@@ -1,0 +1,23 @@
+{
+  "name": "dream_india",
+  "version": "1.0.0",
+  "description": "dream india internal manager",
+  "main": "api_server.js",
+  "scripts": {
+    "build": "babel api_src -d . --copy-files",
+    "devbuild": "npm run build && nodemon ./api_server.js",
+    "dev": "nodemon --watch api_src --exec npm run devbuild"
+  },
+  "author": "mohammed-yasim",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.12.17",
+    "@babel/core": "^7.12.17",
+    "@babel/preset-env": "^7.12.17",
+    "nodemon": "^2.0.7"
+  }
+}
