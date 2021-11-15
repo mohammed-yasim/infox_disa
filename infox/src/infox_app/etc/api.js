@@ -32,7 +32,7 @@ const response_error_capture = function (error) {
     }
     return Promise.reject(error);
 }
-let baseURL = 'http://192.168.43.32:3001/api';
+let baseURL = '/api';
 let config = {
     baseURL: baseURL,
 };
