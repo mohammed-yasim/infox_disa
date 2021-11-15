@@ -2,7 +2,10 @@ import React from 'react';
 import { Link, NavLink, Route, Switch, withRouter } from 'react-router-dom';
 import { removeUserSession } from './etc/auth_handler';
 import { NavMessage, NavProfileMenu, NavAlerts } from './etc/components';
+import { InfoXContext } from './etc/context';
+import { Setting } from './modules';
 class InfoXApp extends React.Component {
+    static contextType = InfoXContext;
     constructor(props) {
         super(props);
         this.state = {
@@ -10,10 +13,10 @@ class InfoXApp extends React.Component {
         }
     }
     componentDidMount() {
-        var head= document.getElementsByTagName('head')[0];
-      var script= document.createElement('script');
-      script.src= '/infox/js/sb-admin-2.min.js';
-      head.appendChild(script);
+        var head = document.getElementsByTagName('head')[0];
+        var script = document.createElement('script');
+        script.src = '/infox/js/sb-admin-2.min.js';
+        head.appendChild(script);
     }
     render() {
         return (<>
@@ -29,11 +32,11 @@ class InfoXApp extends React.Component {
 
                     <hr className="sidebar-divider my-0" />
 
-                    <li className="nav-item">
-                        <NavLink className="nav-link" to="/">
+                    <NavLink className="nav-item text-decoration-none" to="/dashboard">
+                        <span className="nav-link" href="#dashboard">
                             <i className="fas fa-fw fa-tachometer-alt"></i>
-                            <span>Dashboard</span></NavLink>
-                    </li>
+                            <span>Dashboard</span></span>
+                    </NavLink>
 
                     <hr className="sidebar-divider" />
 
@@ -41,7 +44,7 @@ class InfoXApp extends React.Component {
                         Assets
                     </div>
 
-                    <li className="nav-item">
+                    <li className="nav-item text-decoration-none">
                         <NavLink className="nav-link collapsed" to="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
                             <i className="fas fa-fw fa-book"></i>
                             <span>Catalogue</span>
@@ -55,7 +58,7 @@ class InfoXApp extends React.Component {
                         </div>
                     </li>
 
-                    <li className="nav-item">
+                    <li className="nav-item text-decoration-none">
                         <NavLink className="nav-link collapsed" to="/yasim" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
                             <i className="fas fa-fw fa-users"></i>
                             <span>Employees</span>
@@ -74,25 +77,25 @@ class InfoXApp extends React.Component {
                     <div className="sidebar-heading">
                         Reports
                     </div>
-                    <li className="nav-item">
-                        <NavLink className="nav-link" to="/">
+                    <NavLink className="nav-item text-decoration-none" to="/attendance">
+                        <span className="nav-link">
                             <i className="fas fa-fw fa-file"></i>
-                            <span>Attendance</span></NavLink>
-                    </li>
+                            <span>Attendance</span></span>
+                    </NavLink>
                     <hr className="sidebar-divider" />
                     <div className="sidebar-heading">
                         Reports
                     </div>
-                    <li className="nav-item">
-                        <NavLink className="nav-link" to="/">
+                    <NavLink className="nav-item text-decoration-none" to="/quotation">
+                        <span className="nav-link">
                             <i className="fas fa-fw fa-quote-left"></i>
-                            <span>Quotation</span></NavLink>
-                    </li>
-                    <li className="nav-item">
-                        <NavLink className="nav-link" to="/orders">
+                            <span>Quotation</span></span>
+                    </NavLink>
+                    <NavLink className="nav-item text-decoration-none" to="/orders">
+                        <span className="nav-link">
                             <i className="fas fa-fw fa-shopping-cart"></i>
-                            <span>Order</span></NavLink>
-                    </li>
+                            <span>Order</span></span>
+                    </NavLink>
 
 
                     <hr className="sidebar-divider d-none d-md-block" />
@@ -111,11 +114,10 @@ class InfoXApp extends React.Component {
                                 <i className="fa fa-bars"></i>
                             </button>
 
-                            <form className="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+                            <form className="d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                                 <div className="input-group">
                                     <div className="input-group-append"> <button className="btn btn-success btn-sm" type="button"> <i className="fas fa-building" aria-hidden="true"></i> </button> </div>
                                     <input readOnly id="infoxserver" type="text" value="Dream india School Aid (2022-23)" className="form-control bg-light border-0 font-weight-bold" aria-label="Search" aria-describedby="basic-addon2" />
-
                                 </div>
                             </form>
                             <ul className="navbar-nav ml-auto">
@@ -128,7 +130,11 @@ class InfoXApp extends React.Component {
                         </nav>
                         <div className="container-fluid">
                             <Switch>
-                                <Route path="/">Hello</Route>
+                                <Route path="/dashboard">Dashboard</Route>
+                                <Route path="/setting" component={Setting} />
+                                <Route path="/">
+                                    <h5>Welcome, {this.context.u_name}</h5>
+                                </Route>
                             </Switch>
                         </div>
 

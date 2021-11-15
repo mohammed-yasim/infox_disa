@@ -22,7 +22,7 @@ const response_error_capture = function (error) {
         if (error.response.status === 401) {
             removeUserSession();
         } else if (error.response.status === 403) {
-            Toast.fail(`${err}`, 0.5, null, false);
+            Toast.fail(`${err}`, 3, null, false);
         } else {
             Toast.fail(`${err} ${error}`, 1, null, false);
         }
@@ -32,11 +32,11 @@ const response_error_capture = function (error) {
     }
     return Promise.reject(error);
 }
-let baseURL = 'https://console.nooneducare.in/api';
+let baseURL = 'http://192.168.43.32:3001/api';
 let config = {
     baseURL: baseURL,
 };
-let userDB = axios.create(config);
-userDB.interceptors.request.use(request_config_capture, request_error_capture);
-userDB.interceptors.response.use(response_capture, response_error_capture);
-export { userDB }
+let infoxAPI = axios.create(config);
+infoxAPI.interceptors.request.use(request_config_capture, request_error_capture);
+infoxAPI.interceptors.response.use(response_capture, response_error_capture);
+export { infoxAPI }

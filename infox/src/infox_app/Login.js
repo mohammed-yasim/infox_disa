@@ -1,12 +1,11 @@
 import React from "react";
-import axios from "axios";
-import { api_login_url } from './config';
+import { withRouter } from "react-router-dom";
 import { Toast } from "antd-mobile";
+import { infoxAPI } from "./etc/api";
 class InfoXLogin extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            role: '',
             username: '',
             password: ''
         }
@@ -19,11 +18,11 @@ class InfoXLogin extends React.Component {
     LoginFormHandle = (event) => {
         event.preventDefault();
         Toast.loading('Please wait',0)
-        axios.post(api_login_url, this.state)
+        infoxAPI.post('/login', this.state)
             .then((response) => {
                 Toast.hide()
-                sessionStorage.setItem("token", response.data.data.token);
-                this.props.history.push('/')
+                sessionStorage.setItem("token", response.data.token);
+                this.props.history.push('/');
             }).catch((error) => {
                 Toast.hide()
             });
@@ -38,7 +37,7 @@ class InfoXLogin extends React.Component {
                 backgroundSize: 'cover',
                 backgroundRepeat: 'no-repeat'
             }}>
-                <div class="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
+                <div className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
                     <div className="container pt-5">
                         <div className="row justify-content-center mt-5">
                             <div className="col-xl-6 col-lg-6 col-md-9">
@@ -49,17 +48,6 @@ class InfoXLogin extends React.Component {
                                                 <h1 className="h4 text-gray-900 mb-4">Welcome!</h1>
                                             </div>
                                             <form className="user" autoComplete="off" onSubmit={this.LoginFormHandle}>
-                                                <div className="form-group">
-                                                    <select
-                                                        value={this.state.role}
-                                                        name="role"
-                                                        onChange={this.onChangeHandler}
-                                                        className="custom-control custom-select"
-                                                        required>
-                                                        <option disabled value=''>Choose Role</option>
-                                                        <option value={'Admin'}>Admin</option>
-                                                    </select>
-                                                </div>
                                                 <div className="form-group">
                                                     <input name="username"
                                                         onChange={this.onChangeHandler}
@@ -96,4 +84,4 @@ class InfoXLogin extends React.Component {
         )
     }
 }
-export default InfoXLogin;
+export default withRouter(InfoXLogin);

@@ -6,7 +6,7 @@ import { getToken, PrivateRoute, PublicRoute, removeUserSession } from './etc/au
 import { InfoXContext } from './etc/context';
 import { Toast } from "antd-mobile";
 import 'antd-mobile/dist/antd-mobile.css';
-import { userDB } from "./etc/api";
+import { infoxAPI } from "./etc/api";
 class InfoXAppHandler extends React.Component {
     constructor(props) {
         super(props);
@@ -28,7 +28,7 @@ class InfoXAppHandler extends React.Component {
         }
     }
     load_infox_user_data = () => {
-        userDB.get('https://console.nooneducare.in/api/profile')
+        infoxAPI.get('/sync_user')
             .then(response => {
                 this.setState({ infox_user_data: response.data, infox_loaded: true });
                 Toast.hide();
@@ -58,7 +58,7 @@ class InfoXAppHandler extends React.Component {
                                             <p class="lead text-gray-800 mb-3">{this.state.error.message}</p>
                                             <p class="text-gray-500 mb-0">It looks like you found a glitch in the infox...</p>
                                             <a href="tel:00000">&larr; Contact Support</a>
-                                            <hr width="20%"/>
+                                            <hr width="20%" />
                                             <Link to="/logout">Reset</Link>
                                         </div>
 
