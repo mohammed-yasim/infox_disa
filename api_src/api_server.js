@@ -1,14 +1,15 @@
 import express from 'express';
+import path from 'path'
 import cors from 'cors';
 import API_Router from './api';
 
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use('/infox/', express.static(__dirname + '/infox/build'));
+app.use('/infox/', express.static(path.join(__dirname, '/infox/build')));
 app.use('/api', API_Router)
 app.get('/infox/*', (req, res) => {
-    res.sendFile(__dirname + '/infox/build/index.html');
+    res.sendFile(path.join(__dirname, '/infox/build/index.html'));
 });
 app.get('/', (request, response) => {
     response.send("Hello");
