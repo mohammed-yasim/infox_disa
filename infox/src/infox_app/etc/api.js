@@ -1,8 +1,6 @@
 import axios from 'axios';
 import { Toast } from 'antd-mobile';
 import { getToken, removeUserSession } from './auth_handler';
-//http://192.168.43.199:3001/api
-//https://console.nooneducare.in/api
 const request_config_capture = function (config) {
     config['headers']['Authorization'] = getToken();
     Toast.loading('synchronizing', 0, true);
