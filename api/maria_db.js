@@ -31,8 +31,9 @@ Object.defineProperty(exports, "infox_sequlize", {
 
 var _sequelize = require("sequelize");
 
-var infox_db = new _sequelize.Sequelize('u947217984_infox', 'u947217984_infox', '9hHQKOTx3gKH', {
-  host: '45.84.204.52',
+//9hHQKOTx3gKH
+var infox_db = new _sequelize.Sequelize('u947217984_infox', 'u947217984_infox', '5g&9Zq9auxKsGrwn', {
+  host: 'localhost',
   dialect: 'mariadb',
   pool: {
     max: 150,
