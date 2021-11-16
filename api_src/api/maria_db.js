@@ -1,7 +1,8 @@
 import { Sequelize, Model, DataTypes, Op } from 'sequelize';
-//9hHQKOTx3gKH
-const infox_db = new Sequelize('u947217984_infox', 'u947217984_infox', '5g&9Zq9auxKsGrwn', {
-    host: 'localhost',
+//45.84.204.52    9hHQKOTx3gKH
+//173.249.36.84   5g&9Zq9auxKsGrwn
+const infox_db = new Sequelize('u947217984_infox', 'u947217984_infox', '9hHQKOTx3gKH', {
+    host: '45.84.204.52',
     dialect: 'mariadb',
     pool: {
         max: 150,

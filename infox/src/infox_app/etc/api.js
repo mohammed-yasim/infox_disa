@@ -30,7 +30,7 @@ const response_error_capture = function (error) {
     }
     return Promise.reject(error);
 }
-let baseURL = '/api';
+let baseURL = 'http://127.0.0.1:3001/api';
 let config = {
     baseURL: baseURL,
 };
