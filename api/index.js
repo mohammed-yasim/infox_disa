@@ -17,19 +17,20 @@ var _settings = _interopRequireDefault(require("./modules/settings"));
 
 var _bcryptjs = _interopRequireDefault(require("bcryptjs"));
 
+var _catalogue = _interopRequireDefault(require("./modules/catalogue"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var API_Router = _express.default.Router();
 
-API_Router.use('/settings', _settings.default); //API_Router.use(jsonErrorHandler)
+API_Router.use('/settings', _settings.default);
+API_Router.use('/catalogue', _catalogue.default); //API_Router.use(jsonErrorHandler)
 
 API_Router.get('/', (req, res) => {
   res.send("API");
 });
 API_Router.get('/sync', (req, res) => {
-  _maria_db.infox_db.sync({
-    force: true
-  }).then(data => {
+  _maria_db.infox_db.sync().then(data => {
     res.send('Synced');
   }, err => {
     res.send("".concat(err));

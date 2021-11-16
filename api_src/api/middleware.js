@@ -48,7 +48,7 @@ let adminMiddleware = (request, response, next) => {
             if (!err) {
                 request.token = token;
                 request.user = value;
-                if(value.u_type === 'admin'){
+                if(value.u_type === 'admin' || value.u_type === 'root'){
                     next()
                 }else{
                     response.status(403).send("Unauthorized");

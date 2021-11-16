@@ -77,7 +77,7 @@ var adminMiddleware = (request, response, next) => {
         request.token = token;
         request.user = value;
 
-        if (value.u_type === 'admin') {
+        if (value.u_type === 'admin' || value.u_type === 'root') {
           next();
         } else {
           response.status(403).send("Unauthorized");

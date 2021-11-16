@@ -4,8 +4,10 @@ import { generateToken, Middleware } from "./middleware";
 import { Users } from "./models";
 import SettingAPI from "./modules/settings";
 import bcrypt from 'bcryptjs'
+import CatalougueAPI from "./modules/catalogue";
 const API_Router = express.Router();
 API_Router.use('/settings', SettingAPI);
+API_Router.use('/catalogue',CatalougueAPI);
 
 //API_Router.use(jsonErrorHandler)
 API_Router.get('/', (req, res) => {
@@ -13,9 +15,7 @@ API_Router.get('/', (req, res) => {
 })
 
 API_Router.get('/sync', (req, res) => {
-    infox_db.sync({
-        force: true
-    }).then((data) => {
+    infox_db.sync().then((data) => {
         res.send('Synced');
     }, (err) => {
         res.send(`${err}`);

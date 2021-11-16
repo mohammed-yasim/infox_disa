@@ -30,7 +30,8 @@ const response_error_capture = function (error) {
     }
     return Promise.reject(error);
 }
-let baseURL = 'http://127.0.0.1:3001/api';
+const API_ENDPOINT = process.env.REACT_APP_API_ENDPOINT
+let baseURL = API_ENDPOINT;
 let config = {
     baseURL: baseURL,
 };

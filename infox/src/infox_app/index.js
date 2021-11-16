@@ -7,6 +7,8 @@ import { InfoXContext } from './etc/context';
 import { Toast } from "antd-mobile";
 import 'antd-mobile/dist/antd-mobile.css';
 import { infoxAPI } from "./etc/api";
+import LoadingGif from './lib/load.gif';
+
 class InfoXAppHandler extends React.Component {
     constructor(props) {
         super(props);
@@ -34,10 +36,7 @@ class InfoXAppHandler extends React.Component {
                 Toast.hide();
             }).catch((err) => {
                 Toast.hide();
-                //removeUserSession();
-                //this.props.history.replace('/login');
                 this.setState({ infox_user_data: null, infox_loaded: true, error: err });
-
             });
     }
     render() {
@@ -67,7 +66,16 @@ class InfoXAppHandler extends React.Component {
                             </div>
                         </div>
                     </div>
-                </> : <>Loading</>}</>}
+                </> : <>
+                <img src={LoadingGif} alt="Loader" style={{
+                    position:'fixed',
+                    top:0,
+                    bottom:0,
+                    left:0,
+                    right:0,
+                    margin:'auto'
+                }} />
+                </>}</>}
         </>)
     }
 }
