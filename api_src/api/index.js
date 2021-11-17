@@ -60,7 +60,7 @@ API_Router.post('/login', (req, res) => {
                             token: generateToken(data)
                         })
                     } else {
-                        response.status(406).send('invalid credentials');
+                        res.status(406).send('invalid credentials');
                     }
                 })
             }

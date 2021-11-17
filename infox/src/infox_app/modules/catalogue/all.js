@@ -32,8 +32,8 @@ class AllProducts extends React.Component{
               <h6 className="m-0 font-weight-bold text-primary">All Products</h6>
             </div>
             <div className="card-body">
-              <div className="table-responsive"></div>
-            <table id="dataTable" className="table table-bordered text-center">
+              <div className="table-responsive">
+            <table className="table table-bordered text-center" id="dataTable" width="100%" cellSpacing="0">
                 <thead>
                     <tr>
                     <th>S1 No</th>
@@ -50,7 +50,7 @@ class AllProducts extends React.Component{
                                     <td>{i+1}</td>
                                     <td><div className="row">
                                         <div className="col-2">
-                                        <img className="img-fluid" alt={product.p_image} src={'https://www.dreamindiaschool.com/product_img/thumb/'+product.p_image}/>
+                                        <img className="img-fluid" alt={product.p_image} src={'https://www.dreamindiaschool.com/infox_image_server/thumb/'+product.p_image}/>
                                         <p className="text-center m-0"><b>{product.p_code}</b></p>
                                         </div>
                                         <div className="col text-left">
@@ -80,6 +80,7 @@ class AllProducts extends React.Component{
                     )}
                 </tbody>
             </table>
+            </div>
             </div>
             </div>
             </>

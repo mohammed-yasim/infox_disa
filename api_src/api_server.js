@@ -12,16 +12,8 @@ app.get('/infox/*', (req, res) => {
     res.sendFile(path.join(__dirname, '/infox/build/index.html'));
 });
 app.get('/', (request, response) => {
-    response.send("Hello");
+    response.redirect(`/infox?ip=${encodeURI(request.socket.remoteAddress)}`)
 });
-
-app.post('/login', (request, response) => {
-    response.json({
-        data: request.body
-    })
-});
-
-
 app.listen(3001), () => {
     console.log("API runing on Port 3001");
 };

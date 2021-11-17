@@ -1,6 +1,7 @@
 import { Modal, Toast } from "antd-mobile";
 import axios from "axios";
 import React from "react";
+import { withRouter } from "react-router-dom";
 import { infoxAPI } from './../../etc/api';
 class CatalogueForm extends React.Component {
     constructor(props) {
@@ -35,8 +36,9 @@ class CatalogueForm extends React.Component {
             p_image: '',
             p_reference: '',
             p_alias: '',
-            p_tags : '',
-            p_remarks :''
+            p_tags: '',
+            p_remarks: '',
+            p_price: '0'
 
         }
     }
@@ -72,8 +74,9 @@ class CatalogueForm extends React.Component {
                     p_image: data.p_image,
                     p_reference: data.p_reference,
                     p_alias: data.p_alias,
-                    p_tags : data.p_tags,
-                    p_remarks : data.p_remarks,
+                    p_tags: data.p_tags,
+                    p_remarks: data.p_remarks,
+                    p_price: data.p_price
                 })
             }
         ).catch((err) => {
@@ -101,8 +104,6 @@ class CatalogueForm extends React.Component {
         let data = {}
         if (element === 'category_modal_value') {
             data[element] = this.checkcharcter(event.target.value, this.state.category_modal_value)
-        } else if (element === 'p_name') {
-            data[element] = this.checkcharcter(event.target.value, this.state.p_name)
         } else {
             data[element] = event.target.value
         }
@@ -120,21 +121,26 @@ class CatalogueForm extends React.Component {
         }
     }
     save_category = (var_n, var_t, var_c = "") => {
-        Toast.loading('saving');
-        let category_data = this.state.category_data;
-        let category = {
-            var_n: var_n,
-            var_t: var_t,
-            var_c: var_c
+        if (var_n.length > 1) {
+            Toast.loading('saving');
+            let category_data = this.state.category_data;
+            let category = {
+                var_n: var_n,
+                var_t: var_t,
+                var_c: var_c
+            }
+            infoxAPI.post('catalogue/categories', category).then((response) => {
+                category_data.push(response.data);
+                this.setState({ category_data: category_data, category_modal_value: '' });
+                Toast.success('saved', 0.8)
+            });
+        } else {
+            Toast.fail('minimum 2 characters', 0.8);
         }
-        infoxAPI.post('catalogue/categories', category).then((response) => {
-            category_data.push(response.data);
-            this.setState({ category_data: category_data, category_modal_value: '' });
-            Toast.success('saved', 0.8)
-        });
     }
     formHandler = (event) => {
         event.preventDefault();
+        this.setState({active:false});
         let data = {}
         data['p_name'] = this.state.p_name;
         data['p_code'] = this.state.p_code;
@@ -149,16 +155,26 @@ class CatalogueForm extends React.Component {
         data['p_reference'] = this.state.p_reference;
         data['p_remarks'] = this.state.p_remarks;
         data['p_tags'] = this.state.p_tags;
+        data['p_price'] = this.state.p_price;
         if (this.state.action === 'edit') {
             data['p_id'] = this.props.match.params.p_id;
         }
         infoxAPI.post('catalogue/products?action=' + this.state.action, data)
             .then(
                 (response) => {
-                    Toast.success("Product Saved");
-                    console.log(response.data)
+                    if (this.state.action === 'add') {
+                        Toast.success("Product Saved");
+                        this.props.history.replace('/catalogue/go');
+                    } else {
+                        Toast.success("Product Updated");
+
+                        this.props.history.go(-1);
+                    }
                 }
             )
+            .catch((err)=>{
+        this.setState({active:true});
+            })
     }
     handleInputChange = (event) => {
         const file = event.target.files[0];
@@ -177,7 +193,7 @@ class CatalogueForm extends React.Component {
         if (this.state.active === true) {
             return (
                 <>
-                    <div className="card shadow">
+                    <div className="card shadow animated--grow-in">
                         <div className="card-header">
                             <h4 className="card-title">{this.state.title}</h4>
                         </div>
@@ -263,6 +279,7 @@ class CatalogueForm extends React.Component {
                                             </div>
                                             <select required className="form-control" value={this.state.category_group} name="category_group" onChange={this.onSelectChange}>
                                                 <option value='' disabled>Choose group</option>
+                                                <option value='all' disabled>All</option>
                                                 {this.state.category_data.filter(item => { return item.var_t === 'LC' && item.var_c === this.state.category_sub }).map((master, i) => {
                                                     return (
                                                         <option key={"category_group_" + i} value={master.var_v}>{master.var_n}</option>
@@ -290,11 +307,17 @@ class CatalogueForm extends React.Component {
                                         <input type="text" className="form-control" pattern=".{6,}"
                                             value={this.state.p_name} onChange={this.onSelectChange} name="p_name" required placeholder="Enter Product Name" />
                                     </div>
-                                    <div className="form-group col-md-6">
+                                    <div className="form-group col-md-3">
                                         <label>Product Code<span className="text-danger">*</span></label>
                                         <input type="text" className="form-control" pattern="[A-Z0-9-]{3,}"
                                             value={this.state.p_code} onChange={this.onSelectChange} name="p_code" required placeholder="Enter Product Code" />
                                     </div>
+                                    <div className="form-group col-md-3">
+                                        <label>Product MRP<span className="text-danger">*</span></label>
+                                        <input type="text" className="form-control" pattern="[0-9]{1,}"
+                                            value={this.state.p_price} onChange={this.onSelectChange} name="p_price" required placeholder="Enter Maximum Retail Price" />
+                                    </div>
+
                                     <div className="form-group col-md-6">
                                         <label>Image</label>
                                         <div className="input-group">
@@ -303,7 +326,7 @@ class CatalogueForm extends React.Component {
                                             }}>
                                                 <div className="btn btn-info"><i className="fa fa-upload"></i></div>
                                             </div>
-                                            <input required type="text" className="form-control" placeholder="Value" name="p_image" style={{pointerEvents:'none'}} value={this.state.p_image} onChange={this.onSelectChange} />
+                                            <input required type="text" className="form-control" placeholder="Value" name="p_image" readOnly style={{ pointerEvents: 'none', cursor: 'not-allowed' }} value={this.state.p_image} onChange={this.onSelectChange} />
                                         </div>
                                         <Modal visible={this.state.image_modal} transparent
                                             title="Upload Image"
@@ -320,7 +343,7 @@ class CatalogueForm extends React.Component {
                                                         axios.post('https://dreamindiaschool.com/uploader', data, config)
                                                             .then((response) => {
                                                                 Toast.info(`${response.data}`);
-                                                                this.setState({ image_modal: false,p_image:response.data });
+                                                                this.setState({ image_modal: false, p_image: response.data });
                                                             }).catch((err) => {
                                                                 Toast.info(`${err}`);
                                                             })
@@ -331,8 +354,8 @@ class CatalogueForm extends React.Component {
                                                 {this.state.modal_image_src ? <img src={this.state.modal_image_src} className="img-fluid" alt="upload" /> : null}
                                                 <input type="file" id="imgupload" accept="image/png,image/jpeg" style={{ display: 'none' }} onChange={this.handleInputChange} />
                                                 <button href="#" className="btn btn-sm btn-secondary m-3" onClick={() => { window.jQuery('#imgupload').trigger('click'); }}>choose image</button>
-                                                
-                                                {this.state.modal_image_progress !== false ? <> <hr/>Uploading {`${Math.floor((parseInt(this.state.modal_image_progress.loaded) / parseInt(this.state.modal_image_progress.total)) * 100)}%`}</> : null}
+
+                                                {this.state.modal_image_progress !== false ? <> <hr />Uploading {`${Math.floor((parseInt(this.state.modal_image_progress.loaded) / parseInt(this.state.modal_image_progress.total)) * 100)}%`}</> : null}
 
                                             </div>
                                         </Modal>
@@ -378,7 +401,7 @@ class CatalogueForm extends React.Component {
                                         <textarea type="text" className="form-control" pattern="[A-Z0-9-]{3,}"
                                             value={this.state.p_tags} onChange={this.onSelectChange} name="p_tags" placeholder="Enter Tags - tag1,tag2.."></textarea>
                                     </div>
-                                    
+
                                     <div className="form-group col-md-12">
                                         <label>Options</label>
                                         <textarea className="form-control" type="text" value={this.state.p_options} onChange={this.onSelectChange} name="p_options" placeholder="Enter Product Options"></textarea>
@@ -388,12 +411,12 @@ class CatalogueForm extends React.Component {
                                             width:5cm; height:50cm;</p>
                                     </div>
                                     <div className="form-group col-md-6">
-                                        <label>Reference Name</label>
+                                        <label>Reference Name<span className="text-danger">*</span></label>
                                         <input type="text" className="form-control"
-                                            value={this.state.p_reference} onChange={this.onSelectChange} name="p_reference" placeholder="Enter Reference Name" />
+                                            value={this.state.p_reference} onChange={this.onSelectChange} name="p_reference" required placeholder="Enter Reference Name" />
                                     </div>
                                     <div className="form-group col-md-6">
-                                        <label>Alias/Company-code</label>
+                                        <label>Alias</label>
                                         <input type="text" className="form-control"
                                             value={this.state.p_alias} onChange={this.onSelectChange} name="p_alias" placeholder="Enter Alias" />
                                     </div>
@@ -403,13 +426,13 @@ class CatalogueForm extends React.Component {
                                             value={this.state.p_remarks} onChange={this.onSelectChange} name="p_remarks" placeholder="Remarks"></textarea>
                                     </div>
                                     <div className="form-group col-md-6 text-center">
-                                   {this.state.p_image !== '' ? <img src={'https://www.dreamindiaschool.com/product_img/thumb/'+this.state.p_image} alt="product"/> : null}
+                                        {this.state.p_image !== '' ? <img src={'https://www.dreamindiaschool.com/infox_image_server/thumb/' + this.state.p_image} alt="product" /> : null}
                                     </div>
-                                <div className="form-group col-md-6  text-center">
-                                <button className="btn btn-success btn-lg">Save</button>
-                                </div>
-                               
-                                    
+                                    <div className="form-group col-md-6  text-center">
+                                        <button className="btn btn-success btn-lg">Save</button>
+                                    </div>
+
+
                                 </div>
                             </form>
 
@@ -418,13 +441,10 @@ class CatalogueForm extends React.Component {
                     </div>
                 </>
             )
-            /*<div className="card-footer">
-                            {JSON.stringify(this.state)}
-                        </div>*/
         } else {
-            return (<><h5>Catalogue Form</h5> <span className="text-danger">{this.state.error}</span></>)
+            return (<>{this.state.error === null ? <h5>processing..</h5> :<span className="text-danger">{this.state.error}</span>}</>)
         }
     }
 
 }
-export default CatalogueForm;
+export default withRouter(CatalogueForm);

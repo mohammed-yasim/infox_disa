@@ -167,6 +167,10 @@ Products.init({
   p_tags: {
     type: _maria_db.infox_datatype.TEXT,
     allowNull: true
+  },
+  p_price: {
+    type: _maria_db.infox_datatype.STRING,
+    allowNull: true
   }
 }, {
   sequelize: _maria_db.infox_db,

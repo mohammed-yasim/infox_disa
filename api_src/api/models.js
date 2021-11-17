@@ -157,6 +157,11 @@ Products.init({
         type: infox_datatype.TEXT,
         allowNull: true
     },
+    p_price:
+    {
+        type: infox_datatype.STRING,
+        allowNull: true
+    },
 },
     {
         sequelize: infox_db, modelName: 'Products', tableName: 'tb_infox_products'

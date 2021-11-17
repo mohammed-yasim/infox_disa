@@ -49,13 +49,13 @@ class InfoXAppHandler extends React.Component {
                     <div id="wrapper">
                         <div id="content-wrapper" className="d-flex flex-column ">
                             <div id="content">
-                                <div class="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
-                                    <div class="container-fluid">
+                                <div className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
+                                    <div className="container-fluid">
 
-                                        <div class="text-center">
-                                            {this.state.error.response ? <div class="error mx-auto" data-text={this.state.error.response.status}>{this.state.error.response.status}</div> : null}
-                                            <p class="lead text-gray-800 mb-3">{this.state.error.message}</p>
-                                            <p class="text-gray-500 mb-0">It looks like you found a glitch in the infox...</p>
+                                        <div className="text-center">
+                                            {this.state.error.response ? <div className="error mx-auto" data-text={this.state.error.response.status}>{this.state.error.response.status}</div> : null}
+                                            <p className="lead text-gray-800 mb-3">{this.state.error.message}</p>
+                                            <p className="text-gray-500 mb-0">It looks like you found a glitch in the infox...</p>
                                             <a href="tel:00000">&larr; Contact Support</a>
                                             <hr width="20%" />
                                             <Link to="/logout">Reset</Link>
