@@ -24,7 +24,7 @@ class InfoXApp extends React.Component {
     render() {
         return (<>
             <div id="wrapper">
-                <ul className="navbar-nav bg-gradient-dark sidebar toggled sidebar-dark accordion" id="accordionSidebar">
+                <ul className="navbar-nav bg-gradient-dark sidebar toggled sidebar-dark accordion d-print-none" id="accordionSidebar">
 
                     <Link className="sidebar-brand d-flex align-items-center justify-content-center" to="/">
                         <div className="sidebar-brand-icon rotate-n-15">
