@@ -3,6 +3,7 @@ import { infox_db, infox_datatype, infox_model, infox_sequlize } from "./maria_d
 class Users extends infox_model { }
 class Variables extends infox_model { }
 class Products extends infox_model { }
+class QuickQuotations extends infox_model { }
 Users.init({
     u_id: {
         primaryKey: true,
@@ -46,6 +47,10 @@ Users.init({
             isEmail: true
         }
 
+    },
+    u_designation: {
+        type: infox_datatype.STRING,
+        allowNull: null,
     },
     u_contact: {
         type: infox_datatype.STRING,
@@ -167,9 +172,61 @@ Products.init({
         type: infox_datatype.STRING,
         allowNull: true
     },
-    
+
 },
     {
         sequelize: infox_db, modelName: 'Products', tableName: 'tb_infox_products'
-    })
-export { Users, Variables, Products }
+    });
+QuickQuotations.init({
+    id: {
+        primaryKey: true,
+        type: infox_sequlize.UUID,
+        defaultValue: infox_datatype.UUIDV4,
+        allowNull: false
+    },
+    blob: {
+        type: infox_datatype.TEXT('long'),
+        allowNull: true
+    },
+    owner: {
+        type: infox_datatype.UUID
+    },
+    deleted: {
+        type: infox_datatype.INTEGER,
+        defaultValue: 0,
+        allowNull: false
+    },
+    status: {
+        type: infox_datatype.STRING,
+        defaultValue: 'draft',
+        allowNull: false
+    },
+    permission: {
+        type: infox_datatype.INTEGER,
+        defaultValue: 0,
+        allowNull: false
+    },
+    date: {
+        type: infox_datatype.DATE,
+        allowNull: false
+    },
+    name: {
+        type: infox_datatype.STRING,
+        allowNull: false
+    },
+    no: {
+        type: infox_datatype.STRING,
+        allowNull: true
+    },
+    firm: {
+        type: infox_datatype.STRING,
+        allowNull: false
+    },
+    party: {
+        type: infox_datatype.TEXT,
+        allowNull: false
+    },
+}, {
+    sequelize: infox_db, modelName: 'QuickQuotations', tableName: 'tb_infox_quotations'
+});
+export { Users, Variables, Products, QuickQuotations }

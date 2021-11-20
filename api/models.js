@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Variables = exports.Users = exports.Products = void 0;
+exports.Variables = exports.Users = exports.QuickQuotations = exports.Products = void 0;
 
 var _maria_db = require("./maria_db");
 
@@ -18,6 +18,10 @@ exports.Variables = Variables;
 class Products extends _maria_db.infox_model {}
 
 exports.Products = Products;
+
+class QuickQuotations extends _maria_db.infox_model {}
+
+exports.QuickQuotations = QuickQuotations;
 Users.init({
   u_id: {
     primaryKey: true,
@@ -60,6 +64,10 @@ Users.init({
     validate: {
       isEmail: true
     }
+  },
+  u_designation: {
+    type: _maria_db.infox_datatype.STRING,
+    allowNull: null
   },
   u_contact: {
     type: _maria_db.infox_datatype.STRING,
@@ -180,4 +188,58 @@ Products.init({
   sequelize: _maria_db.infox_db,
   modelName: 'Products',
   tableName: 'tb_infox_products'
+});
+QuickQuotations.init({
+  id: {
+    primaryKey: true,
+    type: _maria_db.infox_sequlize.UUID,
+    defaultValue: _maria_db.infox_datatype.UUIDV4,
+    allowNull: false
+  },
+  blob: {
+    type: _maria_db.infox_datatype.TEXT('long'),
+    allowNull: true
+  },
+  owner: {
+    type: _maria_db.infox_datatype.UUID
+  },
+  deleted: {
+    type: _maria_db.infox_datatype.INTEGER,
+    defaultValue: 0,
+    allowNull: false
+  },
+  status: {
+    type: _maria_db.infox_datatype.STRING,
+    defaultValue: 'draft',
+    allowNull: false
+  },
+  permission: {
+    type: _maria_db.infox_datatype.INTEGER,
+    defaultValue: 0,
+    allowNull: false
+  },
+  date: {
+    type: _maria_db.infox_datatype.DATE,
+    allowNull: false
+  },
+  name: {
+    type: _maria_db.infox_datatype.STRING,
+    allowNull: false
+  },
+  no: {
+    type: _maria_db.infox_datatype.STRING,
+    allowNull: true
+  },
+  firm: {
+    type: _maria_db.infox_datatype.STRING,
+    allowNull: false
+  },
+  party: {
+    type: _maria_db.infox_datatype.TEXT,
+    allowNull: false
+  }
+}, {
+  sequelize: _maria_db.infox_db,
+  modelName: 'QuickQuotations',
+  tableName: 'tb_infox_quotations'
 });

@@ -6,6 +6,8 @@ import { InfoXContext } from './etc/context';
 import LoadingGif from './lib/load.gif';
 const Setting = lazy(() => import('./modules/setting'));
 const Catalogue = lazy(() => import('./modules/catalogue'));
+const Quotation = lazy(() => import('./modules/quotation'));
+
 
 class InfoXApp extends React.Component {
     static contextType = InfoXContext;
@@ -50,6 +52,14 @@ class InfoXApp extends React.Component {
                             <i className="fas fa-fw fa-book"></i>
                             <span>catalogue</span></span>
                     </NavLink>
+                    <hr className="sidebar-divider" />
+
+                    <NavLink className="nav-item text-decoration-none" to="/quotation">
+                        <span className="nav-link">
+                            <i className="fas fa-fw fa-quote-left"></i>
+                            <span>Quotation</span></span>
+                    </NavLink>
+
                     <hr className="sidebar-divider d-none d-md-block" />
                     <div className="text-center d-none d-md-inline">
                         <button className="rounded-circle border-0" id="sidebarToggle"></button>
@@ -86,6 +96,7 @@ class InfoXApp extends React.Component {
                                     <Route path="/dashboard">Dashboard</Route>
                                     <Route path="/setting" component={Setting} />
                                     <Route path="/catalogue" component={Catalogue} />
+                                    <Route path="/quotation" component={Quotation} />
                                     <Route path="/">
                                         <h5>Welcome, {this.context.u_name}</h5>
                                     </Route>

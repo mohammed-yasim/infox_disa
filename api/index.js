@@ -19,12 +19,15 @@ var _bcryptjs = _interopRequireDefault(require("bcryptjs"));
 
 var _catalogue = _interopRequireDefault(require("./modules/catalogue"));
 
+var _quotation = _interopRequireDefault(require("./modules/quotation"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var API_Router = _express.default.Router();
 
 API_Router.use('/settings', _settings.default);
-API_Router.use('/catalogue', _catalogue.default); //API_Router.use(jsonErrorHandler)
+API_Router.use('/catalogue', _catalogue.default);
+API_Router.use('/quotation', _quotation.default); //API_Router.use(jsonErrorHandler)
 
 API_Router.get('/', (req, res) => {
   res.send("API");
