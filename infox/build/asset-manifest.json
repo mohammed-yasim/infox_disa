@@ -1,20 +1,20 @@
 {
   "files": {
-    "main.js": "/infox/static/js/main.4d47b6af.chunk.js",
-    "runtime-main.js": "/infox/static/js/runtime-main.1078cb4f.js",
+    "main.js": "/infox/static/js/main.4a9a5068.chunk.js",
+    "runtime-main.js": "/infox/static/js/runtime-main.51d8a3d6.js",
     "static/css/2.83b3fc3b.chunk.css": "/infox/static/css/2.83b3fc3b.chunk.css",
-    "static/js/2.f8020a6e.chunk.js": "/infox/static/js/2.f8020a6e.chunk.js",
-    "static/js/3.12ba4deb.chunk.js": "/infox/static/js/3.12ba4deb.chunk.js",
-    "static/js/4.ae51645e.chunk.js": "/infox/static/js/4.ae51645e.chunk.js",
-    "static/js/5.85422f13.chunk.js": "/infox/static/js/5.85422f13.chunk.js",
+    "static/js/2.10b0c419.chunk.js": "/infox/static/js/2.10b0c419.chunk.js",
+    "static/js/3.7936603f.chunk.js": "/infox/static/js/3.7936603f.chunk.js",
+    "static/js/4.667a1af0.chunk.js": "/infox/static/js/4.667a1af0.chunk.js",
+    "static/js/5.019459f3.chunk.js": "/infox/static/js/5.019459f3.chunk.js",
     "index.html": "/infox/index.html",
-    "static/js/2.f8020a6e.chunk.js.LICENSE.txt": "/infox/static/js/2.f8020a6e.chunk.js.LICENSE.txt",
+    "static/js/2.10b0c419.chunk.js.LICENSE.txt": "/infox/static/js/2.10b0c419.chunk.js.LICENSE.txt",
     "static/media/load.fba03497.gif": "/infox/static/media/load.fba03497.gif"
   },
   "entrypoints": [
-    "static/js/runtime-main.1078cb4f.js",
+    "static/js/runtime-main.51d8a3d6.js",
     "static/css/2.83b3fc3b.chunk.css",
-    "static/js/2.f8020a6e.chunk.js",
-    "static/js/main.4d47b6af.chunk.js"
+    "static/js/2.10b0c419.chunk.js",
+    "static/js/main.4a9a5068.chunk.js"
   ]
 }

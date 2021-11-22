@@ -43,8 +43,8 @@ class InfoXLogin extends React.Component {
                 <div className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
                     <div className="container pt-5">
                         <div className="row justify-content-center mt-5">
-                            <div className="col-xl-4 col-lg-6 col-md-6">
-                                <div className="card o-hidden border-0 shadow-lg my-5">
+                            <div className="col-xl-4 col-lg-4 col-md-6">
+                                <div className="card o-hidden border-0 shadow my-5">
                                     <div className="card-body p-0">
                                         <div className="p-5">
                                             <div className="text-center mb-4">

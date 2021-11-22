@@ -1,7 +1,7 @@
 import React, { Suspense, lazy } from 'react';
 import { Link, NavLink, Route, Switch, withRouter } from 'react-router-dom';
 import { removeUserSession } from './etc/auth_handler';
-import { NavMessage, NavProfileMenu, NavAlerts } from './etc/components';
+import { NavMessage, NavProfileMenu, NavAlerts, AttendanceApp } from './etc/components';
 import { InfoXContext } from './etc/context';
 import LoadingGif from './lib/load.gif';
 const Setting = lazy(() => import('./modules/setting'));
@@ -99,6 +99,7 @@ class InfoXApp extends React.Component {
                                     <Route path="/quotation" component={Quotation} />
                                     <Route path="/">
                                         <h5>Welcome, {this.context.u_name}</h5>
+                                        <AttendanceApp/>
                                     </Route>
                                 </Switch>
                             </Suspense>

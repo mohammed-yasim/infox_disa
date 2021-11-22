@@ -20,12 +20,12 @@ class QuotationHome extends React.Component {
         let draft_count = null
         let submitted_count = null
         let approved_count = null
-        let completed_count = null
+        let ready_count = null
         if (this.state.data.length > 0) {
             draft_count = data.filter(i => i.status === 'draft').length;
+            ready_count = data.filter(i => i.status === 'ready').length;
             submitted_count = data.filter(i => i.status === 'submitted').length;
             approved_count = data.filter(i => i.status === 'approved').length;
-            completed_count = data.filter(i => i.status === 'completed').length;
         }
         return (<>
             <div className="d-sm-flex align-items-center justify-content-between mb-4">
@@ -34,73 +34,75 @@ class QuotationHome extends React.Component {
             </div>
             <div className="row">
                 {draft_count > 0 ?
-                <div className="col-xl-3 col-md-6 mb-4" key={'draft_count'}>
-                    <div className="card border-left-danger shadow h-100 py-2">
-                        <div className="card-body">
-                            <div className="row no-gutters align-items-center">
-                                <div className="col mr-2">
-                                    <NavLink to="/quotation/draft" className="text-decoration-none"><div className="text-xs font-weight-bold text-danger text-uppercase mb-1">Drafts</div></NavLink>
-                                    <div className="h5 mb-0 font-weight-bold text-gray-800">{draft_count}</div>
-                                </div>
-                                <div className="col-auto">
-                                    <i className="fas fa-file fa-2x text-gray-300"></i>
+                    <div className="col-xl-3 col-md-6 mb-4" key={'draft_count'}>
+                        <div className="card border-left-danger shadow h-100 py-2">
+                            <div className="card-body">
+                                <div className="row no-gutters align-items-center">
+                                    <div className="col mr-2">
+                                        <NavLink to="/quotation/draft" className="text-decoration-none"><div className="text-sm font-weight-bold text-danger text-uppercase mb-1">Drafts</div></NavLink>
+                                        <div className="h5 mb-0 font-weight-bold text-gray-800">{draft_count}</div>
+                                    </div>
+                                    <div className="col-auto">
+                                        <i className="fas fa-file fa-2x text-gray-300"></i>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                : null}
+                    : null}
+                {ready_count > 0 ?
+
+                    <div className="col-xl-3 col-md-6 mb-4" key={'ready_count'}>
+                        <div className="card border-left-info shadow h-100 py-2">
+                            <div className="card-body">
+                                <div className="row no-gutters align-items-center">
+                                    <div className="col mr-2">
+                                        <NavLink to="/quotation/ready" className="text-decoration-none"><div className="text-sm font-weight-bold text-info text-uppercase mb-1">Ready</div></NavLink>
+                                        <div className="h5 mb-0 font-weight-bold text-gray-800">{ready_count}</div>
+                                    </div>
+                                    <div className="col-auto">
+                                        <i className="fas fa-file fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    : null}
+
                 {submitted_count > 0 ?
-                <div className="col-xl-3 col-md-6 mb-4" key={'submitted_count'}>
-                    <div className="card border-left-warning shadow h-100 py-2">
-                        <div className="card-body">
-                            <div className="row no-gutters align-items-center">
-                                <div className="col mr-2">
-                                    <NavLink to="/quotation/submitted" className="text-decoration-none"><div className="text-xs font-weight-bold text-warning text-uppercase mb-1">Submitted</div></NavLink>
-                                    <div className="h5 mb-0 font-weight-bold text-gray-800">{submitted_count}</div>
-                                </div>
-                                <div className="col-auto">
-                                    <i className="fas fa-file fa-2x text-gray-300"></i>
+                    <div className="col-xl-3 col-md-6 mb-4" key={'submitted_count'}>
+                        <div className="card border-left-warning shadow h-100 py-2">
+                            <div className="card-body">
+                                <div className="row no-gutters align-items-center">
+                                    <div className="col mr-2">
+                                        <NavLink to="/quotation/submitted" className="text-decoration-none"><div className="text-sm font-weight-bold text-warning text-uppercase mb-1">Submitted</div></NavLink>
+                                        <div className="h5 mb-0 font-weight-bold text-gray-800">{submitted_count}</div>
+                                    </div>
+                                    <div className="col-auto">
+                                        <i className="fas fa-file fa-2x text-gray-300"></i>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                : null}
+                    : null}
                 {approved_count > 0 ?
-                <div className="col-xl-3 col-md-6 mb-4" key={'approved_count'}>
-                    <div className="card border-left-success shadow h-100 py-2">
-                        <div className="card-body">
-                            <div className="row no-gutters align-items-center">
-                                <div className="col mr-2">
-                                    <NavLink to="/quotation/approved" className="text-decoration-none"><div className="text-xs font-weight-bold text-success text-uppercase mb-1">Approved</div></NavLink>
-                                    <div className="h5 mb-0 font-weight-bold text-gray-800">{approved_count}</div>
-                                </div>
-                                <div className="col-auto">
-                                    <i className="fas fa-file fa-2x text-gray-300"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                : null}
-                {completed_count > 0 ?
-                <div className="col-xl-3 col-md-6 mb-4" key={'completed_count'}>
-                    <div className="card border-left-info shadow h-100 py-2">
-                        <div className="card-body">
-                            <div className="row no-gutters align-items-center">
-                                <div className="col mr-2">
-                                    <NavLink to="/quotation/completed" className="text-decoration-none"><div className="text-xs font-weight-bold text-info text-uppercase mb-1">Completed</div></NavLink>
-                                    <div className="h5 mb-0 font-weight-bold text-gray-800">{completed_count}</div>
-                                </div>
-                                <div className="col-auto">
-                                    <i className="fas fa-file fa-2x text-gray-300"></i>
+                    <div className="col-xl-3 col-md-6 mb-4" key={'approved_count'}>
+                        <div className="card border-left-success shadow h-100 py-2">
+                            <div className="card-body">
+                                <div className="row no-gutters align-items-center">
+                                    <div className="col mr-2">
+                                        <NavLink to="/quotation/approved" className="text-decoration-none"><div className="text-sm font-weight-bold text-success text-uppercase mb-1">Approved</div></NavLink>
+                                        <div className="h5 mb-0 font-weight-bold text-gray-800">{approved_count}</div>
+                                    </div>
+                                    <div className="col-auto">
+                                        <i className="fas fa-file fa-2x text-gray-300"></i>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>                
-                : null}
+                    : null}
             </div>
         </>)
     }
@@ -150,8 +152,15 @@ class QuickQuotation extends React.Component {
                             <td>{quotation.party}</td>
                             <td>{new Date(quotation.date).toDateString()}</td>
                             <td>
-                                <NavLink className="btn btn-link" to={`/quotation/quick/edit/${quotation.id}`}><i className="fa fa-edit"></i></NavLink>
-                                <button className="btn btn-primary btn-sm" to={`/quotation/quick/edit/${quotation.id}`}><i className="fa fa-check-circle"></i> Apply</button>
+                                {quotation.status==='draft' ?<NavLink className="btn btn-link" to={`/quotation/quick/edit/${quotation.id}`}><i className="fa fa-edit"></i></NavLink>:null}
+                                {quotation.status==='draft' ?<NavLink className="btn btn-danger btn-sm mr-1 ml-1" to={`/quotation/quick/edit/${quotation.id}`}><i className="fa fa-trash"></i></NavLink>:null}
+                                {quotation.permission === 0 && quotation.status==='draft' ? <button className="btn btn-primary btn-sm"><i className="fa fa-check-circle"></i> Apply</button> : null}
+                                {quotation.permission === 1 && quotation.status==='draft' ? <span className="btn btn-danger btn-sm">Rejected</span> : null}
+                                {quotation.status==='ready' && quotation.permission === 1 ? <><NavLink className="btn btn-warning btn-sm mr-1 ml-1" to={`/quotation/quick/edit/${quotation.id}`}><i className="fa fa-print"></i></NavLink>                            
+                               <NavLink className="btn btn-secondary btn-sm mr-1 ml-1" to={`/quotation/quick/edit/${quotation.id}`}><i className="fa fa-eye"></i></NavLink>                           
+                                <NavLink className="btn btn-success btn-sm mr-1 ml-1" to={`/quotation/quick/edit/${quotation.id}`}><i className="fa fa-check"></i> Submit</NavLink></>:null}                             
+                                {quotation.status==='submitted' ? <button className="btn btn-success btn-sm m-1"><i className="fa fa-check-circle"></i> Approved</button> : null}
+                                {quotation.status==='submitted' ? <button className="btn btn-danger btn-sm m-1"><i className="fa fa-times-circle"></i> Disposed</button> : null}
                             </td>
                         </tr>)
                     })}
@@ -178,7 +187,8 @@ class QuickQuotationEditor extends React.Component {
                 party_phone: '',
                 file_name: '',
                 firm: '',
-                total: 0
+                total: 0,
+                discount: 0
             },
             editor: {
                 name: '',
@@ -218,20 +228,6 @@ class QuickQuotationEditor extends React.Component {
             Toast.fail('Add data First');
         }
     }
-    saveData = (total) => {
-        if (total > 0) {
-            let data = this.state.quotation;
-            data['total'] = total;
-            infoxAPI.post(`/quotation/quick/${this.props.match.params.id}?action=${this.state.action}`, data).then(
-                (response) => {
-                    Toast.success('Saved');
-                    this.props.history.replace('/quotation/quick');
-                }
-            )
-        } else {
-            Toast.fail('Add data First');
-        }
-    }
     goBack = () => {
         this.props.history.goBack();
     }
@@ -263,6 +259,8 @@ class QuickQuotationEditor extends React.Component {
         new_items[index] = JSON.parse(`${JSON.stringify(editor)}`);
         new_items[index]['edit'] = false;
         quotation['items'] = new_items;
+        quotation['total'] = (new_items.reduce((a, v) => { return a = a + (v.qty * v.rate) }, 0)).toFixed(2)
+
         this.setState({
             quotation: quotation, editor: {
                 name: '',
@@ -310,10 +308,6 @@ class QuickQuotationEditor extends React.Component {
         e.target.style.height = `${e.target.scrollHeight}px`;
     }
     render() {
-        let total = 0;
-        if (this.state.quotation.items.length > 0) {
-            total = (this.state.quotation.items.reduce((a, v) => { return a = a + (v.qty * v.rate) }, 0)).toFixed(2)
-        }
         return (
             <>
                 <div>
@@ -331,8 +325,9 @@ class QuickQuotationEditor extends React.Component {
                             </div>
                             <div className="form-group row">
                                 <label className="col-6 d-flex align-items-center justify-content-center"><b>Choose Firm</b></label>
-                                <div className="col-6"><select name="firm" required onChange={this.onChangeInput} className="form-control">
-                                    <option value="">choose</option>
+                                <div className="col-6"><select name="firm" value={this.state.quotation.firm} required onChange={this.onChangeInput} className="form-control">
+                                    <option value="" disabled>choose</option>
+                                    <option value="azba_india">Azba India</option>
                                     <option value="dream_india">Dream India</option>
                                 </select>
                                 </div>
@@ -420,16 +415,19 @@ class QuickQuotationEditor extends React.Component {
                                         : null}
 
                                     <tr>
-                                        <th className="text-right" colSpan={4}> Total Amount : </th><th>&#8377; {total} / -</th></tr>
+                                        <th className="text-right" colSpan={4}> Sub Total : </th><th>&#8377; {this.state.quotation.total} / -</th>
+                                    </tr>
+                                    <tr>
+                                        <th className="text-right" colSpan={4}> Discount(%): </th><th><input type="number" onChange={this.onChangeInput} value={this.state.quotation.discount} name="discount" className="form-control form-control-sm" required /></th>
+                                    </tr>
+                                    <tr>
+                                        <th className="text-right" colSpan={4}> Grand Total : </th><th>&#8377; {parseInt(this.state.quotation.total) - ((parseInt(this.state.quotation.total) * (parseInt(this.state.quotation.discount) / 100)))} / -</th>
+                                    </tr>
                                 </tfoot>
                             </table>
                         </div>
                         <div className="card-body text-right">
-                            <button type="submit" onClick={(e) => {
-                                e.target.value = total;
-                                e.target.name = 'total';
-                                this.onChangeInput(e);
-                            }} className="btn btn-md btn-success"><i className="fa fa-save"></i> Save</button>
+                            <button type="submit" className="btn btn-md btn-success"><i className="fa fa-save"></i> Save</button>
                         </div>
                     </div>
                 </form>
@@ -453,7 +451,7 @@ function Quotation() {
                 <Route exact path={`${path}/submitted`} ><QuickQuotation title="Submitted Quotations" action="submitted" /></Route>
                 <Route exact path={`${path}/draft`}><QuickQuotation title="Drafts" action="draft" /></Route>
                 <Route exact path={`${path}/approved`}><QuickQuotation title="Approved Quotations" action="approved" /></Route>
-                <Route exact path={`${path}/completed`}><QuickQuotation title="complted Quotations" action="completed" /></Route>
+                <Route exact path={`${path}/ready`}><QuickQuotation title="Quotations Print and Submit" action="ready" /></Route>
             </Switch>
         </>
     )
