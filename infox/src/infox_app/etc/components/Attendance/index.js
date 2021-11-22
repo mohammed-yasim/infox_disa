@@ -31,21 +31,39 @@ class AttendanceApp extends React.Component {
                     latitude: position.coords.latitude,
                     longitude: position.coords.longitude
                 });
-                this.get_place_locationiq()
+                this.get_place_locationiq();
             },
             err => { console.log(err) }
         );
     }
+    handlePermission = () => {
+        navigator.permissions.query({ name: 'geolocation' }).then((result) => {
+            this.setState({ geolocation: result.state });
+            result.onchange = () => {
+                this.setState({ geolocation: result.state });
+            }
+        });
+    }
+    componentDidMount() {
+        this.handlePermission();
+    }
     render() {
         return (
             <>
-                <button onClick={this.position} class="btn btn-primary btn-lg">
-                    <i class="fa fa-street-view"></i> Clock In
-                </button>
-                <hr/>
-                {this.state.locationiq.display_name !== undefined ? <p>
-                    {this.state.locationiq.display_name}</p>
-                    : <>Place</>}
+               
+                <hr />
+                {this.state.geolocation === 'granted' || this.state.geolocation === 'prompt' ? <>
+                    <button onClick={this.position} className="btn btn-primary btn-lg">
+                        <i className="fa fa-street-view"></i> Clock In
+                    </button>
+                    <hr /> {this.state.geolocation} - 
+                    {this.state.locationiq.display_name !== undefined ? <p>
+                        {this.state.locationiq.display_name}</p>
+                        : <>Place</>}
+                </> : <>
+                    <h3><i className="fas fa-exclamation-triangle"></i> Location permission {this.state.geolocation}</h3>
+                    <p>Please reset the site setting/permissions</p>
+                </>}
             </>
         )
     }
