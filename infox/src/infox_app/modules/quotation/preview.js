@@ -25,10 +25,6 @@ class QuotationPreview extends React.Component {
     componentDidMount() {
         this.loadData();
     }
-    adjustHeight = (e) => {
-        e.target.style.height = 'inherit';
-        e.target.style.height = `${e.target.scrollHeight}px`;
-    }
     render() {
         let quotation = this.state.quotation
         return (<>
@@ -73,7 +69,7 @@ class QuotationPreview extends React.Component {
                     </div>
                     <div className="text-center"> <h3 className="text-uppercase"><b>Quotation</b></h3></div>
                     <table className="table table-bordered mt-3">
-                        <thead className="thead-light">
+                        <thead className="thead-light text-center">
                             <tr>
                                 <td>SINo</td>
                                 <td>Item</td>
@@ -82,28 +78,28 @@ class QuotationPreview extends React.Component {
                                 <td>Amount</td>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody className="text-center">
                             {quotation.items.map((item, i) => {
                                 return (
                                     <tr className="">
                                         <th style={{ width: '5%' }}>{i + 1}</th>
-                                        <td style={{ width: '55%' }}>{item.name}</td>
+                                        <td className="text-left" style={{ width: '55%' }}>{item.name}</td>
                                         <td style={{ width: '10%' }}>{item.rate}</td>
                                         <td style={{ width: '10%' }}>{item.qty}</td>
-                                        <td style={{ width: '20%' }}>{item.amount}</td>
+                                        <td className="text-right" style={{ width: '20%' }}>{item.amount}</td>
                                     </tr>
                                 )
                             })}
                         </tbody>
-                        <tfoot>
+                        <tfoot className="text-right">
                             <tr>
-                                <th className="text-right" colSpan={4}> Sub Total : </th><th>&#8377; {quotation.total} / -</th>
+                                <th  colSpan={4}> Sub Total : </th><th>&#8377; {quotation.total} </th>
                             </tr>
                             <tr>
-                                <th className="text-right" colSpan={4}> Discount(%): </th><th>{quotation.discount}</th>
+                                <th colSpan={4}> Discount(%): </th><th>{quotation.discount}</th>
                             </tr>
                             <tr>
-                                <th className="text-right" colSpan={4}> Grand Total : </th><th>&#8377; {parseInt(quotation.total) - ((parseInt(quotation.total) * (parseInt(quotation.discount) / 100)))} / -</th>
+                                <th colSpan={4}> Grand Total : </th><th>&#8377; {parseInt(quotation.total) - ((parseInt(quotation.total) * (parseInt(quotation.discount) / 100)))} </th>
                             </tr>
                         </tfoot>
                     </table>
