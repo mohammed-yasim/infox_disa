@@ -47,7 +47,7 @@ API_Router.get('/demo-user', (req, res) => {
 })
 API_Router.post('/login', (req, res) => {
     console.log(req.body);
-    Users.findOne({ where: { username: req.body.username } }).then(
+    Users.findOne({ where: { username: req.body.username,active:1,suspended:0 } }).then(
         (user) => {
             if (user) {
                 bcrypt.compare(req.body.password, user.password, (error, match) => {

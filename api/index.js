@@ -64,7 +64,9 @@ API_Router.post('/login', (req, res) => {
 
   _models.Users.findOne({
     where: {
-      username: req.body.username
+      username: req.body.username,
+      active: 1,
+      suspended: 0
     }
   }).then(user => {
     if (user) {

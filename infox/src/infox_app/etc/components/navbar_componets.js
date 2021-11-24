@@ -14,21 +14,24 @@ class NavProfileMenu extends React.Component {
                     <span className="mr-2 d-none d-lg-inline text-gray-600 small">{this.context.u_name}</span>
                     <i className="fas fa-user fa-fw"></i>
                 </NavLink>
-
                 <div className="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                    <Link className="dropdown-item" to="/setting/activity">
-                        <i className="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-                        Activity Log
-                    </Link>
-                    <Link className="dropdown-item" to="/setting/profile">
-                        <i className="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                        Profile
-                    </Link>
-                    <Link className="dropdown-item" to="/setting">
-                        <i className="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                        Settings
-                    </Link>
-                    <div className="dropdown-divider"></div>
+                    <div className="dropdown-item d-none d-sm-block d-md-none text-gray-600 small">{this.context.u_name}</div>
+                    {this.context.u_type === 'admin' || this.context.u_type === 'root' ?
+                        <>
+                            <Link className="dropdown-item" to="/setting/activity">
+                                <i className="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+                                Activity Log
+                            </Link>
+                            <Link className="dropdown-item" to="/setting/profile">
+                                <i className="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                Profile
+                            </Link>
+                            <Link className="dropdown-item" to="/setting">
+                                <i className="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                                Settings
+                            </Link>
+                            <div className="dropdown-divider"></div>
+                        </> : <></>}
                     <a className="dropdown-item" href="#infox" data-toggle="modal" data-target="#logoutModal">
                         <i className="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                         Logout

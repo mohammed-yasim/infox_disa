@@ -1,15 +1,17 @@
-import { Toast } from "antd-mobile";
 import React from "react";
 import { Switch, Route, withRouter, useRouteMatch, NavLink } from "react-router-dom";
 import { infoxAPI } from "../../etc/api";
-import { InfoXContext } from '../../etc/context';
-
+import QuickQuotationEditor from './quick_editor';
+import QuotationPreview from './preview';
 class QuotationHome extends React.Component {
     constructor(props) {
         super(props);
         this.state = { data: [] }
     }
     componentDidMount() {
+        this.loadData();
+    }
+    loadData = () => {
         infoxAPI.get('/quotation/').then(response => {
             this.setState({ data: response.data });
             console.log(response.data);
@@ -17,20 +19,29 @@ class QuotationHome extends React.Component {
     }
     render() {
         let data = this.state.data;
-        let draft_count = null
-        let submitted_count = null
-        let approved_count = null
-        let ready_count = null
+        let draft_count = null;
+        let request_count = null;
+        let ready_count = null;
+        let submitted_count = null;
+        let approved_count = null;
+        let disposed_count = null;
+        let completed_count = null;
         if (this.state.data.length > 0) {
             draft_count = data.filter(i => i.status === 'draft').length;
+            request_count = data.filter(i => i.status === 'request').length;
             ready_count = data.filter(i => i.status === 'ready').length;
             submitted_count = data.filter(i => i.status === 'submitted').length;
             approved_count = data.filter(i => i.status === 'approved').length;
+            disposed_count = data.filter(i => i.status === 'disposed').length;
+            completed_count = data.filter(i => i.status === 'disposed').length;
         }
         return (<>
             <div className="d-sm-flex align-items-center justify-content-between mb-4">
-                <h1 className="h3 mb-0 text-gray-800">Quotations</h1>
-                <NavLink className="d-inline-block btn btn-sm btn-primary shadow-sm" to="/quotation/quick/edit/new"><i className="fas fa-plus fa-sm text-white-50"></i> Quick</NavLink>
+                <h1 className="h3 mb-0 text-gray-800">Quotations </h1>
+                <div>
+                    <NavLink className="btn btn-sm btn-primary shadow-sm mr-1" to="/quotation/quick/edit/new"><i className="fas fa-plus fa-sm text-white-50"></i> Quick</NavLink>
+                    <button onClick={this.loadData} className="btn btn-circle btn-info btn-sm"><i className="fa fa-sync"></i></button>
+                </div>
             </div>
             <div className="row">
                 {draft_count > 0 ?
@@ -43,7 +54,24 @@ class QuotationHome extends React.Component {
                                         <div className="h5 mb-0 font-weight-bold text-gray-800">{draft_count}</div>
                                     </div>
                                     <div className="col-auto">
-                                        <i className="fas fa-file fa-2x text-gray-300"></i>
+                                        <i className="fab fa-firstdraft fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    : null}
+                {request_count > 0 ?
+                    <div className="col-xl-3 col-md-6 mb-4" key={'draft_count'}>
+                        <div className="card border-left-danger shadow h-100 py-2">
+                            <div className="card-body">
+                                <div className="row no-gutters align-items-center">
+                                    <div className="col mr-2">
+                                        <NavLink to="/quotation/request" className="text-decoration-none"><div className="text-sm font-weight-bold text-danger text-uppercase mb-1">Requests</div></NavLink>
+                                        <div className="h5 mb-0 font-weight-bold text-gray-800">{request_count}</div>
+                                    </div>
+                                    <div className="col-auto">
+                                        <i className="fas fa-stream fa-2x text-gray-300"></i>
                                     </div>
                                 </div>
                             </div>
@@ -61,7 +89,7 @@ class QuotationHome extends React.Component {
                                         <div className="h5 mb-0 font-weight-bold text-gray-800">{ready_count}</div>
                                     </div>
                                     <div className="col-auto">
-                                        <i className="fas fa-file fa-2x text-gray-300"></i>
+                                        <i className="fab fa-readme fa-2x text-gray-300"></i>
                                     </div>
                                 </div>
                             </div>
@@ -79,7 +107,7 @@ class QuotationHome extends React.Component {
                                         <div className="h5 mb-0 font-weight-bold text-gray-800">{submitted_count}</div>
                                     </div>
                                     <div className="col-auto">
-                                        <i className="fas fa-file fa-2x text-gray-300"></i>
+                                        <i className="fas fa-check fa-2x text-gray-300"></i>
                                     </div>
                                 </div>
                             </div>
@@ -96,6 +124,23 @@ class QuotationHome extends React.Component {
                                         <div className="h5 mb-0 font-weight-bold text-gray-800">{approved_count}</div>
                                     </div>
                                     <div className="col-auto">
+                                        <i className="fas fa-check-circle fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    : null}
+                {disposed_count > 0 ?
+                    <div className="col-xl-3 col-md-6 mb-4" key={'approved_count'}>
+                        <div className="card border-left-success shadow h-100 py-2">
+                            <div className="card-body">
+                                <div className="row no-gutters align-items-center">
+                                    <div className="col mr-2">
+                                        <NavLink to="/quotation/approved" className="text-decoration-none"><div className="text-sm font-weight-bold text-success text-uppercase mb-1">Disposed</div></NavLink>
+                                        <div className="h5 mb-0 font-weight-bold text-gray-800">{disposed_count}</div>
+                                    </div>
+                                    <div className="col-auto">
                                         <i className="fas fa-file fa-2x text-gray-300"></i>
                                     </div>
                                 </div>
@@ -103,6 +148,24 @@ class QuotationHome extends React.Component {
                         </div>
                     </div>
                     : null}
+                                {completed_count > 0 ?
+                    <div className="col-xl-3 col-md-6 mb-4" key={'approved_count'}>
+                        <div className="card border-left-success shadow h-100 py-2">
+                            <div className="card-body">
+                                <div className="row no-gutters align-items-center">
+                                    <div className="col mr-2">
+                                        <NavLink to="/quotation/approved" className="text-decoration-none"><div className="text-sm font-weight-bold text-success text-uppercase mb-1">Completed</div></NavLink>
+                                        <div className="h5 mb-0 font-weight-bold text-gray-800">{completed_count}</div>
+                                    </div>
+                                    <div className="col-auto">
+                                        <i className="fas fa-file fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    : null}
+
             </div>
         </>)
     }
@@ -124,319 +187,82 @@ class QuickQuotation extends React.Component {
     loadData = () => {
         infoxAPI.get(`/quotation/list/${this.action}`).then(response => {
             this.setState({ data: response.data });
-            console.log(response.data)
+            console.log(response.data);
+            window.jQuery('#dataTable').DataTable();
         })
     }
     goBack = () => {
         this.props.history.goBack();
+    }
+    actionStatus = (id, status) => {
+        infoxAPI.post(`/quotation/status/${id}/${status}`, {}).then(response => {
+            this.loadData();
+        });
     }
     render() {
         return (<>
             <div>
                 <h4><button onClick={this.goBack}
-                    className="btn btn-link btn-lg"><i className="fa fa-arrow-left"></i></button>{this.title}</h4>
+                    className="btn btn-link btn-lg"><i className="fa fa-arrow-left"></i></button>{this.title}<button onClick={this.loadData} className="btn btn-circle btn-info btn-sm float-right"><i className="fa fa-sync"></i></button>
+                </h4>
             </div>
-            <table className="table">
-                <tbody>
-                    <th>File Name</th>
-                    <th>Firm</th>
-                    <th>Party</th>
-                    <th>Date</th>
-                    <th>Actions</th>
-                </tbody>
-                <tbody>
-                    {this.state.data.map((quotation, i) => {
-                        return (<tr>
-                            <td>{quotation.name}</td>
-                            <td>{quotation.firm.toUpperCase()}</td>
-                            <td>{quotation.party}</td>
-                            <td>{new Date(quotation.date).toDateString()}</td>
-                            <td>
-                                {quotation.status==='draft' ?<NavLink className="btn btn-link" to={`/quotation/quick/edit/${quotation.id}`}><i className="fa fa-edit"></i></NavLink>:null}
-                                {quotation.status==='draft' ?<NavLink className="btn btn-danger btn-sm mr-1 ml-1" to={`/quotation/quick/edit/${quotation.id}`}><i className="fa fa-trash"></i></NavLink>:null}
-                                {quotation.permission === 0 && quotation.status==='draft' ? <button className="btn btn-primary btn-sm"><i className="fa fa-check-circle"></i> Apply</button> : null}
-                                {quotation.permission === 1 && quotation.status==='draft' ? <span className="btn btn-danger btn-sm">Rejected</span> : null}
-                                {quotation.status==='ready' && quotation.permission === 1 ? <><NavLink className="btn btn-warning btn-sm mr-1 ml-1" to={`/quotation/quick/edit/${quotation.id}`}><i className="fa fa-print"></i></NavLink>                            
-                               <NavLink className="btn btn-secondary btn-sm mr-1 ml-1" to={`/quotation/quick/edit/${quotation.id}`}><i className="fa fa-eye"></i></NavLink>                           
-                                <NavLink className="btn btn-success btn-sm mr-1 ml-1" to={`/quotation/quick/edit/${quotation.id}`}><i className="fa fa-check"></i> Submit</NavLink></>:null}                             
-                                {quotation.status==='submitted' ? <button className="btn btn-success btn-sm m-1"><i className="fa fa-check-circle"></i> Approved</button> : null}
-                                {quotation.status==='submitted' ? <button className="btn btn-danger btn-sm m-1"><i className="fa fa-times-circle"></i> Disposed</button> : null}
-                            </td>
-                        </tr>)
-                    })}
-                </tbody>
-            </table>
+            {this.state.data.length > 0 ?
+            <div className="table-responsive table-responsive-sm">
+                <table id="dataTable" className="table table-striped">
+                    <thead className="thead-dark">
+                        <tr>
+                        <th>File Name</th>
+                        <th>Firm</th>
+                        <th>Party</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {this.state.data.map((quotation, i) => {
+                            return (<tr>
+                                <td>{quotation.name}<br />
+                                    {quotation.status === 'draft' && quotation.permission === 0 ? <span className="btn-danger btn-sm">Rejected</span> : null}
+                                </td>
+                                <td>{quotation.firm.toUpperCase()}</td>
+                                <td>{quotation.party}</td>
+                                <td>{new Date(quotation.date).toDateString()}</td>
+                                <td className="d-flex align-items-center justify-content-center">
+                                    <div className="btn-group btn-group-sm" role="group">
+                                        {quotation.status === 'draft' ? <NavLink className="btn btn-link" to={`/quotation/quick/edit/${quotation.id}`}><i className="fa fa-edit"></i></NavLink> : null}
+                                        {quotation.status === 'draft' ? <NavLink className="btn btn-link text-danger" to={`/quotation/quick/edit/${quotation.id}`}><i className="fa fa-trash"></i></NavLink> : null}
+                                        {quotation.status === 'request' ? <button onClick={() => { this.actionStatus(quotation.id, 'accept') }} className="btn btn-success" style={{ width: "60px" }}><i className="fa fa-check-circle"></i> Accept</button> : null}
+                                        {quotation.status === '!ready' ?
+                                            <>
+                                                <NavLink className="btn btn-warning btn-sm " to={`/quotation/quick/edit/${quotation.id}`}><i className="fa fa-print"></i></NavLink>
+                                            </>
+                                            : null
+                                        }
+                                        {quotation.status === 'request' || quotation.status === 'ready'||quotation.status === 'submitted' ?
+                                            <>
+                                                <NavLink className="btn btn-secondary btn-sm " to={`/quotation/quick/preview/${quotation.id}`}><i className="fa fa-eye"></i></NavLink>
+                                            </>
+                                            : null
+                                        }
+                                        {quotation.status === 'draft' && quotation.permission === 1 ? <button onClick={() => { this.actionStatus(quotation.id, 'apply') }} className="btn btn-primary" style={{ width: "60px" }}><i className="fa fa-check-circle"></i> Apply</button> : null}
+                                        {quotation.status === 'request' ? <button onClick={() => { this.actionStatus(quotation.id, 'reject') }} className="btn btn-danger" style={{ width: "60px" }}><i className="fa fa-times-circle"></i> Reject</button> : null}
+                                        {quotation.status === 'ready' && quotation.permission === 1 ? <button className="btn btn-success btn-sm " onClick={() => { this.actionStatus(quotation.id, 'submit') }} style={{ width: "60px" }}><i className="fa fa-check"></i> Submit</button> : null}
+                                        {quotation.status === '!submitted' ? <button className="btn btn-success btn-sm m-1"><i className="fa fa-check-circle"></i> Approved</button> : null}
+                                        {quotation.status === '!submitted' ? <button className="btn btn-danger btn-sm m-1"><i className="fa fa-times-circle"></i> Disposed</button> : null}
+                                    </div>
+                                </td>
+                            </tr>)
+                        })}
+                    </tbody>
+                </table>
+            </div>
+            :<>
+            No Data
+            </>}
         </>)
     }
 }
 QuickQuotation = withRouter(QuickQuotation);
-
-class QuickQuotationEditor extends React.Component {
-    static contextType = InfoXContext;
-    constructor(props) {
-        super(props);
-        this.state = {
-            action: 'edit',
-            quotation: {
-                no: '',
-                date: '',
-                validity: '',
-                items: [],
-                party_name: '',
-                party_address: '',
-                party_phone: '',
-                file_name: '',
-                firm: '',
-                total: 0,
-                discount: 0
-            },
-            editor: {
-                name: '',
-                rate: 0,
-                qty: 1,
-                edit: true,
-                amount: 0
-            },
-            edit: false,
-
-        }
-    }
-    componentDidMount() {
-        if (this.props.match.params.id === 'new') {
-            this.setState({ action: 'add' });
-        } else {
-            this.loadData();
-        }
-    }
-    loadData = () => {
-        infoxAPI.get(`/quotation/quick/${this.props.match.params.id}`).then(
-            (response) => {
-                this.setState({ quotation: JSON.parse(response.data.blob) });
-            });
-    }
-    saveForm = (event) => {
-        event.preventDefault();
-        if (this.state.quotation.total > 0) {
-            let data = this.state.quotation;
-            infoxAPI.post(`/quotation/quick/${this.props.match.params.id}?action=${this.state.action}`, data).then(
-                (response) => {
-                    Toast.success('Saved');
-                    this.props.history.replace('/quotation/draft');
-                }
-            )
-        } else {
-            Toast.fail('Add data First');
-        }
-    }
-    goBack = () => {
-        this.props.history.goBack();
-    }
-    addRow = () => {
-        let quotation = this.state.quotation
-        let items = quotation.items
-        let new_items = []
-        if (items.length > 0) {
-            new_items = items.map((item) => { item.edit = false; return item; })
-        }
-        let data = { name: '', rate: 0, qty: 1, edit: true, amount: 0 }
-        new_items.push(data)
-        quotation['items'] = new_items;
-        this.setState({ quotation: quotation, edit: true });
-    }
-    editRow = (index) => {
-        let quotation = this.state.quotation
-        let items = quotation.items
-        let new_items = items.map((item) => { item.edit = false; return item; })
-        new_items[index]['edit'] = true;
-        this.setState({ quotation: quotation, editor: items[index], edit: true });
-    }
-    saveRow = (index) => {
-        let editor = this.state.editor;
-        editor['amount'] = ((editor.qty) * (editor.rate)).toFixed(2)
-        let quotation = this.state.quotation
-        let items = quotation.items
-        let new_items = items.map((item) => { item.edit = false; return item; })
-        new_items[index] = JSON.parse(`${JSON.stringify(editor)}`);
-        new_items[index]['edit'] = false;
-        quotation['items'] = new_items;
-        quotation['total'] = (new_items.reduce((a, v) => { return a = a + (v.qty * v.rate) }, 0)).toFixed(2)
-
-        this.setState({
-            quotation: quotation, editor: {
-                name: '',
-                rate: 0,
-                qty: 1,
-                edit: true
-            },
-            edit: false
-        });
-    }
-    delRow = (index) => {
-        let quotation = this.state.quotation
-        let items = quotation.items
-        items.splice(index, 1);
-        this.setState({
-            quotation: quotation, editor: {
-                name: '',
-                rate: 0,
-                qty: 1,
-                edit: true
-            }, edit: false
-        })
-    }
-    onRowInput = (event) => {
-        let editor = this.state.editor
-        editor[event.target.getAttribute('name')] = event.target.value;
-        this.setState({ editor: editor });
-    }
-    onChangeInput = (event) => {
-        let quotation = this.state.quotation;
-        quotation[event.target.getAttribute('name')] = event.target.value;
-        this.setState({ quotation: quotation });
-
-    }
-    onFoucus_file = (e) => {
-        if (e.target.value === '') {
-            let quotation = this.state.quotation;
-            quotation[e.target.getAttribute('name')] = `_${this.context.u_name}_[ ${this.context.u_designation} ]_${new Date().toLocaleString()}`;
-            this.setState({ quotation: quotation });
-            e.target.setSelectionRange(0, 0);
-        }
-    }
-    adjustHeight = (e) => {
-        e.target.style.height = 'inherit';
-        e.target.style.height = `${e.target.scrollHeight}px`;
-    }
-    render() {
-        return (
-            <>
-                <div>
-                    <h4><button onClick={this.goBack}
-                        className="btn btn-link btn-lg"><i className="fa fa-arrow-left"></i></button>Quotation Editor</h4>
-                </div>
-                <form className="row justify-content-center" onSubmit={this.saveForm}>
-                    <div className="card shadow col-xl-10">
-                        <div className="card-body">
-                            <div className="form-group row">
-                                <label className="col-6 d-flex align-items-center justify-content-center"><b>File Name</b></label>
-                                <div className="col-6">
-                                    <input type="text" value={this.state.quotation.file_name} onChange={this.onChangeInput} name="file_name" required className="form-control" autoFocus onFocus={this.onFoucus_file} />
-                                </div>
-                            </div>
-                            <div className="form-group row">
-                                <label className="col-6 d-flex align-items-center justify-content-center"><b>Choose Firm</b></label>
-                                <div className="col-6"><select name="firm" value={this.state.quotation.firm} required onChange={this.onChangeInput} className="form-control">
-                                    <option value="" disabled>choose</option>
-                                    <option value="azba_india">Azba India</option>
-                                    <option value="dream_india">Dream India</option>
-                                </select>
-                                </div>
-                            </div>
-                            <hr />
-                            <div className="row">
-                                <div className="col-md-8">
-                                    <div className="col-md-10">
-                                        <h5>Bill To</h5>
-                                        <div className="form-group">
-                                            <input type="text" required value={this.state.quotation.party_name} name="party_name" onChange={this.onChangeInput} className="form-control form-control-sm border-0 mb-1" id="formGroupExampleInput" placeholder="Name" />
-                                            <textarea type="text" required value={this.state.quotation.party_address} name="party_address" onChange={this.onChangeInput}
-                                                onInput={this.adjustHeight} onLoad={this.adjustHeight} on className="form-control form-control-sm border-0 mb-1"
-                                                style={{ overflow: "hidden", }} rows="4"
-                                                id="formGroupExampleInput" placeholder="Address"></textarea>
-                                            <input type="text" value={this.state.quotation.party_phone} name="party_phone" onChange={this.onChangeInput} className="form-control form-control-sm border-0 mb-1" id="formGroupExampleInput" placeholder="Phone" />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-md-4">
-                                    <h5>&nbsp;</h5>
-                                    <table className="table table-bordered table-sm tex-center">
-                                        <tbody>
-                                            <tr>
-                                                <th>Quotation No. </th><td><input className="form-control form-control-sm border-0" type="text" value={this.state.quotation.no} name="no" onChange={this.onChangeInput} /></td>
-                                            </tr>
-                                            <tr>
-                                                <th>Date </th><td><input required className="form-control form-control-sm border-0" type="date" value={this.state.quotation.date} name="date" onChange={this.onChangeInput} /></td>
-                                            </tr>
-                                            <tr>
-                                                <th>Validity </th><td><input required className="form-control form-control-sm border-0" type="date" value={this.state.quotation.validity} name="validity" onChange={this.onChangeInput} /></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            <table className="table table-sm table-bordered text-center table-responsive-sm ">
-                                <thead>
-                                    <tr>
-                                        <th>SI No.</th>
-                                        <th scope="col">Description</th>
-                                        <th>Rate</th>
-                                        <th>Quantity</th>
-                                        <th>Amount</th>
-                                        {this.state.edit === true ? <th></th> : null}
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {this.state.quotation.items.map((item, i) => {
-                                        if (item.edit === true) {
-                                            let amount = ((this.state.editor.qty) * (this.state.editor.rate)).toFixed(2)
-                                            return (
-                                                <tr key={i}>
-                                                    <th scope="col">
-                                                        <button onClick={() => { this.delRow(i) }} className="btn btn-link ml-2"><i className="fa fa-trash"></i></button>
-                                                    </th>
-                                                    <td><input className="form-control" autoComplete="false" type="text" onChange={this.onRowInput} name="name" value={this.state.editor.name} autoFocus /></td>
-                                                    <td className="col-md-1"><input className="form-control " type="number" onChange={this.onRowInput} name="rate" value={this.state.editor.rate} /></td>
-                                                    <td className="col-md-1"><input maxLength={3} className="form-control " type="number" onChange={this.onRowInput} name="qty" value={this.state.editor.qty} /></td>
-                                                    <td  >&#8377; {amount}</td>
-                                                    <td>
-                                                        <button onClick={() => { this.saveRow(i) }} className="btn btn-success btn-circle btn-sm mr-1"><i className="fa fa-save"></i></button>
-                                                    </td>
-                                                </tr>
-                                            )
-                                        }
-                                        else {
-                                            return (<tr key={i} onClick={() => { this.editRow(i) }} >
-                                                <th scope="col">{i + 1}</th>
-                                                <td>{item.name}</td>
-                                                <td>&#8377; {parseFloat(item.rate).toFixed(2)}</td>
-                                                <td>{item.qty}</td>
-                                                <td>&#8377; {item.amount}</td>
-                                            </tr>)
-                                        }
-                                    })}
-                                </tbody>
-                                <tfoot>
-                                    {this.state.edit === false ?
-                                        <tr><td colSpan={6}>
-
-                                            <button onClick={this.addRow} className="btn btn-primary btn-circle btn-sm"><i className="fa fa-plus"></i></button>
-                                        </td>
-                                        </tr>
-                                        : null}
-
-                                    <tr>
-                                        <th className="text-right" colSpan={4}> Sub Total : </th><th>&#8377; {this.state.quotation.total} / -</th>
-                                    </tr>
-                                    <tr>
-                                        <th className="text-right" colSpan={4}> Discount(%): </th><th><input type="number" onChange={this.onChangeInput} value={this.state.quotation.discount} name="discount" className="form-control form-control-sm" required /></th>
-                                    </tr>
-                                    <tr>
-                                        <th className="text-right" colSpan={4}> Grand Total : </th><th>&#8377; {parseInt(this.state.quotation.total) - ((parseInt(this.state.quotation.total) * (parseInt(this.state.quotation.discount) / 100)))} / -</th>
-                                    </tr>
-                                </tfoot>
-                            </table>
-                        </div>
-                        <div className="card-body text-right">
-                            <button type="submit" className="btn btn-md btn-success"><i className="fa fa-save"></i> Save</button>
-                        </div>
-                    </div>
-                </form>
-                {JSON.stringify(this.state)}
-            </>
-        )
-    }
-}
-QuickQuotationEditor = withRouter(QuickQuotationEditor);
 
 
 
@@ -448,10 +274,14 @@ function Quotation() {
             <Switch>
                 <Route exact path={path} component={QuotationHome} />
                 <Route exact path={`${path}/quick/edit/:id`} component={QuickQuotationEditor} />
-                <Route exact path={`${path}/submitted`} ><QuickQuotation title="Submitted Quotations" action="submitted" /></Route>
+                <Route exact path={`${path}/quick/preview/:id`} component={QuotationPreview} />
                 <Route exact path={`${path}/draft`}><QuickQuotation title="Drafts" action="draft" /></Route>
+                <Route exact path={`${path}/request`}><QuickQuotation title="Quotation Requests" action="request" /></Route>
+                <Route exact path={`${path}/ready`}><QuickQuotation title="Print and Submit Quotations" action="ready" /></Route>
+                <Route exact path={`${path}/submitted`} ><QuickQuotation title="Submitted Quotations" action="submitted" /></Route>
                 <Route exact path={`${path}/approved`}><QuickQuotation title="Approved Quotations" action="approved" /></Route>
-                <Route exact path={`${path}/ready`}><QuickQuotation title="Quotations Print and Submit" action="ready" /></Route>
+                <Route exact path={`${path}/disposed`}><QuickQuotation title="Disposed Quotations" action="disposed" /></Route>
+                <Route exact path={`${path}/completed`}><QuickQuotation title="Disposed Quotations" action="completed" /></Route>
             </Switch>
         </>
     )

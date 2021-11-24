@@ -23,8 +23,11 @@ QuotationRouter.get('/', _middleware.Middleware, (req, res) => {
     deleted: 0
   };
 
-  if (req.user.u_type === 'admin' || req.user.u_type === 'root') {} else {
+  if (req.user.u_type === 'admin' || req.user.u_type === 'root') {
+    parameters.where['status'] = ['draft', 'request', 'ready', 'submitted', 'approved', 'completed', 'disposed'];
+  } else {
     parameters.where['owner'] = req.user.u_id;
+    parameters.where['status'] = ['draft', 'ready', 'submitted', 'approved'];
   }
 
   _models.QuickQuotations.findAll(parameters).then(quotations => {
@@ -38,13 +41,21 @@ QuotationRouter.get('/list/:type', _middleware.Middleware, (req, res) => {
   var parameters = {
     attributes: {
       exclude: ['blob']
-    }
+    },
+    where: {}
   };
-  parameters['where'] = {};
-  parameters.where['status'] = action;
 
-  if (req.user.u_type === 'admin' || req.user.u_type === 'root') {} else {
-    parameters.where['owner'] = req.user.u_id;
+  if (req.user.u_type === 'admin' || req.user.u_type === 'root') {
+    parameters.where['status'] = action;
+  } else {
+    parameters.where['status'] = action;
+
+    if (action === 'draft') {
+      parameters.where['owner'] = req.user.u_id;
+    } else {
+      parameters.where['owner'] = req.user.u_id;
+      parameters.where['permission'] = 1;
+    }
   }
 
   _models.QuickQuotations.findAll(parameters).then(quotations => {
@@ -56,8 +67,8 @@ QuotationRouter.get('/list/:type', _middleware.Middleware, (req, res) => {
 QuotationRouter.get('/quick/:id', _middleware.Middleware, (req, res) => {
   _models.QuickQuotations.findOne({
     where: {
-      owner: req.user.u_id //id: req.params.id
-
+      //owner: req.user.u_id,
+      id: req.params.id
     }
   }).then(quotations => {
     res.json(quotations);
@@ -76,8 +87,8 @@ QuotationRouter.post('/quick/:id', _middleware.Middleware, (req, res) => {
         date: new Date(req.body.date),
         name: req.body.file_name,
         firm: req.body.firm,
-        no: req.body.no,
-        party: "".concat(req.body.party_name, " - ").concat(req.body.party_address)
+        party: "".concat(req.body.party_name, " - ").concat(req.body.party_address),
+        permission: 1
       }).then(quotation => {
         res.json(quotation);
       }).catch(err => {
@@ -92,11 +103,11 @@ QuotationRouter.post('/quick/:id', _middleware.Middleware, (req, res) => {
         date: new Date(req.body.date),
         name: req.body.file_name,
         firm: req.body.firm,
-        no: req.body.no,
-        party: "".concat(req.body.party_name, " - ").concat(req.body.party_address)
+        party: "".concat(req.body.party_name, " - ").concat(req.body.party_address),
+        permission: 1
       }, {
         where: {
-          owner: req.user.u_id,
+          //owner: req.user.u_id,
           id: req.params.id
         }
       }).then(quotation => {
@@ -110,6 +121,98 @@ QuotationRouter.post('/quick/:id', _middleware.Middleware, (req, res) => {
     default:
       res.status(406).send('No Actions');
   }
+});
+QuotationRouter.post('/status/:id/:status', _middleware.Middleware, (req, res) => {
+  var status = req.params.status;
+  var id = req.params.id;
+  var data = {};
+
+  if (req.user.u_type === 'admin' || req.user.u_type === 'root') {
+    switch (status) {
+      case 'apply':
+        data = {
+          status: 'request',
+          permission: 1
+        };
+        break;
+
+      case 'accept':
+        data = {
+          status: 'ready',
+          permission: 1,
+          no: '0'
+        };
+        break;
+
+      case 'reject':
+        data = {
+          status: 'draft',
+          permission: 0
+        };
+        break;
+
+      case 'submit':
+        data = {
+          status: 'submitted',
+          permission: 1
+        };
+        break;
+
+      default:
+        res.status(406).send('No Actions').end();
+    }
+
+    _models.QuickQuotations.update(data, {
+      where: {
+        id: id
+      }
+    }).then(quotation => {
+      res.json(quotation);
+    }).catch(err => {
+      res.status(403).send("".concat(err));
+    });
+  } else {
+    switch (status) {
+      case 'apply':
+        data = {
+          status: 'request',
+          permission: 1
+        };
+        break;
+
+      case 'submit':
+        data = {
+          status: 'submitted',
+          permission: 1
+        };
+        break;
+
+      default:
+        res.status(406).send('No Actions').end();
+    }
+
+    _models.QuickQuotations.update(data, {
+      where: {
+        id: id,
+        owner: req.user.u_id
+      }
+    }).then(quotation => {
+      res.json(quotation);
+    }).catch(err => {
+      res.status(403).send("".concat(err));
+    });
+  }
+});
+QuotationRouter.get('/preview/:id', _middleware.Middleware, (req, res) => {
+  _models.QuickQuotations.findOne({
+    where: {
+      id: req.params.id
+    }
+  }).then(quotations => {
+    res.json(quotations);
+  }).catch(err => {
+    res.status(403).send("".concat(err));
+  });
 });
 var _default = QuotationRouter;
 exports.default = _default;
