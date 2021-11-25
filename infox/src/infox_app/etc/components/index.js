@@ -1,5 +1,7 @@
 import { NavProfileMenu, NavMessage, NavAlerts } from './navbar_componets';
-import AtApp from './Attendance';
+import AttendanceApp from './Attendance';
+import EmployeeMap from './map';
 export {
-    NavProfileMenu, NavMessage, NavAlerts, AtApp as AttendanceApp
+    NavProfileMenu, NavMessage, NavAlerts, AttendanceApp,
+    EmployeeMap
 }

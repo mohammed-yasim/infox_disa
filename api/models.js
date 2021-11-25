@@ -293,6 +293,10 @@ Clock.init({
     type: _maria_db.infox_datatype.INTEGER,
     defaultValue: 0,
     allowNull: false
+  },
+  u_name: {
+    type: _maria_db.infox_datatype.STRING,
+    allowNull: true
   }
 }, {
   sequelize: _maria_db.infox_db,

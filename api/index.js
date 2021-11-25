@@ -76,7 +76,8 @@ API_Router.post('/login', (req, res) => {
         } else if (match) {
           var data = {
             u_id: user.u_id,
-            u_type: user.u_type
+            u_type: user.u_type,
+            u_name: user.u_name
           };
           res.json({
             token: (0, _middleware.generateToken)(data)
@@ -158,7 +159,8 @@ API_Router.post('/clock', _middleware.Middleware, (req, res) => {
           clock_in_lat: req.body.latitude,
           clock_in_lng: req.body.longitude,
           clock_in_position: response.data.display_name,
-          status: 0
+          status: 0,
+          u_name: req.user.u_name
         }).then(user => {
           res.json({
             clock_status: 2,
@@ -174,6 +176,15 @@ API_Router.post('/clock', _middleware.Middleware, (req, res) => {
     });
   }).catch(err => {
     console.log(err);
+  });
+});
+API_Router.get('/map', (req, res) => {
+  _models.Clock.findAll({
+    where: {
+      date: new Date()
+    }
+  }).then(data => {
+    res.json(data);
   });
 });
 API_Router.get('/sync_user', _middleware.Middleware, (req, res) => {

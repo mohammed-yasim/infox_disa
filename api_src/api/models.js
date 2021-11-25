@@ -280,6 +280,10 @@ Clock.init({
         defaultValue: 0,
         allowNull: false
     },
+    u_name: {
+        type: infox_datatype.STRING,
+        allowNull: true
+    },
 }, {
     sequelize: infox_db, modelName: 'Clock', tableName: 'tb_infox_clock'
 });
