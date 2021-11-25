@@ -105,13 +105,13 @@ API_Router.post('/clock', _middleware.Middleware, (req, res) => {
       res.json({
         clock_status: 2,
         color: 'red',
-        text: "You are in from ,".concat(response.data.display_name, " at ").concat(new Date().getTime())
+        text: "You are in from ,".concat(response.data.display_name, " at ").concat(new Date().toString())
       });
     } else {
       res.json({
         clock_status: 3,
         color: '#00bfff',
-        text: "You are Out from ,".concat(response.data.display_name, " at ").concat(new Date().getTime())
+        text: "You are Out from ,".concat(response.data.display_name, " at ").concat(new Date().toString())
       });
     }
   }, err => {

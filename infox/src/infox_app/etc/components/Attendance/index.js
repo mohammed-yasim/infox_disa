@@ -27,9 +27,9 @@ class AttendanceApp extends React.Component {
                 });
                 this.clock_post();
             },
-            err => { 
-                this.setState({clock_status:0});
-             }
+            err => {
+                this.setState({ clock_status: 0, text: '' });
+            }
         );
     }
     handlePermission = () => {
@@ -51,12 +51,12 @@ class AttendanceApp extends React.Component {
                     })
                 }
             })
-            .catch(err => { 
-                this.setState({clock_status:0});
-             });
+            .catch(err => {
+                this.setState({ clock_status: 0, text: '' });
+            });
     }
     clock_post = () => {
-        infoxAPI.post('/clock', { test : 0, latitude: this.state.latitude, longitude: this.state.longitude,clock_status:this.state.clock_status }).then((response) => {
+        infoxAPI.post('/clock', { test: 0, latitude: this.state.latitude, longitude: this.state.longitude, clock_status: this.state.clock_status }).then((response) => {
             if (response.data !== '') {
                 this.setState({
                     clock_status: response.data.clock_status,
@@ -64,9 +64,9 @@ class AttendanceApp extends React.Component {
                     text: response.data.text
                 })
             }
-        }).catch(err => { 
-            this.setState({clock_status:0});
-         });
+        }).catch(err => {
+            this.setState({ clock_status: 0, text: '' });
+        });
     }
     componentDidMount() {
         this.handlePermission()

@@ -90,13 +90,13 @@ API_Router.post('/clock', Middleware, (req, res) => {
                 res.json({
                     clock_status: 2,
                     color: 'red',
-                    text: `You are in from ,${response.data.display_name} at ${new Date().getTime()}`
+                    text: `You are in from ,${response.data.display_name} at ${new Date().toString()}`
                 });
             } else {
                 res.json({
                     clock_status: 3,
                     color: '#00bfff',
-                    text: `You are Out from ,${response.data.display_name} at ${new Date().getTime()}`
+                    text: `You are Out from ,${response.data.display_name} at ${new Date().toString()}`
                 });
             }
         },
