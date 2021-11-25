@@ -1,39 +1,35 @@
-import axios from 'axios';
 import React from 'react';
+import { Toast } from 'antd-mobile';
+import { infoxAPI } from '../../api';
 import { withRouter } from 'react-router-dom';
+import ReactSwipeButton from 'react-swipe-button'
+import Clock from 'react-live-clock';
+import 'moment-timezone';
+import './style.scss';
 class AttendanceApp extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            locationiq: []
+            clock_status: 0,
+            locationiq: [],
+            color: '',
+            text: ''
         }
     }
-    get_place = () => {
-        axios.get(`http://api.positionstack.com/v1/reverse?access_key=8adeff7f3eba5e4af8e780bb0172c545&limit=1&query=${this.state.latitude},${this.state.longitude}`)
-            .then((response) => {
-                this.setState({ positionStack: response.data });
-            }).catch((err) => {
-                this.setState({ error: `${err}` })
-            })
-    }
-    get_place_locationiq = () => {
-        axios.get(`https://us1.locationiq.com/v1/reverse.php?key=78a0e5fd31043f&lat=${this.state.latitude}&lon=${this.state.longitude}&format=json`)
-            .then((response) => {
-                this.setState({ locationiq: response.data });
-            }).catch((err) => {
-                this.setState({ error: `${err}` })
-            })
-    }
     position = async () => {
+        this.setState({ color: 'yellow', text: 'getting location' });
         await navigator.geolocation.getCurrentPosition(
             position => {
                 this.setState({
                     latitude: position.coords.latitude,
-                    longitude: position.coords.longitude
+                    longitude: position.coords.longitude,
+                    color: 'Green', text: 'Sending Location'
                 });
-                this.get_place_locationiq();
+                this.clock_post();
             },
-            err => { console.log(err) }
+            err => { 
+                this.setState({clock_status:0});
+             }
         );
     }
     handlePermission = () => {
@@ -44,27 +40,91 @@ class AttendanceApp extends React.Component {
             }
         });
     }
+    load_env = () => {
+        infoxAPI.get('/clock')
+            .then((response) => {
+                if (response.data !== '') {
+                    this.setState({
+                        clock_status: response.data.clock_status,
+                        color: response.data.color,
+                        text: response.data.text
+                    })
+                }
+            })
+            .catch(err => { 
+                this.setState({clock_status:0});
+             });
+    }
+    clock_post = () => {
+        infoxAPI.post('/clock', { test : 0, latitude: this.state.latitude, longitude: this.state.longitude,clock_status:this.state.clock_status }).then((response) => {
+            if (response.data !== '') {
+                this.setState({
+                    clock_status: response.data.clock_status,
+                    color: response.data.color,
+                    text: response.data.text
+                })
+            }
+        }).catch(err => { 
+            this.setState({clock_status:0});
+         });
+    }
     componentDidMount() {
-        this.handlePermission();
+        this.handlePermission()
     }
     render() {
         return (
-            <>
-               
-                <hr />
+            <div id="attendance_app">
                 {this.state.geolocation === 'granted' || this.state.geolocation === 'prompt' ? <>
-                    <button onClick={this.position} className="btn btn-primary btn-lg">
-                        <i className="fa fa-street-view"></i> Clock In
-                    </button>
-                    <hr /> {this.state.geolocation} - 
-                    {this.state.locationiq.display_name !== undefined ? <p>
-                        {this.state.locationiq.display_name}</p>
-                        : <>Place</>}
+                    {this.state.clock_status === 0 ? <>
+                        <h3 className="mb-3">{this.state.text} </h3>
+
+                        <button onClick={this.load_env} className="btn btn-primary">Connect</button>
+
+                    </> : null
+                    }
+                    {this.state.clock_status === 1 ?
+                        <div>
+                            <h2><Clock
+                                format={'h:mm:ss A'}
+                                ticking={true}
+                                timezone={'Asia/Kolkata'} /></h2>
+                            <ReactSwipeButton
+                                text='Swipe To Clock In'
+                                text_unlocked={this.state.text}
+                                color={this.state.color}
+                                onSuccess={this.position}
+                                onFailure={() => { Toast.fail("Swipe Error") }}
+                            />
+                        </div> : null
+                    }
+                    {this.state.clock_status === 2 ? <>
+                        <div>
+                            <h2><Clock
+                                format={'h:mm:ss A'}
+                                ticking={true}
+                                timezone={'Asia/Kolkata'} /></h2>
+                            <h3>{this.state.text} </h3>
+                            <ReactSwipeButton
+                                text='Swipe To Clock Out'
+                                text_unlocked={this.state.text}
+                                color={this.state.color}
+                                onSuccess={this.position}
+                                onFailure={() => { Toast.fail("Swipe Error") }}
+                            />
+                        </div>
+                    </> : null
+                    }
+                    {this.state.clock_status === 3 ? <>
+                        <div>
+                            <h3>{this.state.text} </h3>
+                        </div>
+                    </> : null
+                    }
                 </> : <>
                     <h3><i className="fas fa-exclamation-triangle"></i> Location permission {this.state.geolocation}</h3>
                     <p>Please reset the site setting/permissions</p>
                 </>}
-            </>
+            </div>
         )
     }
 }

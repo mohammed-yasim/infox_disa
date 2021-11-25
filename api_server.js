@@ -14,7 +14,7 @@ var app = (0, _express.default)();
 app.use((0, _cors.default)());
 app.use(_express.default.json());
 app.use('/infox/', _express.default.static(_path.default.join(__dirname, '/infox/build')));
-app.use('/api', _api.default);
+app.use('/_api', _api.default);
 app.get('/infox/*', (req, res) => {
   res.sendFile(_path.default.join(__dirname, '/infox/build/index.html'));
 });

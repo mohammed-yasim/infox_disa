@@ -14,7 +14,6 @@ class QuotationHome extends React.Component {
     loadData = () => {
         infoxAPI.get('/quotation/').then(response => {
             this.setState({ data: response.data });
-            console.log(response.data);
         })
     }
     render() {
@@ -187,7 +186,6 @@ class QuickQuotation extends React.Component {
     loadData = () => {
         infoxAPI.get(`/quotation/list/${this.action}`).then(response => {
             this.setState({ data: response.data });
-            console.log(response.data);
             window.jQuery('#dataTable').DataTable();
         })
     }

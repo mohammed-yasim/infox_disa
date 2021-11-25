@@ -2,6 +2,7 @@ import React from "react";
 import { withRouter } from "react-router-dom";
 import { Toast } from "antd-mobile";
 import { infoxAPI } from "./etc/api";
+import logo from './lib/logo.png'
 class InfoXLogin extends React.Component {
     constructor(props) {
         super(props);
@@ -48,7 +49,7 @@ class InfoXLogin extends React.Component {
                                     <div className="card-body">
                                         <div className="p-3">
                                             <div className="text-center mb-4">
-                                                <img src="https://www.dreamindiaschool.com/cdn/logop.png" alt="logo" className="img-fluid col-10" />
+                                                <img src={logo} alt="logo" className="img-fluid col-10" />
                                                 {this.state.error !== null ? <p className="m-1 text-danger">{this.state.error}</p> : null}
                                             </div>
                                             <form className="user" autoComplete="off" onSubmit={this.LoginFormHandle}>

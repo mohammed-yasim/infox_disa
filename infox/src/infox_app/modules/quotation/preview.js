@@ -3,6 +3,7 @@ import { withRouter } from "react-router-dom";
 import { infoxAPI } from "../../etc/api";
 import $ from 'jquery';
 import QRCode from "react-qr-code";
+import html2pdf from 'html2pdf.js';
 import './style.css';
 class QuotationPreview extends React.Component {
     constructor(props) {
@@ -27,8 +28,6 @@ class QuotationPreview extends React.Component {
         this.props.history.goBack();
     }
     componentDidMount() {
-        var script = '<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>';
-        $('head').append(script);
         this.loadData();
     }
     print_window = () => {
@@ -47,7 +46,7 @@ class QuotationPreview extends React.Component {
             html2canvas: { scale: 5 },
             jsPDF: { unit: 'in', format: 'A4', orientation: 'portrait' }
         };
-        window.html2pdf().set(opt).from(element).save();
+        html2pdf().set(opt).from(element).save();
     }
     render() {
         let quotation = this.state.quotation

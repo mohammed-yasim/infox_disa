@@ -1,0 +1,20 @@
+    get_place = () => {
+        axios.get(`http://api.positionstack.com/v1/reverse?access_key=8adeff7f3eba5e4af8e780bb0172c545&limit=1&query=${this.state.latitude},${this.state.longitude}`)
+            .then((response) => {
+                this.setState({ positionStack: response.data });
+            }).catch((err) => {
+                this.setState({ error: `${err}` })
+            })
+    }
+    get_place_locationiq = () => {
+        axios.get(`https://us1.locationiq.com/v1/reverse.php?key=78a0e5fd31043f&lat=${this.state.latitude}&lon=${this.state.longitude}&format=json`)
+            .then((response) => {
+                this.setState({
+                    locationiq: response.data,
+                    color: 'blue', text: `Welcome, you are at ${response.data.display_name}`
+                });
+
+            }).catch((err) => {
+                this.setState({ error: `${err}` })
+            })
+    }

@@ -7,7 +7,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use('/infox/', express.static(path.join(__dirname, '/infox/build')));
-app.use('/api', API_Router)
+app.use('/_api', API_Router);
 app.get('/infox/*', (req, res) => {
     res.sendFile(path.join(__dirname, '/infox/build/index.html'));
 });

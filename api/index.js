@@ -7,6 +7,8 @@ exports.default = void 0;
 
 var _express = _interopRequireDefault(require("express"));
 
+var _axios = _interopRequireDefault(require("axios"));
+
 var _maria_db = require("./maria_db");
 
 var _middleware = require("./middleware");
@@ -60,8 +62,6 @@ API_Router.get('/demo-user', (req, res) => {
   });
 });
 API_Router.post('/login', (req, res) => {
-  console.log(req.body);
-
   _models.Users.findOne({
     where: {
       username: req.body.username,
@@ -90,6 +90,32 @@ API_Router.post('/login', (req, res) => {
     }
   }).catch(err => {
     res.status(401).send("".concat(err));
+  });
+});
+API_Router.get('/clock', _middleware.Middleware, (req, res) => {
+  res.json({
+    clock_status: 1,
+    color: '#00bfff',
+    text: 'Logged In'
+  });
+});
+API_Router.post('/clock', _middleware.Middleware, (req, res) => {
+  _axios.default.get("https://us1.locationiq.com/v1/reverse.php?key=78a0e5fd31043f&lat=".concat(req.body.latitude, "&lon=").concat(req.body.longitude, "&format=json")).then(response => {
+    if (req.body.clock_status === 1) {
+      res.json({
+        clock_status: 2,
+        color: 'red',
+        text: "You are in from ,".concat(response.data.display_name, " at ").concat(new Date().getTime())
+      });
+    } else {
+      res.json({
+        clock_status: 3,
+        color: '#00bfff',
+        text: "You are Out from ,".concat(response.data.display_name, " at ").concat(new Date().getTime())
+      });
+    }
+  }, err => {
+    console.log(err);
   });
 });
 API_Router.get('/sync_user', _middleware.Middleware, (req, res) => {
