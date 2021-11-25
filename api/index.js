@@ -93,28 +93,86 @@ API_Router.post('/login', (req, res) => {
   });
 });
 API_Router.get('/clock', _middleware.Middleware, (req, res) => {
-  res.json({
-    clock_status: 1,
-    color: '#00bfff',
-    text: 'Logged In'
+  _models.Clock.findOne({
+    where: {
+      u_id: req.user.u_id,
+      date: new Date()
+    }
+  }).then(user => {
+    if (user) {
+      if (user.clock_out === null) {
+        res.json({
+          clock_status: 2,
+          color: '#00bfff',
+          text: "You are in from ,".concat(user.clock_in_position, " at ").concat(user.clock_in)
+        });
+      } else {
+        res.json({
+          clock_status: 3,
+          color: '#00bfff',
+          text: "Already done for the day"
+        });
+      }
+    } else {
+      res.json({
+        clock_status: 1,
+        color: '#00bfff',
+        text: 'Logged In'
+      });
+    }
   });
 });
 API_Router.post('/clock', _middleware.Middleware, (req, res) => {
   _axios.default.get("https://us1.locationiq.com/v1/reverse.php?key=78a0e5fd31043f&lat=".concat(req.body.latitude, "&lon=").concat(req.body.longitude, "&format=json")).then(response => {
-    if (req.body.clock_status === 1) {
-      res.json({
-        clock_status: 2,
-        color: 'red',
-        text: "You are in from ,".concat(response.data.display_name, " at ").concat(new Date().toString())
-      });
-    } else {
-      res.json({
-        clock_status: 3,
-        color: '#00bfff',
-        text: "You are Out from ,".concat(response.data.display_name, " at ").concat(new Date().toString())
-      });
-    }
-  }, err => {
+    _models.Clock.findOne({
+      where: {
+        u_id: req.user.u_id,
+        date: new Date()
+      }
+    }).then(user => {
+      if (user) {
+        if (user.clock_out === null) {
+          user.clock_out = new Date();
+          user.clock_out_lat = req.body.latitude;
+          user.clock_out_lng = req.body.longitude;
+          user.clock_out_position = response.data.display_name;
+          user.status = 1;
+          user.save();
+          res.json({
+            clock_status: 3,
+            color: '#00bfff',
+            text: "You are Out from ,".concat(user.clock_out_position, " at ").concat(user.clock_out)
+          });
+        } else {
+          res.json({
+            clock_status: 3,
+            color: '#00bfff',
+            text: "Already done for the day"
+          });
+        }
+      } else {
+        _models.Clock.create({
+          u_id: req.user.u_id,
+          date: new Date(),
+          clock_in: new Date(),
+          clock_in_lat: req.body.latitude,
+          clock_in_lng: req.body.longitude,
+          clock_in_position: response.data.display_name,
+          status: 0
+        }).then(user => {
+          res.json({
+            clock_status: 2,
+            color: 'red',
+            text: "You are in from ,".concat(user.clock_in_position, " at ").concat(user.clock_in)
+          });
+        }).catch(err => {
+          res.status(401).json(err);
+        });
+      }
+    }).catch(err => {
+      res.status(401).json(err);
+    });
+  }).catch(err => {
     console.log(err);
   });
 });

@@ -3,7 +3,11 @@ import { infox_db, infox_datatype, infox_model, infox_sequlize } from "./maria_d
 class Users extends infox_model { }
 class Variables extends infox_model { }
 class Products extends infox_model { }
+
 class QuickQuotations extends infox_model { }
+
+class Clock extends infox_model { }
+
 Users.init({
     u_id: {
         primaryKey: true,
@@ -229,4 +233,54 @@ QuickQuotations.init({
 }, {
     sequelize: infox_db, modelName: 'QuickQuotations', tableName: 'tb_infox_quotations'
 });
-export { Users, Variables, Products, QuickQuotations }
+Clock.init({
+    date: {
+        type: infox_datatype.DATEONLY,
+        allowNull: false,
+        defaultValue: infox_db.NOW
+    },
+    u_id: {
+        type: infox_sequlize.UUID,
+        allowNull: false
+    },
+    clock_in: {
+        type: infox_datatype.TIME,
+        allowNull: true
+    },
+    clock_in_lat: {
+        type: infox_datatype.STRING,
+        allowNull: true
+    },
+    clock_in_lng: {
+        type: infox_datatype.STRING,
+        allowNull: true
+    },
+    clock_in_position: {
+        type: infox_datatype.STRING,
+        allowNull: true
+    },
+    clock_out: {
+        type: infox_datatype.TIME,
+        allowNull: true
+    },
+    clock_out_lat: {
+        type: infox_datatype.STRING,
+        allowNull: true
+    },
+    clock_out_lng: {
+        type: infox_datatype.STRING,
+        allowNull: true
+    },
+    clock_out_position: {
+        type: infox_datatype.STRING,
+        allowNull: true
+    },
+    status: {
+        type: infox_datatype.INTEGER,
+        defaultValue: 0,
+        allowNull: false
+    },
+}, {
+    sequelize: infox_db, modelName: 'Clock', tableName: 'tb_infox_clock'
+});
+export { Users, Variables, Products, QuickQuotations,Clock }

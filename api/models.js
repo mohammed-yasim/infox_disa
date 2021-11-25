@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Variables = exports.Users = exports.QuickQuotations = exports.Products = void 0;
+exports.Variables = exports.Users = exports.QuickQuotations = exports.Products = exports.Clock = void 0;
 
 var _maria_db = require("./maria_db");
 
@@ -22,6 +22,10 @@ exports.Products = Products;
 class QuickQuotations extends _maria_db.infox_model {}
 
 exports.QuickQuotations = QuickQuotations;
+
+class Clock extends _maria_db.infox_model {}
+
+exports.Clock = Clock;
 Users.init({
   u_id: {
     primaryKey: true,
@@ -242,4 +246,56 @@ QuickQuotations.init({
   sequelize: _maria_db.infox_db,
   modelName: 'QuickQuotations',
   tableName: 'tb_infox_quotations'
+});
+Clock.init({
+  date: {
+    type: _maria_db.infox_datatype.DATEONLY,
+    allowNull: false,
+    defaultValue: _maria_db.infox_db.NOW
+  },
+  u_id: {
+    type: _maria_db.infox_sequlize.UUID,
+    allowNull: false
+  },
+  clock_in: {
+    type: _maria_db.infox_datatype.TIME,
+    allowNull: true
+  },
+  clock_in_lat: {
+    type: _maria_db.infox_datatype.STRING,
+    allowNull: true
+  },
+  clock_in_lng: {
+    type: _maria_db.infox_datatype.STRING,
+    allowNull: true
+  },
+  clock_in_position: {
+    type: _maria_db.infox_datatype.STRING,
+    allowNull: true
+  },
+  clock_out: {
+    type: _maria_db.infox_datatype.TIME,
+    allowNull: true
+  },
+  clock_out_lat: {
+    type: _maria_db.infox_datatype.STRING,
+    allowNull: true
+  },
+  clock_out_lng: {
+    type: _maria_db.infox_datatype.STRING,
+    allowNull: true
+  },
+  clock_out_position: {
+    type: _maria_db.infox_datatype.STRING,
+    allowNull: true
+  },
+  status: {
+    type: _maria_db.infox_datatype.INTEGER,
+    defaultValue: 0,
+    allowNull: false
+  }
+}, {
+  sequelize: _maria_db.infox_db,
+  modelName: 'Clock',
+  tableName: 'tb_infox_clock'
 });

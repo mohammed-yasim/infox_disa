@@ -78,7 +78,7 @@ class AttendanceApp extends React.Component {
                     {this.state.clock_status === 0 ? <>
                         <h3 className="mb-3">{this.state.text} </h3>
 
-                        <button onClick={this.load_env} className="btn btn-primary">Connect</button>
+                        <button onClick={this.load_env} className="btn btn-primary"><i className="fa fa-sync"></i> Sync Clock</button>
 
                     </> : null
                     }
