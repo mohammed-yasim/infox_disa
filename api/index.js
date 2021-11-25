@@ -104,7 +104,7 @@ API_Router.get('/clock', _middleware.Middleware, (req, res) => {
       if (user.clock_out === null) {
         res.json({
           clock_status: 2,
-          color: '#00bfff',
+          color: 'red',
           text: "You are in from ,".concat(user.clock_in_position, " at ").concat(user.clock_in)
         });
       } else {
@@ -181,7 +181,8 @@ API_Router.post('/clock', _middleware.Middleware, (req, res) => {
 API_Router.get('/map', (req, res) => {
   _models.Clock.findAll({
     where: {
-      date: new Date()
+      date: new Date(),
+      clock_out: null
     }
   }).then(data => {
     res.json(data);

@@ -3,12 +3,10 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { infoxAPI } from '../api';
-import icon from 'leaflet/dist/images/marker-icon.png';
-import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+import icon from './../../lib/emp.png';
 
 let DefaultIcon = L.icon({
-    iconUrl: icon,
-    shadowUrl: iconShadow
+    iconUrl: icon
 });
 
 L.Marker.prototype.options.icon = DefaultIcon;
@@ -18,6 +16,9 @@ class EmployeeMap extends React.Component {
         this.state = { data: [] }
     }
     componentDidMount() {
+       this.load_data()
+    }
+    load_data = () => {
         infoxAPI.get('/map').then((response) => {
             this.setState({ data: response.data })
         })
@@ -25,7 +26,8 @@ class EmployeeMap extends React.Component {
     render() {
         return (
             <div>
-                <MapContainer style={{ height: '450px',width:'450px' }} center={[10, 76]} zoom={8} scrollWheelZoom={true}>
+                <p> <button className="btn btn-sm btn-info" onClick={this.load_data}>refresh</button> Active users : {this.state.data.length}</p>
+                <MapContainer style={{ height: '80vh',width:'450px' }} center={[10.1, 76.5]} zoom={8} scrollWheelZoom={true}>
                     <TileLayer
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
@@ -33,7 +35,7 @@ class EmployeeMap extends React.Component {
                         return (
                             <Marker position={[data.clock_in_lat, data.clock_in_lng]}>
                                 <Popup>
-                                    <b>{data.u_name}</b>
+                                    <b>{data.u_name}</b><br/>
                                    {data.clock_in_position}
                                 </Popup>
                             </Marker>
