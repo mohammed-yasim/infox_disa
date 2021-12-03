@@ -27,15 +27,25 @@
   <link
     href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
     rel="stylesheet">
- 
+
   <link href="%PUBLIC_URL%/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 
   <style>
-    body,html{
+    body,
+    html {
       font-size: 85%;
-      background:#F1F1F2;
+      background: #F1F1F2;
+    }
+
+    .collapse {
+      z-index: 1998 !important;
     }
   </style>
+  <script>
+    String.prototype.toProperCase = function () {
+      return this.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
+    };
+  </script>
 </head>
 
 <body id="page-top">
@@ -55,9 +65,10 @@
   <script src="%PUBLIC_URL%/vendor/jquery/jquery.min.js"></script>
   <script src="%PUBLIC_URL%/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="%PUBLIC_URL%/vendor/jquery-easing/jquery.easing.min.js"></script>
-  <script src="%PUBLIC_URL%/js/sb-admin-2.min.js"></script>  
+  <script src="%PUBLIC_URL%/js/sb-admin-2.min.js"></script>
   <script src="%PUBLIC_URL%/vendor/datatables/jquery.dataTables.min.js"></script>
   <script src="%PUBLIC_URL%/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+  <script src="%PUBLIC_URL%/vendor/chart.js/Chart.min.js"></script>
 
 </body>
 

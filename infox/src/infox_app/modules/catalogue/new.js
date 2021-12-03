@@ -140,7 +140,7 @@ class CatalogueForm extends React.Component {
     }
     formHandler = (event) => {
         event.preventDefault();
-        this.setState({active:false});
+        this.setState({ active: false });
         let data = {}
         data['p_name'] = this.state.p_name;
         data['p_code'] = this.state.p_code;
@@ -172,8 +172,8 @@ class CatalogueForm extends React.Component {
                     }
                 }
             )
-            .catch((err)=>{
-        this.setState({active:true});
+            .catch((err) => {
+                this.setState({ active: true });
             })
     }
     handleInputChange = (event) => {
@@ -279,7 +279,7 @@ class CatalogueForm extends React.Component {
                                             </div>
                                             <select required className="form-control" value={this.state.category_group} name="category_group" onChange={this.onSelectChange}>
                                                 <option value='' disabled>Choose group</option>
-                                                <option value='all' disabled>All</option>
+                                                <option value='all'>All</option>
                                                 {this.state.category_data.filter(item => { return item.var_t === 'LC' && item.var_c === this.state.category_sub }).map((master, i) => {
                                                     return (
                                                         <option key={"category_group_" + i} value={master.var_v}>{master.var_n}</option>
@@ -442,7 +442,7 @@ class CatalogueForm extends React.Component {
                 </>
             )
         } else {
-            return (<>{this.state.error === null ? <h5>processing..</h5> :<span className="text-danger">{this.state.error}</span>}</>)
+            return (<>{this.state.error === null ? <h5>processing..</h5> : <span className="text-danger">{this.state.error}</span>}</>)
         }
     }
 

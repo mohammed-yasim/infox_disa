@@ -31,13 +31,17 @@ class InfoXApp extends React.Component {
             if ($(".sidebar").hasClass("toggled")) {
                 window.$('.sidebar .collapse').collapse('hide');
             };
+        }else{
+            if($(".sidebar").hasClass('toggled')){
+                window.$('.sidebar .collapse').collapse('hide');
+            }
         }
     }
     render() {
         if (this.context.u_type === 'admin' || this.context.u_type === 'root') {
             return (<>
                 <div id="wrapper">
-                    <ul className="navbar-nav bg-gradient-dark sidebar toggled sidebar-dark accordion d-print-none" id="accordionSidebar">
+                    <ul className="navbar-nav bg-gradient-dark sidebar sidebar-dark toggled accordion d-print-none" id="accordionSidebar">
                         <Link onClick={this.closeSidebar} className="sidebar-brand d-flex align-items-center justify-content-center" to="/">
                             <div className="sidebar-brand-icon rotate-n-15">
                                 <i className="fas fa-handshake"></i>
@@ -45,7 +49,7 @@ class InfoXApp extends React.Component {
                             <div className="sidebar-brand-text mx-3">InfoX<sup>{process.env.REACT_APP_VERSION}</sup></div>
                         </Link>
                         <hr className="sidebar-divider my-0" />
-                        <NavLink className="nav-item text-decoration-none" to="/dashboard">
+                        <NavLink  onClick={this.closeSidebar}  data-close="collapse" className="nav-item text-decoration-none" to="/dashboard">
                             <span className="nav-link" href="#dashboard">
                                 <i className="fas fa-fw fa-tachometer-alt"></i>
                                 <span>Dashboard</span></span>
@@ -55,13 +59,23 @@ class InfoXApp extends React.Component {
                         <div className="sidebar-heading">
                             Assets
                         </div>
-                        <NavLink className="nav-item text-decoration-none" to="/catalogue">
-                            <span className="nav-link">
-                                <i className="fas fa-fw fa-book"></i>
-                                <span>catalogue</span></span>
-                        </NavLink>
+                        <li className={window.location.pathname.includes('/infox/catalogue') ? "nav-item text-decoration-none active" : "nav-item text-decoration-none"}>
+                            <a className="nav-link collapsed" href="#menu" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
+                                <i className="fas fa-fw fa-users"></i>
+                                <span>Catalogue</span>
+                            </a>
+                            <div id="collapseUtilities" className="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+                                <div className="bg-white py-2 collapse-inner rounded" style={{ zIndex: '9999 !important' }}>
+                                <button data-toggle="collapse" data-target="#collapseUtilities" className="float-right btn btn-link text-decoration-none"><i className="fa fa-times"></i></button>
+                                    <NavLink  onClick={this.closeSidebar}  exact className="collapse-item" to="/catalogue">Home</NavLink>
+                                    <NavLink  onClick={this.closeSidebar}  className="collapse-item" to="/catalogue/all">All Products</NavLink>
+                                    <NavLink  onClick={this.closeSidebar}  className="collapse-item" to="/catalogue/go">Add New</NavLink>
+                                    <NavLink  onClick={this.closeSidebar}  className="collapse-item" to="/catalogue/advanced">Advanced</NavLink>
+                                </div>
+                            </div>
+                        </li>
                         <hr className="sidebar-divider" />
-                        <NavLink className="nav-item text-decoration-none" to="/quotation">
+                        <NavLink onClick={this.closeSidebar} className="nav-item text-decoration-none" to="/quotation">
                             <span className="nav-link">
                                 <i className="fas fa-fw fa-quote-left"></i>
                                 <span>Quotation</span></span>
@@ -101,7 +115,7 @@ class InfoXApp extends React.Component {
                                 <Suspense fallback={<div><img alt="loadimage" src={LoadingGif} /></div>}>
                                     <Switch>
                                         <Route path="/dashboard">
-                                            <EmployeeMap/>
+                                            <EmployeeMap />
                                         </Route>
 
                                         <Route path="/setting" component={Setting} />
