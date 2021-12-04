@@ -16,7 +16,7 @@ class EmployeeMap extends React.Component {
         this.state = { data: [] }
     }
     componentDidMount() {
-       this.load_data()
+        this.load_data()
     }
     load_data = () => {
         infoxAPI.get('/map').then((response) => {
@@ -25,26 +25,65 @@ class EmployeeMap extends React.Component {
     }
     render() {
         return (
-            <div>
-                <p> <button className="btn btn-sm btn-info" onClick={this.load_data}>refresh</button> Active users : {this.state.data.length}</p>
-                <MapContainer style={{ height: '80vh',width:'450px' }} center={[10.1, 76.5]} zoom={8} scrollWheelZoom={true}>
-                    <TileLayer
-                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    />
-                    {this.state.data.map((data) => {
-                        return (
-                            <Marker position={[data.clock_in_lat, data.clock_in_lng]}>
-                                <Popup>
-                                    <b>{data.u_name}</b><br/>
-                                   {data.clock_in_position}
-                                </Popup>
-                            </Marker>
-                        )
-                    })}
+            <>
+                <div class="col-xl-8 col-lg-7">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="m-0 font-weight-bold text-primary">Active Users : {this.state.data.length}</h6>
+                            <a href="#reload" onClick={this.load_data}><i className="fa fa-sync"></i></a>
+                        </div>
+                        <div class="card-body">
+                            <MapContainer style={{ height: '50vh', width: '100%' }} center={[10.1, 76.5]} zoom={8} scrollWheelZoom={true}>
+                                <TileLayer
+                                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                />
+                                {this.state.data.map((data) => {
+                                    return (
+                                        <Marker position={[data.clock_in_lat, data.clock_in_lng]}>
+                                            <Popup>
+                                                <b>{data.u_name}</b><br />
+                                                {data.clock_in_position}
+                                            </Popup>
+                                        </Marker>
+                                    )
+                                })}
+                            </MapContainer>
+                        </div>
+                    </div>
+                </div>
 
-
-                </MapContainer>
-            </div>
+                <div class="col-xl-4 col-lg-5">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="m-0 font-weight-bold text-primary">User By Location</h6>
+                        </div>
+                        <div class="card-body" style={{ height: '53.5vh', width: '100%' }} >
+                            <div className="table-responsive">
+                                <table className="table table-sm table-striped ">
+                                    <thead>
+                                        <tr>
+                                        <th scope="col">User</th>
+                                        <th>Location</th>
+                                        <th>Time In</th>
+                                        <th>Point</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {this.state.data.map((data) => {
+                                            return (<tr>
+                                                <th>{data.u_name}</th>
+                                                <th></th>
+                                                <td>{data.clock_in}</td>
+                                                <td>{data.clock_in_position}</td>
+                                            </tr>)
+                                        })}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </>
         )
     }
 }

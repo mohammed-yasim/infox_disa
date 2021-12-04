@@ -1,10 +1,15 @@
 .bottom-bar{
-    background: white;
+    background: darkblue;
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
     margin: auto;
-    padding: 10px 40px 0 40px;
+    padding: 10px 40px 10px 40px;
     z-index: 3001;
+
+    select,input {
+        height: 20px;font-size: 8px;
+    }
+
 }

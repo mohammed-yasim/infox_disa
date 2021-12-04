@@ -10,10 +10,10 @@ class NavProfileMenu extends React.Component {
     render() {
         return (
             <li className="nav-item dropdown no-arrow">
-                <NavLink className="nav-link dropdown-toggle" to="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <a className="nav-link dropdown-toggle" href="#infox" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <span className="mr-2 d-none d-lg-inline text-gray-600 small">{this.context.u_name}</span>
                     <i className="fas fa-user fa-fw"></i>
-                </NavLink>
+                </a>
                 <div className="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
                     <div className="dropdown-item d-none d-sm-block d-md-none text-gray-600 small">{this.context.u_name}</div>
                     {this.context.u_type === 'admin' || this.context.u_type === 'root' ?
@@ -52,7 +52,7 @@ class NavMessage extends React.Component {
         return (
 
             <li className="nav-item dropdown no-arrow mx-1">
-                <NavLink className="nav-link dropdown-toggle" to="/#" id="messagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <NavLink className="nav-link dropdown-toggle" to="#" id="messagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i className="fas fa-envelope fa-fw"></i>
                     <span className="badge badge-danger badge-counter">7</span>
                 </NavLink>
@@ -116,7 +116,7 @@ class NavAlerts extends React.Component {
     render() {
         return (
             <li className="nav-item dropdown no-arrow mx-1">
-                <NavLink className="nav-link dropdown-toggle" to="/#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <NavLink className="nav-link dropdown-toggle" to="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i className="fas fa-bell fa-fw"></i>
 
                     <span className="badge badge-danger badge-counter">3+</span>

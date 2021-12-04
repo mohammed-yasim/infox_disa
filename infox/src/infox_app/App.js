@@ -2,7 +2,7 @@ import React, { Suspense, lazy } from 'react';
 import $ from 'jquery';
 import { Link, NavLink, Route, Switch, withRouter } from 'react-router-dom';
 import { removeUserSession } from './etc/auth_handler';
-import { NavMessage, NavProfileMenu, NavAlerts, AttendanceApp, EmployeeMap } from './etc/components';
+import { NavMessage, NavProfileMenu, NavAlerts, AttendanceApp, EmployeeMap, DashboardAttendance } from './etc/components';
 import { InfoXContext } from './etc/context';
 import LoadingGif from './lib/load.gif';
 
@@ -115,7 +115,10 @@ class InfoXApp extends React.Component {
                                 <Suspense fallback={<div><img alt="loadimage" src={LoadingGif} /></div>}>
                                     <Switch>
                                         <Route path="/dashboard">
+                                            <DashboardAttendance/>
+                                            <div className="row">
                                             <EmployeeMap />
+                                            </div>
                                         </Route>
 
                                         <Route path="/setting" component={Setting} />

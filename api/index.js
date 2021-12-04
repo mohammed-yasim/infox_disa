@@ -105,7 +105,7 @@ API_Router.get('/clock', _middleware.Middleware, (req, res) => {
         res.json({
           clock_status: 2,
           color: 'red',
-          text: "You are in from ,".concat(user.clock_in_position, " at ").concat(user.clock_in)
+          text: "You are in from ,".concat(user.clock_in_position, " at ").concat(new Date(user.clock_in).toString())
         });
       } else {
         res.json({
@@ -165,7 +165,7 @@ API_Router.post('/clock', _middleware.Middleware, (req, res) => {
           res.json({
             clock_status: 2,
             color: 'red',
-            text: "You are in from ,".concat(user.clock_in_position, " at ").concat(user.clock_in)
+            text: "&copy; You are in from ".concat(user.clock_in_position, " at ").concat(new Date(user.clock_in).toString())
           });
         }).catch(err => {
           res.status(401).json(err);

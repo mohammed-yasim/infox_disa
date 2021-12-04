@@ -90,7 +90,7 @@ API_Router.get('/clock', Middleware, (req, res) => {
                     res.json({
                         clock_status: 2,
                         color: 'red',
-                        text: `You are in from ,${user.clock_in_position} at ${user.clock_in}`
+                        text: `You are in from ,${user.clock_in_position} at ${new Date(user.clock_in).toString()}`
 
                     });
                 } else {
@@ -154,7 +154,7 @@ API_Router.post('/clock', Middleware, (req, res) => {
                             res.json({
                                 clock_status: 2,
                                 color: 'red',
-                                text: `You are in from ,${user.clock_in_position} at ${user.clock_in}`
+                                text: `&copy; You are in from ${user.clock_in_position} at ${new Date(user.clock_in).toString()}`
                             });
                         }).catch(
                             (err) => {
