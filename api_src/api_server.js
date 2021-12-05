@@ -2,14 +2,23 @@ import express from 'express';
 import path from 'path'
 import cors from 'cors';
 import API_Router from './api';
-
+import { demo_db } from './api/maria_db';
+import Demo from './api/database/test';
 const app = express();
 app.use(cors());
 app.use(express.json());
 app.use('/infox/', express.static(path.join(__dirname, '/infox/build')));
 app.use('/_api', API_Router);
+app.use('/demo', Demo);
 app.get('/infox/*', (req, res) => {
     res.sendFile(path.join(__dirname, '/infox/build/index.html'));
+});
+app.get('/sync', (req, res) => {
+    demo_db.sync({force:true}).then((data) => {
+        res.send(`${data}`);
+    }, (err) => {
+        res.send(`${err}`);
+    });
 });
 app.get('/', (request, response) => {
     response.redirect(`/infox?ip=${encodeURI(request.socket.remoteAddress)}`)

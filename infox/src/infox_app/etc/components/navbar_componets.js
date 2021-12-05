@@ -31,7 +31,13 @@ class NavProfileMenu extends React.Component {
                                 Settings
                             </Link>
                             <div className="dropdown-divider"></div>
-                        </> : <></>}
+                        </> : <>
+                            <Link className="dropdown-item" to="/setting/profile">
+                                <i className="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                Profile
+                            </Link>
+                            <div className="dropdown-divider"></div>
+                        </>}
                     <a className="dropdown-item" href="#infox" data-toggle="modal" data-target="#logoutModal">
                         <i className="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                         Logout

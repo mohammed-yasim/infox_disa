@@ -24,9 +24,16 @@ class AllProducts extends React.Component {
                 }
             )
     }
+    goBack = () => {
+        this.props.history.push('/catalogue/');
+    }
     render() {
         return (
             <>
+                <div className="d-print-none">
+                    <h4><button onClick={this.goBack} className="btn btn-link btn-lg"><i className="fa fa-arrow-left"></i></button></h4>
+                </div>
+
                 <div className="card shadow mb-4">
                     <div className="card-header py-3">
                         <h6 className="m-0 font-weight-bold text-primary">All Products</h6>

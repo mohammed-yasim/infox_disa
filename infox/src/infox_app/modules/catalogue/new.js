@@ -189,10 +189,16 @@ class CatalogueForm extends React.Component {
             modal_image: file,
         });
     }
+    goBack = () => {
+        this.props.history.push('/catalogue/all');
+    }
     render() {
         if (this.state.active === true) {
             return (
                 <>
+                    <div className="d-print-none">
+                        <h4><button onClick={this.goBack} className="btn btn-link btn-lg"><i className="fa fa-arrow-left"></i></button></h4>
+                    </div>
                     <div className="card shadow animated--grow-in">
                         <div className="card-header">
                             <h4 className="card-title">{this.state.title}</h4>
