@@ -18,7 +18,9 @@ const response_error_capture = function (error) {
     try {
         err = error.response.data;
         if (error.response.status === 401) {
+            Toast.fail(`${err}`, 3, null, false);
             removeUserSession();
+            //window.location.reload()
         } else if (error.response.status === 403) {
             Toast.fail(`${err}`, 3, null, false);
         } else {

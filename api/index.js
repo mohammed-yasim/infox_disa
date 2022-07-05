@@ -5,7 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _express = _interopRequireDefault(require("express"));
+var _express = _interopRequireWildcard(require("express"));
 
 var _axios = _interopRequireDefault(require("axios"));
 
@@ -23,7 +23,13 @@ var _catalogue = _interopRequireDefault(require("./modules/catalogue"));
 
 var _quotation = _interopRequireDefault(require("./modules/quotation"));
 
+var _models2 = require("./database/models");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 var API_Router = _express.default.Router();
 
@@ -72,7 +78,7 @@ API_Router.post('/login', (req, res) => {
     if (user) {
       _bcryptjs.default.compare(req.body.password, user.password, (error, match) => {
         if (error) {
-          response.status(406).send('invalid credentials');
+          _express.response.status(406).send('invalid credentials');
         } else if (match) {
           var data = {
             u_id: user.u_id,
@@ -87,7 +93,7 @@ API_Router.post('/login', (req, res) => {
         }
       });
     } else {
-      response.status(406).send('inactive/invalid credentials/suspended');
+      _express.response.status(406).send('inactive/invalid credentials/suspended');
     }
   }).catch(err => {
     res.status(401).send("".concat(err));
@@ -101,7 +107,8 @@ API_Router.get('/clock', _middleware.Middleware, (req, res) => {
     }
   }).then(user => {
     if (user) {
-      if (user.clock_out === null) {
+      //if (user.clock_out === null) {
+      if (user.clock_out) {
         res.json({
           clock_status: 2,
           color: 'red',
@@ -118,7 +125,7 @@ API_Router.get('/clock', _middleware.Middleware, (req, res) => {
       res.json({
         clock_status: 1,
         color: '#00bfff',
-        text: 'Logged In'
+        text: 'Welcome Login'
       });
     }
   });
@@ -165,7 +172,7 @@ API_Router.post('/clock', _middleware.Middleware, (req, res) => {
           res.json({
             clock_status: 2,
             color: 'red',
-            text: "&copy; You are in from ".concat(user.clock_in_position, " at ").concat(new Date(user.clock_in).toString())
+            text: "You are in from ".concat(user.clock_in_position, " at ").concat(new Date(user.clock_in).toString())
           });
         }).catch(err => {
           res.status(401).json(err);
@@ -176,6 +183,136 @@ API_Router.post('/clock', _middleware.Middleware, (req, res) => {
     });
   }).catch(err => {
     console.log(err);
+  });
+});
+
+var Scheduler = (request, response, next) => {
+  _models2.User.findOne({
+    attributes: ['schedule_'],
+    where: {
+      u_id: request.user.u_id
+    }
+  }).then(user => {
+    _models2.Schedule.findOne({
+      attributes: ['clock_in', 'clock_out'],
+      where: {
+        id: user.schedule_
+      }
+    }).then(schedule => {
+      request.user.schedule = schedule;
+      next();
+    }).catch(err => {
+      console.log(err);
+      next();
+    });
+  }).catch(err => {
+    console.log(err);
+    next();
+  });
+};
+
+API_Router.get('/clock_', _middleware.Middleware, Scheduler, (req, res) => {
+  _models2.Attendance.findOne({
+    attributes: ['id', 'clock_out_server', 'clock_in_position', 'clock_in_server'],
+    where: {
+      u_id: req.user.u_id,
+      date: new Date()
+    }
+  }).then(user => {
+    if (user) {
+      //if (user.clock_out === null) {
+      if (user.clock_out_server === null) {
+        res.json({
+          clock_status: 2,
+          color: 'red',
+          text: "You are in from ,".concat(user.clock_in_position, " at ").concat(user.clock_in_server)
+        });
+      } else {
+        res.json({
+          clock_status: 3,
+          color: '#00bfff',
+          text: "Already done for the day"
+        });
+      }
+    } else {
+      res.json({
+        clock_status: 1,
+        color: '#00bfff',
+        text: 'Welcome Login'
+      });
+    }
+  });
+});
+API_Router.post('/clock_', _middleware.Middleware, Scheduler, (req, res) => {
+  var timecal = 1000 * 60;
+  var a = new Date();
+  var b = new Date();
+  var av = "".concat(req.user.schedule.clock_in).split(':');
+  var bv = "".concat(req.user.schedule.clock_out).split(':');
+  a.setHours(av[0], av[1], av[2], 0);
+  b.setHours(bv[0], bv[1], bv[2], 0);
+
+  _axios.default.get("https://us1.locationiq.com/v1/reverse.php?key=78a0e5fd31043f&lat=".concat(req.body.latitude, "&lon=").concat(req.body.longitude, "&format=json")).then(response => {
+    _models2.Attendance.findOne({
+      where: {
+        u_id: req.user.u_id,
+        date: new Date()
+      }
+    }).then(user => {
+      if (user) {
+        var c = new Date();
+        var cv = "".concat(user.clock_in_server).split(':');
+        c.setHours(cv[0], cv[1], cv[2], 0);
+        var hours = ((new Date() - c) / timecal).toFixed(2);
+
+        if (user.clock_out_server === null) {
+          user.clock_out_server = new Date();
+          user.clock_out_local = new Date(req.body.clock);
+          user.clock_out_lat = req.body.latitude;
+          user.clock_out_lng = req.body.longitude;
+          user.clock_out_position = response.data.display_name;
+          user.clock_out_status = ((new Date() - b) / timecal).toFixed(2);
+          user.clock_out_hours = hours;
+          user.save();
+          res.json({
+            clock_status: 3,
+            color: '#00bfff',
+            text: "You are Out from ,".concat(user.clock_out_position, " at ").concat(user.clock_out_server)
+          });
+        } else {
+          res.json({
+            clock_status: 3,
+            color: '#00bfff',
+            text: "Already done for the day"
+          });
+        }
+      } else {
+        _models2.Attendance.create({
+          u_id: req.user.u_id,
+          date: new Date(),
+          clock_in_server: new Date(),
+          clock_in_local: new Date(req.body.clock),
+          clock_in_lat: req.body.latitude,
+          clock_in_lng: req.body.longitude,
+          clock_in_position: response.data.display_name,
+          clock_in_status: ((new Date() - a) / timecal).toFixed(2)
+        }).then(user => {
+          res.json({
+            clock_status: 2,
+            color: 'red',
+            text: "You are in from ".concat(user.clock_in_position, " at ").concat(user.clock_in_server)
+          });
+        }).catch(err => {
+          res.status(404).json(err);
+          console.log(2, err);
+        });
+      }
+    }).catch(err => {
+      res.status(404).json(err);
+      console.log(1, err);
+    });
+  }).catch(err => {
+    console.log(0, err);
   });
 });
 API_Router.get('/map', (req, res) => {
@@ -189,9 +326,14 @@ API_Router.get('/map', (req, res) => {
   });
 });
 API_Router.get('/sync_user', _middleware.Middleware, (req, res) => {
-  _models.Users.findOne({
+  _models2.User.findOne({
+    attributes: ['u_id', 'u_type'],
     where: {
       u_id: req.user.u_id
+    },
+    include: {
+      model: _models2.Profile,
+      as: 'profile'
     }
   }).then(user => {
     res.json(user);

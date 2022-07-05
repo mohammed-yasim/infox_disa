@@ -129,7 +129,7 @@ class QuickQuotationEditor extends React.Component {
     onFoucus_file = (e) => {
         if (e.target.value === '') {
             let quotation = this.state.quotation;
-            quotation[e.target.getAttribute('name')] = `_${this.context.u_name}_[ ${this.context.u_designation} ]_${new Date().toLocaleString()}`;
+            quotation[e.target.getAttribute('name')] = `_${this.context.profile.u_name}_[ ${this.context.u_designation} ]_${new Date().toLocaleString()}`;
             this.setState({ quotation: quotation });
             e.target.setSelectionRange(0, 0);
         }

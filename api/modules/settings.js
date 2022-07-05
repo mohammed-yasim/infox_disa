@@ -34,11 +34,11 @@ SettingAPI.get('/', _middleware.rootMiddleware, /*#__PURE__*/function () {
 
     var location = _models.Location.count();
 
-    var designations = _models.Designations.count();
+    var designations = _models.Designation.count();
 
-    var schedules = _models.Schedules.count();
+    var schedules = _models.Schedule.count();
 
-    var users = _models.Users.count();
+    var users = _models.User.count();
 
     Promise.all([location, designations, schedules, users]).then(data => {
       json['locations'] = data[0];
@@ -62,7 +62,7 @@ SettingAPI.get('/config/:type', _middleware.rootMiddleware, (req, res) => {
     case 'locations':
       _models.Location.findAll({
         include: {
-          model: _models.Users,
+          model: _models.User,
           as: 'users',
           attributes: ['username'],
           include: {
@@ -76,9 +76,9 @@ SettingAPI.get('/config/:type', _middleware.rootMiddleware, (req, res) => {
       break;
 
     case 'designations':
-      _models.Designations.findAll({
+      _models.Designation.findAll({
         include: {
-          model: _models.Users,
+          model: _models.User,
           as: 'users',
           attributes: ['username'],
           include: {
@@ -92,9 +92,9 @@ SettingAPI.get('/config/:type', _middleware.rootMiddleware, (req, res) => {
       break;
 
     case 'schedules':
-      _models.Schedules.findAll({
+      _models.Schedule.findAll({
         include: {
-          model: _models.Users,
+          model: _models.User,
           as: 'users',
           attributes: ['username'],
           include: {
@@ -113,15 +113,16 @@ SettingAPI.get('/config/:type', _middleware.rootMiddleware, (req, res) => {
         locations: [],
         schedules: [],
         designations: []
-      };
+      }; //data for forms
 
       var location = _models.Location.findAll();
 
-      var designations = _models.Designations.findAll();
+      var designations = _models.Designation.findAll();
 
-      var schedules = _models.Schedules.findAll();
+      var schedules = _models.Schedule.findAll(); /// master
 
-      var users = _models.Users.findAll({
+
+      var users = _models.User.findAll({
         attributes: {
           exclude: ['password']
         },
@@ -162,12 +163,12 @@ SettingAPI.post('/config/:type/:action', _middleware.rootMiddleware, (req, res) 
       break;
 
     case 'designations_add':
-      _models.Designations.create(req.body).then(locations => res.json(locations)).catch(err => res.status(406).send("".concat(err)));
+      _models.Designation.create(req.body).then(locations => res.json(locations)).catch(err => res.status(406).send("".concat(err)));
 
       break;
 
     case 'schedules_add':
-      _models.Schedules.create(req.body).then(locations => res.json(locations)).catch(err => res.status(406).send("".concat(err)));
+      _models.Schedule.create(req.body).then(locations => res.json(locations)).catch(err => res.status(406).send("".concat(err)));
 
       break;
 
@@ -181,7 +182,7 @@ SettingAPI.post('/config/:type/:action', _middleware.rootMiddleware, (req, res) 
             u_email: req.body.u_email,
             u_contact: req.body.u_contact
           }).then(profile => {
-            _models.Users.create({
+            _models.User.create({
               u_type: req.body.u_type,
               username: req.body.username,
               password: hash,
@@ -199,6 +200,40 @@ SettingAPI.post('/config/:type/:action', _middleware.rootMiddleware, (req, res) 
             res.status(406).send("A ".concat(err));
           });
         }
+      });
+
+      break;
+
+    case 'users_deactivate':
+      _models.User.update({
+        active: 0
+      }, {
+        attributes: ['username'],
+        where: {
+          u_id: req.body.u_id,
+          active: 1
+        }
+      }).then(user => {
+        res.json(user);
+      }).catch(err => {
+        res.status(406).send("user_deactivate ".concat(err));
+      });
+
+      break;
+
+    case 'users_activate':
+      _models.User.update({
+        active: 1
+      }, {
+        attributes: ['username'],
+        where: {
+          u_id: req.body.u_id,
+          active: 0
+        }
+      }).then(user => {
+        res.json(user);
+      }).catch(err => {
+        res.status(406).send("user_deactivate ".concat(err));
       });
 
       break;

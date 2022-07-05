@@ -1,4 +1,4 @@
-import express from "express";
+import express, { response } from "express";
 import axios from "axios";
 import { infox_db } from "./maria_db";
 import { generateToken, Middleware } from "./middleware";
@@ -7,6 +7,7 @@ import SettingAPI from "./modules/settings";
 import bcrypt from 'bcryptjs'
 import CatalougueAPI from "./modules/catalogue";
 import QuotationRouter from "./modules/quotation";
+import { Attendance, Profile, Schedule, User } from "./database/models";
 const API_Router = express.Router();
 API_Router.use('/settings', SettingAPI);
 API_Router.use('/catalogue', CatalougueAPI);
@@ -57,7 +58,7 @@ API_Router.post('/login', (req, res) => {
                         let data = {
                             u_id: user.u_id,
                             u_type: user.u_type,
-                            u_name : user.u_name
+                            u_name: user.u_name
                         }
                         res.json({
                             token: generateToken(data)
@@ -86,7 +87,8 @@ API_Router.get('/clock', Middleware, (req, res) => {
     }).then(
         (user) => {
             if (user) {
-                if (user.clock_out === null) {
+                //if (user.clock_out === null) {
+                if (user.clock_out) {
                     res.json({
                         clock_status: 2,
                         color: 'red',
@@ -104,7 +106,7 @@ API_Router.get('/clock', Middleware, (req, res) => {
                 res.json({
                     clock_status: 1,
                     color: '#00bfff',
-                    text: 'Logged In'
+                    text: 'Welcome Login'
                 });
             }
         });
@@ -149,12 +151,12 @@ API_Router.post('/clock', Middleware, (req, res) => {
                             clock_in_lng: req.body.longitude,
                             clock_in_position: response.data.display_name,
                             status: 0,
-                            u_name : req.user.u_name
+                            u_name: req.user.u_name
                         }).then((user) => {
                             res.json({
                                 clock_status: 2,
                                 color: 'red',
-                                text: `&copy; You are in from ${user.clock_in_position} at ${new Date(user.clock_in).toString()}`
+                                text: `You are in from ${user.clock_in_position} at ${new Date(user.clock_in).toString()}`
                             });
                         }).catch(
                             (err) => {
@@ -172,18 +174,152 @@ API_Router.post('/clock', Middleware, (req, res) => {
             err => { console.log(err) }
         );
 });
+let Scheduler = (request, response, next) => {
+    User.findOne({ attributes: ['schedule_'], where: { u_id: request.user.u_id } }).then((user) => {
+        Schedule.findOne({
+            attributes: ['clock_in', 'clock_out'],
+            where: { id: user.schedule_ }
+        }).then((schedule) => {
+            request.user.schedule = schedule;
+            next();
+        }).
+            catch(err => {
+                console.log(err);
+                next()
+            })
+    }).
+        catch(err => {
+            console.log(err);
+            next()
+        })
+}
+
+API_Router.get('/clock_', Middleware, Scheduler, (req, res) => {
+    Attendance.findOne({
+        attributes: ['id', 'clock_out_server', 'clock_in_position', 'clock_in_server'],
+        where: {
+            u_id: req.user.u_id,
+            date: new Date()
+        }
+    }).then(
+        (user) => {
+            if (user) {
+                //if (user.clock_out === null) {
+                if (user.clock_out_server === null) {
+                    res.json({
+                        clock_status: 2,
+                        color: 'red',
+                        text: `You are in from ,${user.clock_in_position} at ${user.clock_in_server}`
+
+                    });
+                } else {
+                    res.json({
+                        clock_status: 3,
+                        color: '#00bfff',
+                        text: `Already done for the day`
+                    });
+                }
+            } else {
+                res.json({
+                    clock_status: 1,
+                    color: '#00bfff',
+                    text: 'Welcome Login'
+                });
+            }
+        });
+
+});
+API_Router.post('/clock_', Middleware, Scheduler, (req, res) => {
+    let timecal = (1000 * 60);
+    var a = new Date();
+    var b = new Date();
+    var av = `${req.user.schedule.clock_in}`.split(':');
+    var bv = `${req.user.schedule.clock_out}`.split(':');
+    a.setHours(av[0], av[1], av[2], 0)
+    b.setHours(bv[0], bv[1], bv[2], 0)
+    axios.get(`https://us1.locationiq.com/v1/reverse.php?key=78a0e5fd31043f&lat=${req.body.latitude}&lon=${req.body.longitude}&format=json`)
+        .then((response) => {
+            Attendance.findOne({
+                where: {
+                    u_id: req.user.u_id,
+                    date: new Date()
+                }
+            })
+                .then((user) => {
+                    if (user) {
+                        var c = new Date();
+                        var cv = `${user.clock_in_server}`.split(':');
+                        c.setHours(cv[0], cv[1], cv[2], 0)
+                        let hours = ((new Date() - c) / timecal).toFixed(2);
+                        if (user.clock_out_server === null) {
+                            user.clock_out_server = new Date();
+                            user.clock_out_local = new Date(req.body.clock);
+                            user.clock_out_lat = req.body.latitude;
+                            user.clock_out_lng = req.body.longitude;
+                            user.clock_out_position = response.data.display_name;
+                            user.clock_out_status = ((new Date() - b) / timecal).toFixed(2);
+                            user.clock_out_hours = hours
+                            user.save();
+                            res.json({
+                                clock_status: 3,
+                                color: '#00bfff',
+                                text: `You are Out from ,${user.clock_out_position} at ${user.clock_out_server}`
+                            });
+                        } else {
+                            res.json({
+                                clock_status: 3,
+                                color: '#00bfff',
+                                text: `Already done for the day`
+                            });
+                        }
+                    } else {
+                        Attendance.create({
+                            u_id: req.user.u_id,
+                            date: new Date(),
+                            clock_in_server: new Date(),
+                            clock_in_local: new Date(req.body.clock),
+                            clock_in_lat: req.body.latitude,
+                            clock_in_lng: req.body.longitude,
+                            clock_in_position: response.data.display_name,
+                            clock_in_status: ((new Date() - a) / timecal).toFixed(2)
+                        }).then((user) => {
+                            res.json({
+                                clock_status: 2,
+                                color: 'red',
+                                text: `You are in from ${user.clock_in_position} at ${user.clock_in_server}`
+                            });
+                        }).catch(
+                            (err) => {
+                                res.status(404).json(err);
+                                console.log(2, err)
+                            })
+                    }
+                }).catch(
+                    (err) => {
+                        res.status(404).json(err);
+                        console.log(1, err)
+                    })
+        })
+        .catch(
+            err => { console.log(0, err) }
+        );
+});
 API_Router.get('/map', (req, res) => {
     Clock.findAll({
         where: {
             date: new Date(),
-            clock_out:null
+            clock_out: null
         }
     }).then((data) => {
         res.json(data);
     });
 })
 API_Router.get('/sync_user', Middleware, (req, res) => {
-    Users.findOne({ where: { u_id: req.user.u_id } }).then(
+    User.findOne({
+        attributes: ['u_id', 'u_type'],
+        where: { u_id: req.user.u_id },
+        include: { model: Profile, as: 'profile' }
+    }).then(
         (user) => {
             res.json(user)
         }

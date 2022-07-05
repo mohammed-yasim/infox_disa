@@ -26,13 +26,13 @@ class EmployeeMap extends React.Component {
     render() {
         return (
             <>
-                <div class="col-xl-8 col-lg-7">
-                    <div class="card shadow mb-4">
-                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                            <h6 class="m-0 font-weight-bold text-primary">Active Users : {this.state.data.length}</h6>
+                <div className="col-xl-8 col-lg-7">
+                    <div className="card shadow mb-4">
+                        <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            <h6 className="m-0 font-weight-bold text-primary">Active Users : {this.state.data.length}</h6>
                             <a href="#reload" onClick={this.load_data}><i className="fa fa-sync"></i></a>
                         </div>
-                        <div class="card-body">
+                        <div className="card-body">
                             <MapContainer style={{ height: '50vh', width: '100%' }} center={[10.1, 76.5]} zoom={8} scrollWheelZoom={true}>
                                 <TileLayer
                                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -52,12 +52,12 @@ class EmployeeMap extends React.Component {
                     </div>
                 </div>
 
-                <div class="col-xl-4 col-lg-5">
-                    <div class="card shadow mb-4">
-                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                            <h6 class="m-0 font-weight-bold text-primary">User By Location</h6>
+                <div className="col-xl-4 col-lg-5">
+                    <div className="card shadow mb-4">
+                        <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            <h6 className="m-0 font-weight-bold text-primary">User By Location</h6>
                         </div>
-                        <div class="card-body" style={{ height: '53.5vh', width: '100%' }} >
+                        <div className="card-body" style={{ height: '53.5vh', width: '100%' }} >
                             <div className="table-responsive">
                                 <table className="table table-sm table-striped ">
                                     <thead>

@@ -17,7 +17,7 @@ var infox_secret = "2CgRp_6PNpb";
 
 function generateToken(data) {
   return jwt.sign(data, infox_secret, {
-    expiresIn: '24h'
+    expiresIn: '7d'
   });
 }
 

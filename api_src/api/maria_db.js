@@ -10,7 +10,13 @@ const demo_db = new Sequelize('u947217984_infox', 'u947217984_infox', '9hHQKOTx3
         idle: 10000,
         acquire: 60000,
         evict: 1000,
-    }
+    },
+    dialectOptions: {
+        useUTC: false, //for reading from database
+        dateStrings: true,
+        typeCast: true,
+        timezone: 'Asia/Kolkata' //for writing to database
+    },
 });
 
 const infox_db = new Sequelize('u947217984_infox', 'u947217984_infox', '5g&9Zq9auxKsGrwn', {
@@ -23,5 +29,6 @@ const infox_db = new Sequelize('u947217984_infox', 'u947217984_infox', '5g&9Zq9a
         acquire: 60000,
         evict: 1000,
     }
+
 });
 export { infox_db, demo_db, Model as infox_model, DataTypes as infox_datatype, Op as infox_op, Sequelize as infox_sequlize }

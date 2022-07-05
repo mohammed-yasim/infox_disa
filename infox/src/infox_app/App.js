@@ -112,7 +112,7 @@ class InfoXApp extends React.Component {
 
                             </nav>
                             <div className="container-fluid">
-                                <Suspense fallback={<div><img alt="loadimage" src={LoadingGif} /></div>}>
+                                <Suspense fallback={<div  className="Suspense_fallback"><img alt="loadimage" src={LoadingGif} /></div>}>
                                     <Switch>
                                         <Route path="/dashboard">
                                             <DashboardAttendance/>
@@ -125,7 +125,7 @@ class InfoXApp extends React.Component {
                                         <Route path="/catalogue" component={Catalogue} />
                                         <Route path="/quotation" component={Quotation} />
                                         <Route exact path="/">
-                                            <h5>Welcome, {this.context.u_name}</h5>
+                                            <h5>Welcome, {this.context.profile.u_name}</h5>
                                             <AttendanceApp />
                                         </Route>
                                         <Route path="*">
@@ -201,8 +201,8 @@ class InfoXApp extends React.Component {
                                     <i className="fas fa-fw fa-tachometer-alt"></i>
                                     <span>Dashboard</span></span>
                             </NavLink>
-                            <hr className="sidebar-divider" />
-                            <NavLink onClick={this.closeSidebar} className="nav-item text-decoration-none" to="/quotation">
+                            <hr className="d-none sidebar-divider" />
+                            <NavLink style={{display:'none'}} onClick={this.closeSidebar} className="nav-item text-decoration-none" to="/quotation">
                                 <span className="nav-link">
                                     <i className="fas fa-fw fa-quote-left"></i>
                                     <span>Quotation</span></span>
@@ -235,14 +235,16 @@ class InfoXApp extends React.Component {
                                     </ul>
                                 </nav>
                                 <div className="container-fluid">
-                                    <Suspense fallback={<div><img alt="loadimage" src={LoadingGif} /></div>}>
+                                    <Suspense fallback={<div className="Suspense_fallback"><img alt="loadimage" src={LoadingGif} /></div>}>
                                         <Switch>
                                             <Route path="/dashboard">Dashboard</Route>
                                             <Route exact path="/">
-                                                <h5>Welcome, {this.context.u_name}</h5>
+                                                <h5>Welcome, {this.context.profile.u_name}</h5>
                                                 <AttendanceApp />
                                             </Route>
-                                            <Route path="/quotation" component={Quotation} />
+                                            {
+                                            //<Route path="/quotation" component={Quotation} /> 
+                                            }
                                             <Route path="*">
                                                 <div id="content">
                                                     <div className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>

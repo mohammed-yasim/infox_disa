@@ -11,11 +11,11 @@ class NavProfileMenu extends React.Component {
         return (
             <li className="nav-item dropdown no-arrow">
                 <a className="nav-link dropdown-toggle" href="#infox" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span className="mr-2 d-none d-lg-inline text-gray-600 small">{this.context.u_name}</span>
+                    <span className="mr-2 d-none d-lg-inline text-gray-600 small">{this.context.profile.u_name}</span>
                     <i className="fas fa-user fa-fw"></i>
                 </a>
                 <div className="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                    <div className="dropdown-item d-none d-sm-block d-md-none text-gray-600 small">{this.context.u_name}</div>
+                    <div className="dropdown-item d-none d-sm-block d-md-none text-gray-600 small">{this.context.profile.u_name}</div>
                     {this.context.u_type === 'admin' || this.context.u_type === 'root' ?
                         <>
                             <Link className="dropdown-item" to="/setting/activity">
@@ -60,7 +60,9 @@ class NavMessage extends React.Component {
             <li className="nav-item dropdown no-arrow mx-1">
                 <NavLink className="nav-link dropdown-toggle" to="#" id="messagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i className="fas fa-envelope fa-fw"></i>
-                    <span className="badge badge-danger badge-counter">7</span>
+                    {
+                        //<span className="badge badge-danger badge-counter">7</span>
+                    }
                 </NavLink>
                 <div className="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="messagesDropdown">
                     <h6 className="dropdown-header">
@@ -124,12 +126,13 @@ class NavAlerts extends React.Component {
             <li className="nav-item dropdown no-arrow mx-1">
                 <NavLink className="nav-link dropdown-toggle" to="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i className="fas fa-bell fa-fw"></i>
-
-                    <span className="badge badge-danger badge-counter">3+</span>
+                    {
+                        //<span className="badge badge-danger badge-counter">3+</span>
+                    }
                 </NavLink>
                 <div className="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
                     <h6 className="dropdown-header">
-                        Alerts Center
+                        Notifications
                     </h6>
                     <a className="dropdown-item d-flex align-items-center" href="#infox">
                         <div className="mr-3">
@@ -164,7 +167,7 @@ class NavAlerts extends React.Component {
                             Spending Alert: We've noticed unusually high spending for your account.
                         </div>
                     </a>
-                    <a className="dropdown-item text-center small text-gray-500" href="#infox">Show All Alerts</a>
+                    <a className="dropdown-item text-center small text-gray-500" href="#infox">Show All</a>
                 </div>
             </li>
         )

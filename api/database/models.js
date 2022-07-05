@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Visits = exports.Users = exports.Schedules = exports.Profile = exports.Location = exports.Designations = exports.Configuration = exports.Clocks = void 0;
+exports.Visit = exports.User = exports.Schedule = exports.Profile = exports.Notification = exports.Message = exports.Location = exports.Designation = exports.Configuration = exports.Attendance = void 0;
 
 var _maria_db = require("../maria_db");
 
@@ -32,37 +32,46 @@ Configuration.init({
   sequelize: _maria_db.demo_db
 }); //Master
 
-class Users extends _maria_db.infox_model {}
+class User extends _maria_db.infox_model {}
 
-exports.Users = Users;
+exports.User = User;
 
 class Profile extends _maria_db.infox_model {} //Configuration
 
 
 exports.Profile = Profile;
 
-class Designations extends _maria_db.infox_model {}
+class Designation extends _maria_db.infox_model {}
 
-exports.Designations = Designations;
+exports.Designation = Designation;
 
-class Schedules extends _maria_db.infox_model {} //Data
+class Schedule extends _maria_db.infox_model {}
 
+exports.Schedule = Schedule;
 
-exports.Schedules = Schedules;
-
-class Clocks extends _maria_db.infox_model {}
-
-exports.Clocks = Clocks;
-
-class Visits extends _maria_db.infox_model {}
-
-exports.Visits = Visits;
-
-class Location extends _maria_db.infox_model {} //Connections
+class Location extends _maria_db.infox_model {} //Master_Data
 
 
 exports.Location = Location;
-Users.init({
+
+class Attendance extends _maria_db.infox_model {}
+
+exports.Attendance = Attendance;
+
+class Visit extends _maria_db.infox_model {} //Messages & Notification
+
+
+exports.Visit = Visit;
+
+class Message extends _maria_db.infox_model {}
+
+exports.Message = Message;
+
+class Notification extends _maria_db.infox_model {} //Connections
+
+
+exports.Notification = Notification;
+User.init({
   u_id: {
     primaryKey: true,
     type: _maria_db.infox_sequlize.UUID,
@@ -91,6 +100,11 @@ Users.init({
   password: {
     type: _maria_db.infox_datatype.STRING,
     allowNull: false
+  },
+  rfid: {
+    type: _maria_db.infox_datatype.STRING,
+    allowNull: true,
+    unique: true
   } //
 
 }, {
@@ -127,35 +141,55 @@ Profile.init({
 }, {
   sequelize: _maria_db.demo_db
 });
-Designations.init({
+Designation.init({
   name: {
     type: _maria_db.infox_datatype.STRING,
+    allowNull: false
+  }
+}, {
+  sequelize: _maria_db.demo_db
+});
+Schedule.init({
+  clock_in: {
+    type: _maria_db.infox_datatype.TIME,
+    allowNull: false
+  },
+  clock_out: {
+    type: _maria_db.infox_datatype.TIME,
+    allowNull: false
+  }
+}, {
+  sequelize: _maria_db.demo_db
+});
+Location.init({
+  name: {
+    type: _maria_db.infox_datatype.STRING,
+    allowNull: false
+  }
+}, {
+  sequelize: _maria_db.demo_db
+});
+Attendance.init({
+  date: {
+    type: _maria_db.infox_datatype.DATEONLY,
     allowNull: false,
-    unique: true
-  }
-}, {
-  sequelize: _maria_db.demo_db
-});
-Schedules.init({
-  clock_in: {
+    defaultValue: _maria_db.demo_db.NOW
+  },
+  clock_in_server: {
     type: _maria_db.infox_datatype.TIME,
     allowNull: false
   },
-  clock_out: {
+  clock_in_local: {
     type: _maria_db.infox_datatype.TIME,
-    allowNull: false
-  }
-}, {
-  sequelize: _maria_db.demo_db
-});
-Clocks.init({
-  clock_in: {
-    type: _maria_db.infox_datatype.TIME,
-    allowNull: false
+    allowNull: true
   },
-  clock_out: {
+  clock_out_server: {
     type: _maria_db.infox_datatype.TIME,
-    allowNull: false
+    allowNull: true
+  },
+  clock_out_local: {
+    type: _maria_db.infox_datatype.TIME,
+    allowNull: true
   },
   clock_in_lat: {
     type: _maria_db.infox_datatype.STRING,
@@ -196,16 +230,7 @@ Clocks.init({
 }, {
   sequelize: _maria_db.demo_db
 });
-Location.init({
-  name: {
-    type: _maria_db.infox_datatype.STRING,
-    allowNull: false,
-    unique: true
-  }
-}, {
-  sequelize: _maria_db.demo_db
-});
-Visits.init({
+Visit.init({
   lat: {
     type: _maria_db.infox_datatype.STRING,
     allowNull: true
@@ -220,47 +245,95 @@ Visits.init({
   }
 }, {
   sequelize: _maria_db.demo_db
+}); ///
+
+Message.init({
+  status: {
+    type: _maria_db.infox_datatype.INTEGER,
+    defaultValue: 0,
+    allowNull: false
+  },
+  txt: {
+    type: _maria_db.infox_datatype.TEXT,
+    allowNull: false
+  }
+}, {
+  sequelize: _maria_db.demo_db
+});
+Notification.init({
+  status: {
+    type: _maria_db.infox_datatype.INTEGER,
+    defaultValue: 0,
+    allowNull: false
+  },
+  txt: {
+    type: _maria_db.infox_datatype.STRING,
+    allowNull: false
+  }
+}, {
+  sequelize: _maria_db.demo_db
 }); //Relations
 
-Users.belongsTo(Profile, {
+User.belongsTo(Profile, {
   foreignKey: {
     name: 'profile_',
     allowNull: false
   },
   as: 'profile'
 });
-Designations.hasMany(Users, {
+Designation.hasMany(User, {
   foreignKey: {
     name: 'designation_',
     allowNull: false
   },
   as: 'users'
 });
-Schedules.hasMany(Users, {
+Schedule.hasMany(User, {
   foreignKey: {
     name: 'schedule_',
     allowNull: false
   },
   as: 'users'
 });
-Location.hasMany(Users, {
+Location.hasMany(User, {
   foreignKey: {
     name: 'location_',
     allowNull: false
   },
   as: 'users'
 });
-Users.hasMany(Clocks, {
+User.hasMany(Attendance, {
   foreignKey: {
     name: 'u_id',
     allowNull: false
   },
-  as: 'clocks'
+  as: 'Attendances '
 });
-Users.hasMany(Visits, {
+User.hasMany(Visit, {
   foreignKey: {
     name: 'u_id',
     allowNull: false
   },
   as: 'visits'
+});
+User.hasMany(Message, {
+  foreignKey: {
+    name: 'sender',
+    allowNull: false
+  },
+  as: 'from_chats'
+});
+User.hasMany(Message, {
+  foreignKey: {
+    name: 'recipient',
+    allowNull: false
+  },
+  as: 'to_chats'
+});
+User.hasMany(Notification, {
+  foreignKey: {
+    name: 'recipient',
+    allowNull: false
+  },
+  as: 'notifications'
 });

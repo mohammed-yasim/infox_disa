@@ -1,7 +1,7 @@
 import * as jwt from 'jsonwebtoken';
 const infox_secret = "2CgRp_6PNpb"
 function generateToken(data) {
-    return jwt.sign(data, infox_secret, { expiresIn: '24h' })
+    return jwt.sign(data, infox_secret, { expiresIn: '7d' })
 }
 let Middleware = (request, response, next) => {
     const token = request.headers.authorization

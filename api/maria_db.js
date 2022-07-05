@@ -43,6 +43,14 @@ var demo_db = new _sequelize.Sequelize('u947217984_infox', 'u947217984_infox', '
     idle: 10000,
     acquire: 60000,
     evict: 1000
+  },
+  dialectOptions: {
+    useUTC: false,
+    //for reading from database
+    dateStrings: true,
+    typeCast: true,
+    timezone: 'Asia/Kolkata' //for writing to database
+
   }
 });
 exports.demo_db = demo_db;

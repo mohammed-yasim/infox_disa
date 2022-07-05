@@ -237,6 +237,13 @@ class Users extends React.Component {
     goBack = () => {
         this.props.history.goBack();
     }
+    useraction = (u_id, action) => {
+        infoxAPI.post(`settings/config/users/${action}`, {
+            u_id: u_id
+        }).then((response) => {
+            this.load_users_data();
+        });
+    }
     render() {
         return (
             <>
@@ -272,9 +279,16 @@ class Users extends React.Component {
                                             <td>{user.profile.u_email}</td>
                                             <td>{user.profile.u_contact}</td>
                                             <td>
-                                                {user.active === 1 ? <button className="btn btn-sm btn-warning m-2">Deacivate</button> : <button className="btn btn-sm btn-success mr-2">Activate</button>}
-                                                {user.active === 0 ? <button className="btn btn-sm btn-danger m-2">Suspend</button> : null}
-                                                <button className="btn btn-sm btn-info m-2">Reset Password</button>
+                                                {user.active === 1 ? <><button className="btn btn-sm btn-warning m-2" onClick={() => {
+                                                    this.useraction(user.u_id, "deactivate");
+                                                }}>Deactivate</button> <button className="btn btn-sm btn-info m-2" onClick={() => {
+                                                    this.useraction(user.u_id, "reset");
+                                                }}>Reset</button></> : <button className="btn btn-sm btn-success mr-2" onClick={() => {
+                                                    this.useraction(user.u_id, "activate");
+                                                }}>Activate</button>}
+                                                {user.active === 0 ? <button className="btn btn-sm btn-danger m-2" onClick={() => {
+                                                    this.useraction(user.u_id, "suspend");
+                                                }}>Suspend</button> : null}
                                             </td>
                                         </tr>
                                     )
