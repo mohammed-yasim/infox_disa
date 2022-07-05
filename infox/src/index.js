@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import App from './infox_app'
 ReactDOM.render(
   <React.StrictMode>
@@ -7,3 +8,4 @@ ReactDOM.render(
   </React.StrictMode>,
   document.getElementById('root')
 );
+serviceWorkerRegistration.register();

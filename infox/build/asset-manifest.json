@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/infox/static/css/main.ccc7b601.chunk.css",
-    "main.js": "/infox/static/js/main.46b221c0.chunk.js",
+    "main.js": "/infox/static/js/main.fe990179.chunk.js",
     "runtime-main.js": "/infox/static/js/runtime-main.4971fa87.js",
     "static/css/2.7952ae80.chunk.css": "/infox/static/css/2.7952ae80.chunk.css",
     "static/js/2.486792e4.chunk.js": "/infox/static/js/2.486792e4.chunk.js",
@@ -14,6 +14,7 @@
     "static/js/7.20abc1c6.chunk.js": "/infox/static/js/7.20abc1c6.chunk.js",
     "static/js/8.94ea1fed.chunk.js": "/infox/static/js/8.94ea1fed.chunk.js",
     "index.html": "/infox/index.html",
+    "service-worker.js": "/infox/service-worker.js",
     "static/js/2.486792e4.chunk.js.LICENSE.txt": "/infox/static/js/2.486792e4.chunk.js.LICENSE.txt",
     "static/js/3.560f2a00.chunk.js.LICENSE.txt": "/infox/static/js/3.560f2a00.chunk.js.LICENSE.txt",
     "static/js/4.cf19de08.chunk.js.LICENSE.txt": "/infox/static/js/4.cf19de08.chunk.js.LICENSE.txt",
@@ -26,6 +27,6 @@
     "static/css/2.7952ae80.chunk.css",
     "static/js/2.486792e4.chunk.js",
     "static/css/main.ccc7b601.chunk.css",
-    "static/js/main.46b221c0.chunk.js"
+    "static/js/main.fe990179.chunk.js"
   ]
 }
