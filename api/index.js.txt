@@ -1,0 +1,99 @@
+API_Router.post('/clock', Middleware, (req, res) => {
+    var ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+    axios.get(`https://us1.locationiq.com/v1/reverse.php?key=78a0e5fd31043f&lat=${req.body.latitude}&lon=${req.body.longitude}&format=json`)
+        .then((response) => {
+            Clock.findOne({
+                where: {
+                    u_id: req.user.u_id,
+                    date: new Date()
+                }
+            })
+                .then((user) => {
+                    if (user) {
+                        if (user.clock_out === null) {
+                            user.clock_out = new Date();
+                            user.clock_out_lat = req.body.latitude;
+                            user.clock_out_lng = req.body.longitude;
+                            user.clock_out_position = response.data.display_name;
+                            user.status = 1;
+                            user.save();
+                            res.status(200).json({
+                                clock_status: 3,
+                                color: '#00bfff',
+                                text: `You are Out from ,${user.clock_out_position} at ${user.clock_out}`
+                            });
+                        } else {
+                            res.status(200).json({
+                                clock_status: 3,
+                                color: '#00bfff',
+                                text: `Already done for the day`
+                            });
+                        }
+                    } else {
+                        Clock.create({
+                            u_id: req.user.u_id,
+                            date: new Date(),
+                            clock_in: new Date(),
+                            clock_in_lat: req.body.latitude,
+                            clock_in_lng: req.body.longitude,
+                            clock_in_position: response.data.display_name,
+                            status: 0,
+                            u_name: req.user.u_name
+                        }).then((user) => {
+                            res.status(200).json({
+                                clock_status: 2,
+                                color: 'red',
+                                text: `You are in from ${user.clock_in_position} at ${new Date(user.clock_in).toString()}`
+                            });
+                        }).catch(
+                            (err) => {
+                                res.status(401).json(err);
+
+                            })
+                    }
+                }).catch(
+                    (err) => {
+                        res.status(401).json(err);
+
+                    })
+        })
+        .catch(
+            err => { console.log(err) }
+        );
+});
+
+API_Router.get('/clock', Middleware, (req, res) => {
+    Clock.findOne({
+        where: {
+            u_id: req.user.u_id,
+            date: new Date()
+        }
+    }).then(
+        (user) => {
+            if (user) {
+                //if (user.clock_out === null) {
+                if (user.clock_out) {
+                    res.status(200).json({
+                        clock_status: 2,
+                        color: 'red',
+                        text: `You are in from ,${user.clock_in_position} at ${new Date(user.clock_in).toString()}`
+
+                    });
+                } else {
+                    res.status(200).json({
+                        clock_status: 3,
+                        color: '#00bfff',
+                        text: `Already done for the day`
+                    });
+                }
+            } else {
+                res.status(200).json({
+                    clock_status: 1,
+                    color: '#00bfff',
+                    text: 'Welcome Login'
+                });
+            }
+        });
+
+});
+

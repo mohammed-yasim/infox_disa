@@ -60,7 +60,7 @@ API_Router.get('/demo-user', (req, res) => {
         u_email: 'yasim@test.com',
         u_contact: '9746830098'
       }).then(user => {
-        res.json(user);
+        res.status(200).json(user);
       }).catch(err => {
         res.status(401).json(err);
       });
@@ -85,7 +85,7 @@ API_Router.post('/login', (req, res) => {
             u_type: user.u_type,
             u_name: user.u_name
           };
-          res.json({
+          res.status(200).json({
             token: (0, _middleware.generateToken)(data)
           });
         } else {
@@ -116,97 +116,11 @@ API_Router.get('/sync_user', _middleware.Middleware, (req, res) => {
         u_type : user.u_type,
         profile:{u_name:"Root"}
     }
-    res.json(data)
+    res.status(200).json(data)
     */
-    res.json(user);
+    res.status(200).json(user);
   }).catch(err => {
     res.status(401).json(err);
-  });
-});
-API_Router.get('/clock', _middleware.Middleware, (req, res) => {
-  _models.Clock.findOne({
-    where: {
-      u_id: req.user.u_id,
-      date: new Date()
-    }
-  }).then(user => {
-    if (user) {
-      //if (user.clock_out === null) {
-      if (user.clock_out) {
-        res.json({
-          clock_status: 2,
-          color: 'red',
-          text: "You are in from ,".concat(user.clock_in_position, " at ").concat(new Date(user.clock_in).toString())
-        });
-      } else {
-        res.json({
-          clock_status: 3,
-          color: '#00bfff',
-          text: "Already done for the day"
-        });
-      }
-    } else {
-      res.json({
-        clock_status: 1,
-        color: '#00bfff',
-        text: 'Welcome Login'
-      });
-    }
-  });
-});
-API_Router.post('/clock', _middleware.Middleware, (req, res) => {
-  _axios.default.get("https://us1.locationiq.com/v1/reverse.php?key=78a0e5fd31043f&lat=".concat(req.body.latitude, "&lon=").concat(req.body.longitude, "&format=json")).then(response => {
-    _models.Clock.findOne({
-      where: {
-        u_id: req.user.u_id,
-        date: new Date()
-      }
-    }).then(user => {
-      if (user) {
-        if (user.clock_out === null) {
-          user.clock_out = new Date();
-          user.clock_out_lat = req.body.latitude;
-          user.clock_out_lng = req.body.longitude;
-          user.clock_out_position = response.data.display_name;
-          user.status = 1;
-          user.save();
-          res.json({
-            clock_status: 3,
-            color: '#00bfff',
-            text: "You are Out from ,".concat(user.clock_out_position, " at ").concat(user.clock_out)
-          });
-        } else {
-          res.json({
-            clock_status: 3,
-            color: '#00bfff',
-            text: "Already done for the day"
-          });
-        }
-      } else {
-        _models.Clock.create({
-          u_id: req.user.u_id,
-          date: new Date(),
-          clock_in: new Date(),
-          clock_in_lat: req.body.latitude,
-          clock_in_lng: req.body.longitude,
-          clock_in_position: response.data.display_name,
-          status: 0,
-          u_name: req.user.u_name
-        }).then(user => {
-          res.json({
-            clock_status: 2,
-            color: 'red',
-            text: "You are in from ".concat(user.clock_in_position, " at ").concat(new Date(user.clock_in).toString())
-          });
-        }).catch(err => {
-          res.status(401).json(err);
-        });
-      }
-    }).catch(err => {
-      res.status(401).json(err);
-    });
-  }).catch(err => {
-    console.log(err);
   });
 });
 
@@ -246,20 +160,20 @@ API_Router.get('/clock_', _middleware.Middleware, Scheduler, (req, res) => {
     if (user) {
       //if (user.clock_out === null) {
       if (user.clock_out_server === null) {
-        res.json({
+        res.status(200).json({
           clock_status: 2,
           color: 'red',
           text: "You are in from ,".concat(user.clock_in_position, " at ").concat(user.clock_in_server)
         });
       } else {
-        res.json({
+        res.status(200).json({
           clock_status: 3,
           color: '#00bfff',
           text: "Already done for the day"
         });
       }
     } else {
-      res.json({
+      res.status(200).json({
         clock_status: 1,
         color: '#00bfff',
         text: 'Welcome Login'
@@ -268,6 +182,7 @@ API_Router.get('/clock_', _middleware.Middleware, Scheduler, (req, res) => {
   });
 });
 API_Router.post('/clock_', _middleware.Middleware, Scheduler, (req, res) => {
+  var ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
   var timecal = 1000 * 60;
   var a = new Date();
   var b = new Date();
@@ -297,14 +212,16 @@ API_Router.post('/clock_', _middleware.Middleware, Scheduler, (req, res) => {
           user.clock_out_position = response.data.display_name;
           user.clock_out_status = ((new Date() - b) / timecal).toFixed(2);
           user.clock_out_hours = hours;
+          user.clock_out_ip = ip;
+          user.clock_out_agent = req.body.agent;
           user.save();
-          res.json({
+          res.status(200).json({
             clock_status: 3,
             color: '#00bfff',
             text: "You are Out from ,".concat(user.clock_out_position, " at ").concat(user.clock_out_server)
           });
         } else {
-          res.json({
+          res.status(200).json({
             clock_status: 3,
             color: '#00bfff',
             text: "Already done for the day"
@@ -319,9 +236,11 @@ API_Router.post('/clock_', _middleware.Middleware, Scheduler, (req, res) => {
           clock_in_lat: req.body.latitude,
           clock_in_lng: req.body.longitude,
           clock_in_position: response.data.display_name,
-          clock_in_status: ((new Date() - a) / timecal).toFixed(2)
+          clock_in_status: ((new Date() - a) / timecal).toFixed(2),
+          clock_in_ip: ip,
+          clock_in_agent: req.body.agent
         }).then(user => {
-          res.json({
+          res.status(200).json({
             clock_status: 2,
             color: 'red',
             text: "You are in from ".concat(user.clock_in_position, " at ").concat(user.clock_in_server)
@@ -346,7 +265,7 @@ API_Router.get('/map', (req, res) => {
       clock_out: null
     }
   }).then(data => {
-    res.json(data);
+    res.status(200).json(data);
   });
 });
 var _default = API_Router;

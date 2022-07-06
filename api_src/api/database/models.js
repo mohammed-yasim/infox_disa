@@ -71,6 +71,13 @@ Attendance.init({
 
     clock_out_hours: { type: infox_datatype.STRING, allowNull: true },
 
+    clock_in_ip: { type: infox_datatype.STRING, allowNull: true, defaultValue: '0.0.0.0' },
+    clock_out_ip: { type: infox_datatype.STRING, allowNull: true, default: '0.0.0.0' },
+
+    clock_in_agent: { type: infox_datatype.STRING, allowNull: true, defaultValue: 'IX' },
+    clock_out_agent: { type: infox_datatype.STRING, allowNull: true, default: 'OX' },
+
+
 }, { sequelize: demo_db });
 Visit.init({
     lat: { type: infox_datatype.STRING, allowNull: true },

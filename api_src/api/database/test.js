@@ -4,10 +4,10 @@ const Demo = express.Router();
 Demo.get('/',(req,res)=>{
     Users.findAll({})
     .then((users)=>{
-        res.json(users);
+        res.status(200).json(users);
     })
     .catch((err)=>{
-        res.json(err)
+        res.status(200).json(err)
     })
 })
 Demo.get('/',(req,res)=>{
@@ -15,10 +15,10 @@ Demo.get('/',(req,res)=>{
         
     })
     .then((data)=>{
-        res.json(data);
+        res.status(200).json(data);
     })
     .catch((err)=>{
-        res.json(err)
+        res.status(200).json(err)
     })
 })
 export default Demo

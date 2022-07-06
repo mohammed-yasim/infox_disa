@@ -15,16 +15,16 @@ var Demo = _express.default.Router();
 
 Demo.get('/', (req, res) => {
   _models.Users.findAll({}).then(users => {
-    res.json(users);
+    res.status(200).json(users);
   }).catch(err => {
-    res.json(err);
+    res.status(200).json(err);
   });
 });
 Demo.get('/', (req, res) => {
   _models.Schedules.create({}).then(data => {
-    res.json(data);
+    res.status(200).json(data);
   }).catch(err => {
-    res.json(err);
+    res.status(200).json(err);
   });
 });
 var _default = Demo;

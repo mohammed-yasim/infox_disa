@@ -16,7 +16,7 @@ SettingAPI.get('/', rootMiddleware, async (req, res) => {
             json['designations'] = data[1]
             json['schedules'] = data[2]
             json['users'] = data[3]
-            res.json(json);
+            res.status(200).json(json);
         }).catch((err) => {
             res.status(406).send(`${err}`)
         })
@@ -25,13 +25,13 @@ SettingAPI.get('/config/:type', rootMiddleware, (req, res) => {
     let type = req.params.type
     switch (type) {
         case 'locations':
-            Location.findAll({ include: { model: User, as: 'users', attributes: ['username'], include: { model: Profile, as: 'profile', attributes: ['u_name'], } } }).then(locations => res.json(locations)).catch(err => res.status(406).send(`${err}`));
+            Location.findAll({ include: { model: User, as: 'users', attributes: ['username'], include: { model: Profile, as: 'profile', attributes: ['u_name'], } } }).then(locations => res.status(200).json(locations)).catch(err => res.status(406).send(`${err}`));
             break;
         case 'designations':
-            Designation.findAll({ include: { model: User, as: 'users', attributes: ['username'], include: { model: Profile, as: 'profile', attributes: ['u_name'], } } }).then(designations => res.json(designations)).catch(err => res.status(406).send(`${err}`));
+            Designation.findAll({ include: { model: User, as: 'users', attributes: ['username'], include: { model: Profile, as: 'profile', attributes: ['u_name'], } } }).then(designations => res.status(200).json(designations)).catch(err => res.status(406).send(`${err}`));
             break;
         case 'schedules':
-            Schedule.findAll({ include: { model: User, as: 'users', attributes: ['username'], include: { model: Profile, as: 'profile', attributes: ['u_name'], } } }).then(schedules => res.json(schedules)).catch(err => res.status(406).send(`${err}`));
+            Schedule.findAll({ include: { model: User, as: 'users', attributes: ['username'], include: { model: Profile, as: 'profile', attributes: ['u_name'], } } }).then(schedules => res.status(200).json(schedules)).catch(err => res.status(406).send(`${err}`));
             break;
         case 'users':
             let json = { users: [], locations: [], schedules: [], designations: [] }
@@ -47,7 +47,7 @@ SettingAPI.get('/config/:type', rootMiddleware, (req, res) => {
                     json['designations'] = data[1]
                     json['schedules'] = data[2]
                     json['users'] = data[3]
-                    res.json(json);
+                    res.status(200).json(json);
                 }).catch((err) => {
                     res.status(406).send(`${err}`)
                 })
@@ -60,13 +60,13 @@ SettingAPI.post('/config/:type/:action', rootMiddleware, (req, res) => {
     let type = `${req.params.type}_${req.params.action}`;
     switch (type) {
         case 'locations_add':
-            Location.create(req.body).then(locations => res.json(locations)).catch(err => res.status(406).send(`${err}`));
+            Location.create(req.body).then(locations => res.status(200).json(locations)).catch(err => res.status(406).send(`${err}`));
             break;
         case 'designations_add':
-            Designation.create(req.body).then(locations => res.json(locations)).catch(err => res.status(406).send(`${err}`));
+            Designation.create(req.body).then(locations => res.status(200).json(locations)).catch(err => res.status(406).send(`${err}`));
             break;
         case 'schedules_add':
-            Schedule.create(req.body).then(locations => res.json(locations)).catch(err => res.status(406).send(`${err}`));
+            Schedule.create(req.body).then(locations => res.status(200).json(locations)).catch(err => res.status(406).send(`${err}`));
             break;
         case 'users_add':
             bcrypt.hash(req.body.password, 10, (error, hash) => {
@@ -89,7 +89,7 @@ SettingAPI.post('/config/:type/:action', rootMiddleware, (req, res) => {
                             schedule_: req.body.schedule_,
                         }).then((user) => {
                             user.password = ''
-                            res.json(user);
+                            res.status(200).json(user);
                         }).catch((err) => {
                             res.status(406).send(`B ${err}`)
                         })
@@ -106,7 +106,7 @@ SettingAPI.post('/config/:type/:action', rootMiddleware, (req, res) => {
                     active: 1
                 }
             }).then((user) => {
-                res.json(user);
+                res.status(200).json(user);
             })
                 .catch((err) => {
                     res.status(406).send(`user_deactivate ${err}`)
@@ -119,7 +119,7 @@ SettingAPI.post('/config/:type/:action', rootMiddleware, (req, res) => {
                     active: 0
                 }
             }).then((user) => {
-                res.json(user);
+                res.status(200).json(user);
             })
                 .catch((err) => {
                     res.status(406).send(`user_deactivate ${err}`)

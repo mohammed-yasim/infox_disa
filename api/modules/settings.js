@@ -45,7 +45,7 @@ SettingAPI.get('/', _middleware.rootMiddleware, /*#__PURE__*/function () {
       json['designations'] = data[1];
       json['schedules'] = data[2];
       json['users'] = data[3];
-      res.json(json);
+      res.status(200).json(json);
     }).catch(err => {
       res.status(406).send("".concat(err));
     });
@@ -71,7 +71,7 @@ SettingAPI.get('/config/:type', _middleware.rootMiddleware, (req, res) => {
             attributes: ['u_name']
           }
         }
-      }).then(locations => res.json(locations)).catch(err => res.status(406).send("".concat(err)));
+      }).then(locations => res.status(200).json(locations)).catch(err => res.status(406).send("".concat(err)));
 
       break;
 
@@ -87,7 +87,7 @@ SettingAPI.get('/config/:type', _middleware.rootMiddleware, (req, res) => {
             attributes: ['u_name']
           }
         }
-      }).then(designations => res.json(designations)).catch(err => res.status(406).send("".concat(err)));
+      }).then(designations => res.status(200).json(designations)).catch(err => res.status(406).send("".concat(err)));
 
       break;
 
@@ -103,7 +103,7 @@ SettingAPI.get('/config/:type', _middleware.rootMiddleware, (req, res) => {
             attributes: ['u_name']
           }
         }
-      }).then(schedules => res.json(schedules)).catch(err => res.status(406).send("".concat(err)));
+      }).then(schedules => res.status(200).json(schedules)).catch(err => res.status(406).send("".concat(err)));
 
       break;
 
@@ -143,7 +143,7 @@ SettingAPI.get('/config/:type', _middleware.rootMiddleware, (req, res) => {
         json['designations'] = data[1];
         json['schedules'] = data[2];
         json['users'] = data[3];
-        res.json(json);
+        res.status(200).json(json);
       }).catch(err => {
         res.status(406).send("".concat(err));
       });
@@ -158,17 +158,17 @@ SettingAPI.post('/config/:type/:action', _middleware.rootMiddleware, (req, res) 
 
   switch (type) {
     case 'locations_add':
-      _models.Location.create(req.body).then(locations => res.json(locations)).catch(err => res.status(406).send("".concat(err)));
+      _models.Location.create(req.body).then(locations => res.status(200).json(locations)).catch(err => res.status(406).send("".concat(err)));
 
       break;
 
     case 'designations_add':
-      _models.Designation.create(req.body).then(locations => res.json(locations)).catch(err => res.status(406).send("".concat(err)));
+      _models.Designation.create(req.body).then(locations => res.status(200).json(locations)).catch(err => res.status(406).send("".concat(err)));
 
       break;
 
     case 'schedules_add':
-      _models.Schedule.create(req.body).then(locations => res.json(locations)).catch(err => res.status(406).send("".concat(err)));
+      _models.Schedule.create(req.body).then(locations => res.status(200).json(locations)).catch(err => res.status(406).send("".concat(err)));
 
       break;
 
@@ -192,7 +192,7 @@ SettingAPI.post('/config/:type/:action', _middleware.rootMiddleware, (req, res) 
               schedule_: req.body.schedule_
             }).then(user => {
               user.password = '';
-              res.json(user);
+              res.status(200).json(user);
             }).catch(err => {
               res.status(406).send("B ".concat(err));
             });
@@ -214,7 +214,7 @@ SettingAPI.post('/config/:type/:action', _middleware.rootMiddleware, (req, res) 
           active: 1
         }
       }).then(user => {
-        res.json(user);
+        res.status(200).json(user);
       }).catch(err => {
         res.status(406).send("user_deactivate ".concat(err));
       });
@@ -231,7 +231,7 @@ SettingAPI.post('/config/:type/:action', _middleware.rootMiddleware, (req, res) 
           active: 0
         }
       }).then(user => {
-        res.json(user);
+        res.status(200).json(user);
       }).catch(err => {
         res.status(406).send("user_deactivate ".concat(err));
       });

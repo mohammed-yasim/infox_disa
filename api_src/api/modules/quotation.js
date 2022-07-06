@@ -15,7 +15,7 @@ QuotationRouter.get('/', Middleware, (req, res) => {
     }
     QuickQuotations.findAll(parameters)
         .then((quotations) => {
-            res.json(quotations);
+            res.status(200).json(quotations);
         }).catch(err => {
             res.status(406).send(`${err}`);
         })
@@ -35,7 +35,7 @@ QuotationRouter.get('/list/:type', Middleware, (req, res) => {
         }
     }
     QuickQuotations.findAll(parameters).then((quotations) => {
-        res.json(quotations);
+        res.status(200).json(quotations);
     }).catch(err => {
         res.status(406).send(`${err}`);
     })
@@ -47,7 +47,7 @@ QuotationRouter.get('/quick/:id', Middleware, (req, res) => {
             id: req.params.id
         },
     }).then((quotations) => {
-        res.json(quotations);
+        res.status(200).json(quotations);
     })
         .catch(err => {
             res.status(403).send(`${err}`)
@@ -66,7 +66,7 @@ QuotationRouter.post('/quick/:id', Middleware, (req, res) => {
                 party: `${req.body.party_name} - ${req.body.party_address}`,
                 permission: 1
             }).then((quotation) => {
-                res.json(quotation);
+                res.status(200).json(quotation);
             })
                 .catch(err => {
                     res.status(406).send(`${err}`)
@@ -86,7 +86,7 @@ QuotationRouter.post('/quick/:id', Middleware, (req, res) => {
                     id: req.params.id
                 }
             }).then((quotation) => {
-                res.json(quotation);
+                res.status(200).json(quotation);
             })
                 .catch(err => {
                     res.status(403).send(`${err}`);
@@ -130,7 +130,7 @@ QuotationRouter.post('/status/:id/:status', Middleware, (req, res) => {
         QuickQuotations.update(data, {
             where: { id: id, }
         }).then((quotation) => {
-            res.json(quotation);
+            res.status(200).json(quotation);
         })
             .catch(err => {
                 res.status(403).send(`${err}`);
@@ -152,7 +152,7 @@ QuotationRouter.post('/status/:id/:status', Middleware, (req, res) => {
         QuickQuotations.update(data, {
             where: { id: id, owner: req.user.u_id }
         }).then((quotation) => {
-            res.json(quotation);
+            res.status(200).json(quotation);
         })
             .catch(err => {
                 res.status(403).send(`${err}`);
@@ -165,7 +165,7 @@ QuotationRouter.get('/preview/:id', Middleware, (req, res) => {
             id: req.params.id
         },
     }).then((quotations) => {
-        res.json(quotations);
+        res.status(200).json(quotations);
     })
         .catch(err => {
             res.status(403).send(`${err}`)

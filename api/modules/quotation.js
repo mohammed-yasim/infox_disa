@@ -31,7 +31,7 @@ QuotationRouter.get('/', _middleware.Middleware, (req, res) => {
   }
 
   _models.QuickQuotations.findAll(parameters).then(quotations => {
-    res.json(quotations);
+    res.status(200).json(quotations);
   }).catch(err => {
     res.status(406).send("".concat(err));
   });
@@ -59,7 +59,7 @@ QuotationRouter.get('/list/:type', _middleware.Middleware, (req, res) => {
   }
 
   _models.QuickQuotations.findAll(parameters).then(quotations => {
-    res.json(quotations);
+    res.status(200).json(quotations);
   }).catch(err => {
     res.status(406).send("".concat(err));
   });
@@ -71,7 +71,7 @@ QuotationRouter.get('/quick/:id', _middleware.Middleware, (req, res) => {
       id: req.params.id
     }
   }).then(quotations => {
-    res.json(quotations);
+    res.status(200).json(quotations);
   }).catch(err => {
     res.status(403).send("".concat(err));
   });
@@ -90,7 +90,7 @@ QuotationRouter.post('/quick/:id', _middleware.Middleware, (req, res) => {
         party: "".concat(req.body.party_name, " - ").concat(req.body.party_address),
         permission: 1
       }).then(quotation => {
-        res.json(quotation);
+        res.status(200).json(quotation);
       }).catch(err => {
         res.status(406).send("".concat(err));
       });
@@ -111,7 +111,7 @@ QuotationRouter.post('/quick/:id', _middleware.Middleware, (req, res) => {
           id: req.params.id
         }
       }).then(quotation => {
-        res.json(quotation);
+        res.status(200).json(quotation);
       }).catch(err => {
         res.status(403).send("".concat(err));
       });
@@ -167,7 +167,7 @@ QuotationRouter.post('/status/:id/:status', _middleware.Middleware, (req, res) =
         id: id
       }
     }).then(quotation => {
-      res.json(quotation);
+      res.status(200).json(quotation);
     }).catch(err => {
       res.status(403).send("".concat(err));
     });
@@ -197,7 +197,7 @@ QuotationRouter.post('/status/:id/:status', _middleware.Middleware, (req, res) =
         owner: req.user.u_id
       }
     }).then(quotation => {
-      res.json(quotation);
+      res.status(200).json(quotation);
     }).catch(err => {
       res.status(403).send("".concat(err));
     });
@@ -209,7 +209,7 @@ QuotationRouter.get('/preview/:id', _middleware.Middleware, (req, res) => {
       id: req.params.id
     }
   }).then(quotations => {
-    res.json(quotations);
+    res.status(200).json(quotations);
   }).catch(err => {
     res.status(403).send("".concat(err));
   });

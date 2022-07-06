@@ -31,7 +31,8 @@ app.get('/sync', (req, res) => {
   });
 });
 app.get('/', (request, response) => {
-  response.redirect("/infox?ip=".concat(encodeURI(request.socket.remoteAddress)));
+  var ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+  response.redirect("/infox?ip=".concat(encodeURI(ip)));
 });
 app.listen(3001), () => {
   console.log("API runing on Port 3001");

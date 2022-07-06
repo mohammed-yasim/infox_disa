@@ -226,6 +226,26 @@ Attendance.init({
   clock_out_hours: {
     type: _maria_db.infox_datatype.STRING,
     allowNull: true
+  },
+  clock_in_ip: {
+    type: _maria_db.infox_datatype.STRING,
+    allowNull: true,
+    defaultValue: '0.0.0.0'
+  },
+  clock_out_ip: {
+    type: _maria_db.infox_datatype.STRING,
+    allowNull: true,
+    default: '0.0.0.0'
+  },
+  clock_in_agent: {
+    type: _maria_db.infox_datatype.STRING,
+    allowNull: true,
+    defaultValue: 'IX'
+  },
+  clock_out_agent: {
+    type: _maria_db.infox_datatype.STRING,
+    allowNull: true,
+    default: 'OX'
   }
 }, {
   sequelize: _maria_db.demo_db

@@ -90,7 +90,7 @@ CatalougueAPI.get('/', _middleware.adminMiddleware, (req, res) => {
     });
   });
   Promise.all([totel, verified, mrp, image, noimage, discontinued]).then(data => {
-    res.json({
+    res.status(200).json({
       totel: data[0],
       verified: data[1],
       mrp: data[2],
@@ -109,7 +109,7 @@ CatalougueAPI.get('/categories', _middleware.adminMiddleware, (req, res) => {
       var_t: ["MC", "LC", "SC", "UNIT"]
     }
   }).then(variable => {
-    res.json(variable);
+    res.status(200).json(variable);
   }).catch(err => {
     res.status(406).send("".concat(err));
   });
@@ -123,7 +123,7 @@ CatalougueAPI.post('/categories', _middleware.adminMiddleware, (req, res) => {
     var_t: req.body.var_t,
     var_c: req.body.var_c
   }).then(variable => {
-    res.json(variable);
+    res.status(200).json(variable);
   }).catch(err => {
     res.status(406).send("".concat(err));
   });
@@ -135,7 +135,7 @@ CatalougueAPI.get('/products', _middleware.adminMiddleware, (req, res) => {
     }
   }).then(product => {
     if (product) {
-      res.json(product);
+      res.status(200).json(product);
     } else {
       res.status(406).send("".concat(err));
     }
@@ -146,7 +146,7 @@ CatalougueAPI.get('/products', _middleware.adminMiddleware, (req, res) => {
 CatalougueAPI.get('/allproducts', _middleware.Middleware, (req, res) => {
   _models.Products.findAll().then(product => {
     if (product) {
-      res.json(product);
+      res.status(200).json(product);
     } else {
       res.status(406).send("".concat(err));
     }
@@ -159,7 +159,7 @@ CatalougueAPI.get('/list', _middleware.Middleware, (req, res) => {
     attributes: ['p_code', 'p_master', 'p_sub', 'p_group', 'p_image', 'p_name', 'p_reference']
   }).then(product => {
     if (product) {
-      res.json(product);
+      res.status(200).json(product);
     } else {
       res.status(406).send("".concat(err));
     }
@@ -173,7 +173,7 @@ CatalougueAPI.post('/products', _middleware.adminMiddleware, (req, res) => {
   switch (action) {
     case 'add':
       _models.Products.create(req.body).then(product => {
-        res.json(product);
+        res.status(200).json(product);
       }).catch(err => {
         res.status(406).send("".concat(err));
       });
@@ -188,7 +188,7 @@ CatalougueAPI.post('/products', _middleware.adminMiddleware, (req, res) => {
           p_id: data.p_id
         }
       }).then(product => {
-        res.json(product);
+        res.status(200).json(product);
       }).catch(err => {
         res.status(406).send("".concat(err));
       });
