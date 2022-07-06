@@ -14,7 +14,7 @@ app.get('/infox/*', (req, res) => {
     res.sendFile(path.join(__dirname, '/infox/build/index.html'));
 });
 app.get('/sync', (req, res) => {
-    demo_db.sync({ force: true }).then((data) => {
+    demo_db.sync().then((data) => {
         res.send(`${data}`);
     }, (err) => {
         res.send(`${err}`);

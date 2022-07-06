@@ -5,6 +5,7 @@ import { infoxAPI } from "../../etc/api";
 import { InfoXContext } from "../../etc/context";
 import { Designations, Locations, Schedules } from "./config";
 
+/*
 class Example extends React.Component {
     constructor(props) {
         super(props)
@@ -24,7 +25,7 @@ class Example extends React.Component {
         )
     }
 }
-
+*/
 class Home extends React.Component {
     static contextType = InfoXContext
     constructor(props) {

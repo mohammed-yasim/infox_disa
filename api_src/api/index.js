@@ -48,7 +48,7 @@ API_Router.get('/demo-user', (req, res) => {
     });
 })
 API_Router.post('/login', (req, res) => {
-    Users.findOne({ where: { username: req.body.username, active: 1, suspended: 0 } }).then(
+    User.findOne({ where: { username: req.body.username, active: 1, suspended: 0 } }).then(
         (user) => {
             if (user) {
                 bcrypt.compare(req.body.password, user.password, (error, match) => {
@@ -77,6 +77,29 @@ API_Router.post('/login', (req, res) => {
             res.status(401).send(`${err}`);
         }
     )
+});
+API_Router.get('/sync_user', Middleware, (req, res) => {
+    User.findOne({
+        attributes: ['u_id', 'u_type'],
+        where: { u_id: req.user.u_id },
+        include: { model: Profile, as: 'profile' }
+    }).then(
+        (user) => {
+            /*
+            let data = {
+                u_id : user.u_id,
+                u_type : user.u_type,
+                profile:{u_name:"Root"}
+            }
+            res.json(data)
+            */
+            res.json(user)
+        }
+    ).catch(
+        (err) => {
+            res.status(401).json(err);
+
+        })
 });
 API_Router.get('/clock', Middleware, (req, res) => {
     Clock.findOne({
@@ -314,19 +337,5 @@ API_Router.get('/map', (req, res) => {
         res.json(data);
     });
 })
-API_Router.get('/sync_user', Middleware, (req, res) => {
-    User.findOne({
-        attributes: ['u_id', 'u_type'],
-        where: { u_id: req.user.u_id },
-        include: { model: Profile, as: 'profile' }
-    }).then(
-        (user) => {
-            res.json(user)
-        }
-    ).catch(
-        (err) => {
-            res.status(401).json(err);
 
-        })
-});
 export default API_Router;

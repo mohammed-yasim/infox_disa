@@ -24,9 +24,7 @@ app.get('/infox/*', (req, res) => {
   res.sendFile(_path.default.join(__dirname, '/infox/build/index.html'));
 });
 app.get('/sync', (req, res) => {
-  _maria_db.demo_db.sync({
-    force: true
-  }).then(data => {
+  _maria_db.demo_db.sync().then(data => {
     res.send("".concat(data));
   }, err => {
     res.send("".concat(err));

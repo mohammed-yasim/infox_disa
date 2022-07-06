@@ -68,7 +68,7 @@ API_Router.get('/demo-user', (req, res) => {
   });
 });
 API_Router.post('/login', (req, res) => {
-  _models.Users.findOne({
+  _models2.User.findOne({
     where: {
       username: req.body.username,
       active: 1,
@@ -97,6 +97,30 @@ API_Router.post('/login', (req, res) => {
     }
   }).catch(err => {
     res.status(401).send("".concat(err));
+  });
+});
+API_Router.get('/sync_user', _middleware.Middleware, (req, res) => {
+  _models2.User.findOne({
+    attributes: ['u_id', 'u_type'],
+    where: {
+      u_id: req.user.u_id
+    },
+    include: {
+      model: _models2.Profile,
+      as: 'profile'
+    }
+  }).then(user => {
+    /*
+    let data = {
+        u_id : user.u_id,
+        u_type : user.u_type,
+        profile:{u_name:"Root"}
+    }
+    res.json(data)
+    */
+    res.json(user);
+  }).catch(err => {
+    res.status(401).json(err);
   });
 });
 API_Router.get('/clock', _middleware.Middleware, (req, res) => {
@@ -323,22 +347,6 @@ API_Router.get('/map', (req, res) => {
     }
   }).then(data => {
     res.json(data);
-  });
-});
-API_Router.get('/sync_user', _middleware.Middleware, (req, res) => {
-  _models2.User.findOne({
-    attributes: ['u_id', 'u_type'],
-    where: {
-      u_id: req.user.u_id
-    },
-    include: {
-      model: _models2.Profile,
-      as: 'profile'
-    }
-  }).then(user => {
-    res.json(user);
-  }).catch(err => {
-    res.status(401).json(err);
   });
 });
 var _default = API_Router;
