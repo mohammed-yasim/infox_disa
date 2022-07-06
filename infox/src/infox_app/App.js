@@ -116,9 +116,8 @@ class InfoXApp extends React.Component {
                                     <Switch>
                                         <Route path="/dashboard">
                                             <DashboardAttendance />
-                                            <div className="row">
+                                            
                                                 <EmployeeMap />
-                                            </div>
                                         </Route>
 
                                         <Route path="/setting" component={Setting} />

@@ -259,12 +259,38 @@ API_Router.post('/clock_', _middleware.Middleware, Scheduler, (req, res) => {
   });
 });
 API_Router.get('/map', (req, res) => {
-  _models.Clock.findAll({
-    where: {
-      date: new Date(),
-      clock_out: null
-    }
-  }).then(data => {
+  var users = new Promise((resolve, reject) => {
+    _models2.User.findAll({
+      attributes: {
+        exclude: ['password']
+      },
+      where: {
+        active: 1,
+        suspended: 0
+      },
+      include: 'profile'
+    }).then(data => {
+      resolve(data);
+    }).catch(err => {
+      reject(err);
+    });
+  });
+  var attendances = new Promise((resolve, reject) => {
+    _models2.Attendance.findAll({
+      where: {
+        date: new Date()
+      }
+    }).then(data => {
+      resolve(data);
+    }).catch(err => {
+      reject(err);
+    });
+  });
+  Promise.all([users, attendances]).then(values => {
+    var data = {
+      users: values[0],
+      attendances: values[1]
+    };
     res.status(200).json(data);
   });
 });

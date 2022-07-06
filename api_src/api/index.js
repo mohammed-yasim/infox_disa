@@ -238,14 +238,37 @@ API_Router.post('/clock_', Middleware, Scheduler, (req, res) => {
         );
 });
 API_Router.get('/map', (req, res) => {
-    Clock.findAll({
-        where: {
-            date: new Date(),
-            clock_out: null
-        }
-    }).then((data) => {
-        res.status(200).json(data);
+    const users = new Promise((resolve, reject) => {
+        User.findAll({
+            attributes: { exclude: ['password'] },
+            where: { active: 1, suspended: 0 },
+            include: 'profile'
+        }).then((data) => {
+            resolve(data);
+        }).catch(err => {
+            reject(err);
+        })
     });
+    const attendances = new Promise((resolve, reject) => {
+        Attendance.findAll({
+            where: {
+                date: new Date(),
+            }
+        })
+            .then((data) => {
+                resolve(data);
+            }).catch(err => {
+                reject(err);
+            })
+    });
+    Promise.all([users, attendances])
+        .then((values) => {
+            let data = {
+                users: values[0],
+                attendances: values[1]
+            }
+            res.status(200).json(data);
+        });
 })
 
 export default API_Router;
