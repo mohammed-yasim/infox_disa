@@ -31,7 +31,7 @@ app.get('/sync', (req, res) => {
   });
 });
 app.get('/', (request, response) => {
-  var ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+  var ip = request.headers['x-forwarded-for'] || request.socket.remoteAddress;
   response.redirect("/infox?ip=".concat(encodeURI(ip)));
 });
 app.listen(3001), () => {
