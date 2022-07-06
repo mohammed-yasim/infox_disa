@@ -31,8 +31,8 @@ class InfoXApp extends React.Component {
             if ($(".sidebar").hasClass("toggled")) {
                 window.$('.sidebar .collapse').collapse('hide');
             };
-        }else{
-            if($(".sidebar").hasClass('toggled')){
+        } else {
+            if ($(".sidebar").hasClass('toggled')) {
                 window.$('.sidebar .collapse').collapse('hide');
             }
         }
@@ -49,7 +49,7 @@ class InfoXApp extends React.Component {
                             <div className="sidebar-brand-text mx-3">InfoX<sup>{process.env.REACT_APP_VERSION}</sup></div>
                         </Link>
                         <hr className="sidebar-divider my-0" />
-                        <NavLink  onClick={this.closeSidebar}  data-close="collapse" className="nav-item text-decoration-none" to="/dashboard">
+                        <NavLink replace={true} onClick={this.closeSidebar} data-close="collapse" className="nav-item text-decoration-none" to="/dashboard">
                             <span className="nav-link" href="#dashboard">
                                 <i className="fas fa-fw fa-tachometer-alt"></i>
                                 <span>Dashboard</span></span>
@@ -66,16 +66,16 @@ class InfoXApp extends React.Component {
                             </a>
                             <div id="collapseUtilities" className="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
                                 <div className="bg-white py-2 collapse-inner rounded" style={{ zIndex: '9999 !important' }}>
-                                <button data-toggle="collapse" data-target="#collapseUtilities" className="float-right btn btn-link text-decoration-none"><i className="fa fa-times"></i></button>
-                                    <NavLink  onClick={this.closeSidebar}  exact className="collapse-item" to="/catalogue">Home</NavLink>
-                                    <NavLink  onClick={this.closeSidebar}  className="collapse-item" to="/catalogue/all">All Products</NavLink>
-                                    <NavLink  onClick={this.closeSidebar}  className="collapse-item" to="/catalogue/go">Add New</NavLink>
-                                    <NavLink  onClick={this.closeSidebar}  className="collapse-item" to="/catalogue/advanced">Advanced</NavLink>
+                                    <button data-toggle="collapse" data-target="#collapseUtilities" className="float-right btn btn-link text-decoration-none"><i className="fa fa-times"></i></button>
+                                    <NavLink replace={true} onClick={this.closeSidebar} exact className="collapse-item" to="/catalogue">Home</NavLink>
+                                    <NavLink replace={true} onClick={this.closeSidebar} className="collapse-item" to="/catalogue/all">All Products</NavLink>
+                                    <NavLink replace={true} onClick={this.closeSidebar} className="collapse-item" to="/catalogue/go">Add New</NavLink>
+                                    <NavLink replace={true} onClick={this.closeSidebar} className="collapse-item" to="/catalogue/advanced">Advanced</NavLink>
                                 </div>
                             </div>
                         </li>
                         <hr className="sidebar-divider" />
-                        <NavLink onClick={this.closeSidebar} className="nav-item text-decoration-none" to="/quotation">
+                        <NavLink replace={true} onClick={this.closeSidebar} className="nav-item text-decoration-none" to="/quotation">
                             <span className="nav-link">
                                 <i className="fas fa-fw fa-quote-left"></i>
                                 <span>Quotation</span></span>
@@ -112,12 +112,12 @@ class InfoXApp extends React.Component {
 
                             </nav>
                             <div className="container-fluid">
-                                <Suspense fallback={<div  className="Suspense_fallback"><img alt="loadimage" src={LoadingGif} /></div>}>
+                                <Suspense fallback={<div className="Suspense_fallback"><img alt="loadimage" src={LoadingGif} /></div>}>
                                     <Switch>
                                         <Route path="/dashboard">
-                                            <DashboardAttendance/>
+                                            <DashboardAttendance />
                                             <div className="row">
-                                            <EmployeeMap />
+                                                <EmployeeMap />
                                             </div>
                                         </Route>
 
@@ -196,13 +196,13 @@ class InfoXApp extends React.Component {
                                 <div className="sidebar-brand-text mx-3">InfoX<sup>{process.env.REACT_APP_VERSION}</sup></div>
                             </Link>
                             <hr className="sidebar-divider my-0" />
-                            <NavLink onClick={this.closeSidebar} className="nav-item text-decoration-none" to="/dashboard">
+                            <NavLink replace={true} onClick={this.closeSidebar} className="nav-item text-decoration-none" to="/dashboard">
                                 <span className="nav-link" href="#dashboard">
                                     <i className="fas fa-fw fa-tachometer-alt"></i>
                                     <span>Dashboard</span></span>
                             </NavLink>
                             <hr className="d-none sidebar-divider" />
-                            <NavLink style={{display:'none'}} onClick={this.closeSidebar} className="nav-item text-decoration-none" to="/quotation">
+                            <NavLink replace={true} style={{ display: 'none' }} onClick={this.closeSidebar} className="nav-item text-decoration-none" to="/quotation">
                                 <span className="nav-link">
                                     <i className="fas fa-fw fa-quote-left"></i>
                                     <span>Quotation</span></span>
@@ -243,7 +243,7 @@ class InfoXApp extends React.Component {
                                                 <AttendanceApp />
                                             </Route>
                                             {
-                                            //<Route path="/quotation" component={Quotation} /> 
+                                                //<Route path="/quotation" component={Quotation} /> 
                                             }
                                             <Route path="*">
                                                 <div id="content">
@@ -313,21 +313,21 @@ export default withRouter(InfoXApp);
                         Assets
                     </div>
                     <li className="nav-item text-decoration-none">
-                        <NavLink className="nav-link collapsed" to="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                        <NavLink replace={true} className="nav-link collapsed" to="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
                             <i className="fas fa-fw fa-book"></i>
                             <span>Catalogue</span>
                         </NavLink>
                         <div id="collapseTwo" className="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                             <div className="bg-white py-2 collapse-inner rounded">
                                 <h6 className="collapse-header">Custom Components:</h6>
-                                <NavLink className="collapse-item" to="buttons.html">Buttons</NavLink>
-                                <NavLink className="collapse-item" to="cards.html">Cards</NavLink>
+                                <NavLink replace={true} className="collapse-item" to="buttons.html">Buttons</NavLink>
+                                <NavLink replace={true} className="collapse-item" to="cards.html">Cards</NavLink>
                             </div>
                         </div>
                     </li>
 
                     <li className="nav-item text-decoration-none">
-                        <NavLink className="nav-link collapsed" to="/yasim" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
+                        <NavLink replace={true} className="nav-link collapsed" to="/yasim" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
                             <i className="fas fa-fw fa-users"></i>
                             <span>Employees</span>
                         </NavLink>
@@ -345,7 +345,7 @@ export default withRouter(InfoXApp);
                     <div className="sidebar-heading">
                         Reports
                     </div>
-                    <NavLink className="nav-item text-decoration-none" to="/attendance">
+                    <NavLink replace={true} className="nav-item text-decoration-none" to="/attendance">
                         <span className="nav-link">
                             <i className="fas fa-fw fa-file"></i>
                             <span>Attendance</span></span>
@@ -354,7 +354,7 @@ export default withRouter(InfoXApp);
                     <div className="sidebar-heading">
                         Reports
                     </div>
-                    <NavLink className="nav-item text-decoration-none" to="/quotation">
+                    <NavLink replace={true} className="nav-item text-decoration-none" to="/quotation">
                         <span className="nav-link">
                             <i className="fas fa-fw fa-quote-left"></i>
                             <span>Quotation</span></span>
