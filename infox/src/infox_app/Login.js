@@ -3,6 +3,7 @@ import { withRouter } from "react-router-dom";
 import { Toast } from "antd-mobile";
 import { infoxAPI } from "./etc/api";
 import logo from './lib/logo.png'
+import { setUserSession } from "./etc/auth_handler";
 class InfoXLogin extends React.Component {
     constructor(props) {
         super(props);
@@ -24,7 +25,7 @@ class InfoXLogin extends React.Component {
             .then((response) => {
                 Toast.hide()
                 this.setState({ error: null });
-                sessionStorage.setItem("token", response.data.token);
+                setUserSession(response.data.token);
                 this.props.history.push('/');
             }).catch((error) => {
                 Toast.fail(`${error}`, 0.8)

@@ -1,10 +1,14 @@
 import { Route, Redirect } from "react-router-dom";
+
 const getToken = () => {
-    return sessionStorage.getItem("token") || null;
+    return localStorage.getItem("token") || null;
+};
+const setUserSession = (token) => {
+    localStorage.setItem("token", token);
 };
 const removeUserSession = () => {
-    sessionStorage.removeItem("token");
-  };
+    localStorage.removeItem("token");
+};
 // handle the public routes
 function PublicRoute({ component: Component, ...rest }) {
     return (
@@ -38,4 +42,4 @@ function PrivateRoute({ component: Component, ...rest }) {
     );
 }
 
-export { PrivateRoute, PublicRoute,removeUserSession,getToken }
+export { PrivateRoute, PublicRoute, setUserSession, removeUserSession, getToken }
