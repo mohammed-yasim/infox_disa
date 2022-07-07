@@ -1,4 +1,4 @@
-import express, { response } from "express";
+import express from "express";
 import axios from "axios";
 import { infox_db } from "./maria_db";
 import { generateToken, Middleware } from "./middleware";
@@ -54,7 +54,7 @@ API_Router.post('/login', (req, res) => {
             if (user) {
                 bcrypt.compare(req.body.password, user.password, (error, match) => {
                     if (error) {
-                        response.status(406).send('invalid credentials');
+                        res.status(406).send('invalid credentials');
                     } else if (match) {
                         let data = {
                             u_id: user.u_id,
@@ -70,7 +70,7 @@ API_Router.post('/login', (req, res) => {
                 })
             }
             else {
-                response.status(406).send('inactive/invalid credentials/suspended');
+                res.status(406).send('inactive/invalid credentials/suspended');
             }
         }
     ).catch(

@@ -4,6 +4,7 @@ import cors from 'cors';
 import API_Router from './api';
 import { demo_db } from './api/maria_db';
 import Demo from './api/database/test';
+import { Products } from './api/models';
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -20,6 +21,21 @@ app.get('/sync', (req, res) => {
         res.send(`${err}`);
     });
 });
+app.post('/update_price',(req,res)=>{
+    console.log(req.body)
+    let data = req.body;
+    Products.update(data, {
+        where: { p_code: data.p_code }
+    }).then(
+        (product) => {
+            res.status(200).json(product);
+        }
+    ).catch(
+        (err) => {
+            res.status(406).send(`${err}`);
+        }
+    );
+})
 app.get('/', (request, response) => {
     let ip = request.headers['x-forwarded-for'] || request.socket.remoteAddress;
     response.redirect(`/infox?ip=${encodeURI(ip)}`);
@@ -27,3 +43,4 @@ app.get('/', (request, response) => {
 app.listen(3001), () => {
     console.log("API runing on Port 3001");
 };
+

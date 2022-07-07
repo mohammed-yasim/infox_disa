@@ -5,7 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _express = _interopRequireWildcard(require("express"));
+var _express = _interopRequireDefault(require("express"));
 
 var _axios = _interopRequireDefault(require("axios"));
 
@@ -26,10 +26,6 @@ var _quotation = _interopRequireDefault(require("./modules/quotation"));
 var _models2 = require("./database/models");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 var API_Router = _express.default.Router();
 
@@ -78,7 +74,7 @@ API_Router.post('/login', (req, res) => {
     if (user) {
       _bcryptjs.default.compare(req.body.password, user.password, (error, match) => {
         if (error) {
-          _express.response.status(406).send('invalid credentials');
+          res.status(406).send('invalid credentials');
         } else if (match) {
           var data = {
             u_id: user.u_id,
@@ -93,7 +89,7 @@ API_Router.post('/login', (req, res) => {
         }
       });
     } else {
-      _express.response.status(406).send('inactive/invalid credentials/suspended');
+      res.status(406).send('inactive/invalid credentials/suspended');
     }
   }).catch(err => {
     res.status(401).send("".concat(err));
