@@ -6,7 +6,8 @@
   "scripts": {
     "build": "babel api_src -d . --copy-files",
     "devbuild": "npm run build && nodemon ./api_server.js",
-    "dev": "nodemon --watch api_src --exec npm run devbuild"
+    "dev": "nodemon --watch api_src --exec npm run devbuild",
+    "clean":"npm cache clean --force"
   },
   "author": "mohammed-yasim",
   "license": "ISC",
