@@ -201,8 +201,8 @@ API_Router.post('/clock_', _middleware.Middleware, Scheduler, (req, res) => {
         var hours = ((new Date() - c) / timecal).toFixed(2);
 
         if (user.clock_out_server === null) {
-          user.clock_out_server = new Date();
-          user.clock_out_local = new Date(req.body.clock);
+          user.clock_out_server = new Date(); //user.clock_out_local = new Date(req.body.clock);
+
           user.clock_out_lat = req.body.latitude;
           user.clock_out_lng = req.body.longitude;
           user.clock_out_position = response.data.display_name;
