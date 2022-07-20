@@ -60,7 +60,7 @@ class AttendanceApp extends React.Component {
             latitude: this.state.latitude,
             longitude: this.state.longitude,
             clock_status: this.state.clock_status,
-            clock: new Date().toLocaleString(),
+            clock: new Date().toISOString(),
             agent: window.navigator.userAgent
         }).then((response) => {
             if (response.data !== '') {
@@ -80,6 +80,8 @@ class AttendanceApp extends React.Component {
     render() {
         return (
             <div id="attendance_app">
+                <button onClick={this.load_env}>TEST</button>
+
                 {this.state.geolocation === 'granted' || this.state.geolocation === 'prompt' ? <>
                     {this.state.clock_status === 0 ? <>
                         <h3 className="mb-3">{this.state.text} </h3>
