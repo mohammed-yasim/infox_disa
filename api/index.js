@@ -228,7 +228,7 @@ API_Router.post('/clock_', _middleware.Middleware, Scheduler, (req, res) => {
           u_id: req.user.u_id,
           date: new Date(),
           clock_in_server: new Date(),
-          clock_in_local: new Date(req.body.clock),
+          //clock_in_local: new Date(req.body.clock),
           clock_in_lat: req.body.latitude,
           clock_in_lng: req.body.longitude,
           clock_in_position: response.data.display_name,
