@@ -223,13 +223,13 @@ API_Router.post('/clock_', Middleware, Scheduler, (req, res) => {
                             });
                         }).catch(
                             (err) => {
-                                res.status(403).send(err);
+                                res.status(403).send(`${err}`);
                                 console.log(2, err)
                             })
                     }
                 }).catch(
                     (err) => {
-                        res.status(404).send(err);
+                        res.status(404).send(`${err}`);
                         console.log(1, err)
                     })
         })

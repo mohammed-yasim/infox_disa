@@ -242,12 +242,12 @@ API_Router.post('/clock_', _middleware.Middleware, Scheduler, (req, res) => {
             text: "You are in from ".concat(user.clock_in_position, " at ").concat(user.clock_in_server)
           });
         }).catch(err => {
-          res.status(403).send(err);
+          res.status(403).send("".concat(err));
           console.log(2, err);
         });
       }
     }).catch(err => {
-      res.status(404).send(err);
+      res.status(404).send("".concat(err));
       console.log(1, err);
     });
   }).catch(err => {
