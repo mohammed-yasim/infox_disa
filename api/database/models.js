@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Visit = exports.User = exports.Schedule = exports.Profile = exports.Notification = exports.Message = exports.Location = exports.Designation = exports.Configuration = exports.Attendance = void 0;
+exports.Visit = exports.User = exports.Schedule = exports.Profile = exports.Notification = exports.Message = exports.Location = exports.Designation = exports.Configuration = exports.Attendance = exports.ActivityStatus = void 0;
 
 var _maria_db = require("../maria_db");
 
@@ -67,10 +67,15 @@ class Message extends _maria_db.infox_model {}
 
 exports.Message = Message;
 
-class Notification extends _maria_db.infox_model {} //Connections
+class Notification extends _maria_db.infox_model {} // Non Linked Data 
 
 
 exports.Notification = Notification;
+
+class ActivityStatus extends _maria_db.infox_model {} //Connections
+
+
+exports.ActivityStatus = ActivityStatus;
 User.init({
   u_id: {
     primaryKey: true,
@@ -292,6 +297,14 @@ Notification.init({
   }
 }, {
   sequelize: _maria_db.demo_db
+});
+ActivityStatus.init({
+  txt: {
+    type: _maria_db.infox_datatype.STRING,
+    allowNull: false
+  }
+}, {
+  sequelize: _maria_db.demo_db
 }); //Relations
 
 User.belongsTo(Profile, {
@@ -356,4 +369,11 @@ User.hasMany(Notification, {
     allowNull: false
   },
   as: 'notifications'
+});
+User.hasMany(ActivityStatus, {
+  foreignKey: {
+    name: 'u_id',
+    allowNull: false
+  },
+  as: 'status'
 });

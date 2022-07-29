@@ -7,11 +7,13 @@ import SettingAPI from "./modules/settings";
 import bcrypt from 'bcryptjs'
 import CatalougueAPI from "./modules/catalogue";
 import QuotationRouter from "./modules/quotation";
-import { Attendance, Profile, Schedule, User } from "./database/models";
+import { Attendance, Profile, Schedule, User, ActivityStatus } from "./database/models";
+import ReportAPI from "./modules/report";
 const API_Router = express.Router();
 API_Router.use('/settings', SettingAPI);
 API_Router.use('/catalogue', CatalougueAPI);
 API_Router.use('/quotation', QuotationRouter);
+API_Router.use('/reports', ReportAPI);
 
 //API_Router.use(jsonErrorHandler)
 API_Router.get('/', (req, res) => {
@@ -237,11 +239,33 @@ API_Router.post('/clock_', Middleware, Scheduler, (req, res) => {
             err => { console.log(0, err) }
         );
 });
+
+
+API_Router.post('/activity_status', Middleware, (req, res) => {
+    ActivityStatus.create({ u_id: req.user.u_id, txt: req.body.txt })
+        .then((activity) => {
+            res.status(200).json(activity)
+        })
+        .catch((err) => {
+            res.status(404).send(`${err}`);
+        })
+});
+
+
+API_Router.get('/activity_status', Middleware, (req, res) => {
+    ActivityStatus.findOne({ attributes: ['txt','updatedAt'], where: { u_id: req.user.u_id }, order: [['createdAt', 'DESC']], })
+        .then((activity) => {
+            res.status(200).json({ activity: activity });
+        })
+        .catch((err) => {
+            res.status(404).send(`${err}`);
+        })
+});
+
 API_Router.get('/map', (req, res) => {
     const users = new Promise((resolve, reject) => {
         User.findAll({
             attributes: { exclude: ['password'] },
-            where: { active: 1, suspended: 0 },
             include: 'profile'
         }).then((data) => {
             resolve(data);
@@ -269,6 +293,7 @@ API_Router.get('/map', (req, res) => {
             }
             res.status(200).json(data);
         });
-})
+});
+
 
 export default API_Router;

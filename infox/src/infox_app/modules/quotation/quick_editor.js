@@ -129,7 +129,7 @@ class QuickQuotationEditor extends React.Component {
     onFoucus_file = (e) => {
         if (e.target.value === '') {
             let quotation = this.state.quotation;
-            quotation[e.target.getAttribute('name')] = `_${this.context.profile.u_name}_[ ${this.context.u_designation} ]_${new Date().toLocaleString()}`;
+            quotation[e.target.getAttribute('name')] = `_${this.context.profile.u_name}_${new Date().toLocaleString()}`;
             this.setState({ quotation: quotation });
             e.target.setSelectionRange(0, 0);
         }
@@ -158,8 +158,10 @@ class QuickQuotationEditor extends React.Component {
                                 <label className="col-6 d-flex align-items-center justify-content-center"><b>Choose Firm</b></label>
                                 <div className="col-6"><select name="firm" value={this.state.quotation.firm} required onChange={this.onChangeInput} className="form-control">
                                     <option value="" disabled>choose</option>
-                                    <option value="azba_india">Azba India</option>
-                                    <option value="dream_india">Dream India</option>
+                                    <option value="dream_india">Dream India School Aid</option>
+                                    <option value="dream_india">Dream India Trade Links</option>
+                                    <option value="dream_india">VNS School</option>
+                                    <option value="dream_india">VT School Land</option>
                                 </select>
                                 </div>
                             </div>
@@ -209,7 +211,7 @@ class QuickQuotationEditor extends React.Component {
                                 <tbody>
                                     {this.state.quotation.items.map((item, i) => {
                                         if (item.edit === true) {
-                                            
+
                                             let amount = ((this.state.editor.qty) * (this.state.editor.rate)).toFixed(2)
                                             return (
                                                 <tr key={i}>

@@ -25,13 +25,16 @@ var _quotation = _interopRequireDefault(require("./modules/quotation"));
 
 var _models2 = require("./database/models");
 
+var _report = _interopRequireDefault(require("./modules/report"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var API_Router = _express.default.Router();
 
 API_Router.use('/settings', _settings.default);
 API_Router.use('/catalogue', _catalogue.default);
-API_Router.use('/quotation', _quotation.default); //API_Router.use(jsonErrorHandler)
+API_Router.use('/quotation', _quotation.default);
+API_Router.use('/reports', _report.default); //API_Router.use(jsonErrorHandler)
 
 API_Router.get('/', (req, res) => {
   res.send("API");
@@ -254,15 +257,36 @@ API_Router.post('/clock_', _middleware.Middleware, Scheduler, (req, res) => {
     console.log(0, err);
   });
 });
+API_Router.post('/activity_status', _middleware.Middleware, (req, res) => {
+  _models2.ActivityStatus.create({
+    u_id: req.user.u_id,
+    txt: req.body.txt
+  }).then(activity => {
+    res.status(200).json(activity);
+  }).catch(err => {
+    res.status(404).send("".concat(err));
+  });
+});
+API_Router.get('/activity_status', _middleware.Middleware, (req, res) => {
+  _models2.ActivityStatus.findOne({
+    attributes: ['txt', 'updatedAt'],
+    where: {
+      u_id: req.user.u_id
+    },
+    order: [['createdAt', 'DESC']]
+  }).then(activity => {
+    res.status(200).json({
+      activity: activity
+    });
+  }).catch(err => {
+    res.status(404).send("".concat(err));
+  });
+});
 API_Router.get('/map', (req, res) => {
   var users = new Promise((resolve, reject) => {
     _models2.User.findAll({
       attributes: {
         exclude: ['password']
-      },
-      where: {
-        active: 1,
-        suspended: 0
       },
       include: 'profile'
     }).then(data => {

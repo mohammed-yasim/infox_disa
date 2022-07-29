@@ -79,16 +79,14 @@ class AttendanceApp extends React.Component {
     }
     render() {
         return (
-            <div id="attendance_app">
-                <button onClick={this.load_env}>TEST</button>
-
+            <div className="my-3" id="attendance_app">
                 {this.state.geolocation === 'granted' || this.state.geolocation === 'prompt' ? <>
                     {this.state.clock_status === 0 ? <>
                         <h3 className="mb-3">{this.state.text} </h3>
 
                         <button onClick={this.load_env} className="btn btn-primary"><i className="fa fa-sync"></i> Sync Clock</button>
 
-                    </> : null
+                    </> : <button onClick={this.load_env} className="btn btn-primary"><i className="fa fa-sync"></i> Refresh</button>
                     }
                     {this.state.clock_status === 1 ?
                         <div>
@@ -103,30 +101,26 @@ class AttendanceApp extends React.Component {
                                 onSuccess={this.position}
                                 onFailure={() => { Toast.fail("Swipe Error") }}
                             />
-                        </div> : null
-                    }
-                    {this.state.clock_status === 2 ? <>
-                        <div>
-                            <h2><Clock
-                                format={'h:mm:ss A'}
-                                ticking={true}
-                                timezone={'Asia/Kolkata'} /></h2>
-                            <h3>{this.state.text} </h3>
-                            <ReactSwipeButton
-                                text='Swipe To Clock Out'
-                                text_unlocked={this.state.text}
-                                color={this.state.color}
-                                onSuccess={this.position}
-                                onFailure={() => { Toast.fail("Swipe Error") }}
-                            />
-                        </div>
-                    </> : null
-                    }
-                    {this.state.clock_status === 3 ? <>
-                        <div>
-                            <h3>{this.state.text} </h3>
-                        </div>
-                    </> : null
+                        </div> : this.state.clock_status === 2 ? <>
+                            <div>
+                                <h2><Clock
+                                    format={'h:mm:ss A'}
+                                    ticking={true}
+                                    timezone={'Asia/Kolkata'} /></h2>
+                                <h3>{this.state.text} </h3>
+                                <ReactSwipeButton
+                                    text='Swipe To Clock Out'
+                                    text_unlocked={this.state.text}
+                                    color={this.state.color}
+                                    onSuccess={this.position}
+                                    onFailure={() => { Toast.fail("Swipe Error") }}
+                                />
+                            </div>
+                        </> : this.state.clock_status === 3 ? <>
+                            <div className='m-2'>
+                                <h3>{this.state.text} </h3>
+                            </div>
+                        </> : null
                     }
                 </> : <>
                     <h3><i className="fas fa-exclamation-triangle"></i> Location permission {this.state.geolocation}</h3>

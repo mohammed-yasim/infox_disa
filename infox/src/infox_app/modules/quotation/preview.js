@@ -43,7 +43,7 @@ class QuotationPreview extends React.Component {
             filename: this.state.data.name,
             image: { type: 'jpeg', quality: 1 },
             pagebreak: { mode: ['css', 'legacy'] },
-            html2canvas: { scale: 5 },
+            html2canvas: { scale: 10 },
             jsPDF: { unit: 'in', format: 'A4', orientation: 'portrait' }
         };
         html2pdf().set(opt).from(element).save();
@@ -94,14 +94,14 @@ class QuotationPreview extends React.Component {
                             </div>
                         </div>
                         <div className="text-center"> <h3 className="text-uppercase"><b>Quotation</b></h3></div>
-                        <table className="table table-bordered mt-3">
+                        <table className="table table-bordered mt-3 table-md" >
                             <thead className="thead-light text-center">
                                 <tr>
-                                    <td>SINo</td>
-                                    <td>Item</td>
-                                    <td>Rate</td>
-                                    <td>Quantity</td>
-                                    <td>Amount</td>
+                                    <th>SINo</th>
+                                    <th>Item</th>
+                                    <th>Rate</th>
+                                    <th>Quantity</th>
+                                    <th>Amount</th>
                                 </tr>
                             </thead>
                             <tbody className="text-center">
@@ -136,7 +136,7 @@ class QuotationPreview extends React.Component {
                             <p className="text-left">THANK YOU FOR YOUR BUSINESS!</p>
                         </div>
 
-                        <div className="text-left mb-2"><QRCode size={140} level='L' value={this.state.data.id} /></div>
+                        <div className="text-left mb-2"><QRCode size={100} level='L' value={this.state.data.id} /></div>
                         <p className="small text-left">Generated on {new Date().toString()} &copy; Azba india </p>
                     </div>
                 </div> : null}

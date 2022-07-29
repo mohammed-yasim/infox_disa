@@ -2,9 +2,11 @@ import React, { Suspense, lazy } from 'react';
 import $ from 'jquery';
 import { Link, NavLink, Route, Switch, withRouter } from 'react-router-dom';
 import { removeUserSession } from './etc/auth_handler';
-import { NavMessage, NavProfileMenu, NavAlerts, AttendanceApp, EmployeeMap, DashboardAttendance } from './etc/components';
+import { NavMessage, NavProfileMenu, NavAlerts, AttendanceApp, EmployeeMap, DashboardAttendance, StatusApp } from './etc/components';
 import { InfoXContext } from './etc/context';
 import LoadingGif from './lib/load.gif';
+import AttendanceReport from './modules/reports/Attendance';
+import ActivitystatusReport from './modules/reports/ActivityStatus';
 
 const Setting = lazy(() => import('./modules/setting'));
 const Catalogue = lazy(() => import('./modules/catalogue'));
@@ -75,12 +77,30 @@ class InfoXApp extends React.Component {
                             </div>
                         </li>
                         <hr className="sidebar-divider" />
+
                         <NavLink replace={true} onClick={this.closeSidebar} className="nav-item text-decoration-none" to="/quotation">
                             <span className="nav-link">
                                 <i className="fas fa-fw fa-quote-left"></i>
                                 <span>Quotation</span></span>
                         </NavLink>
 
+                        <hr className="sidebar-divider" />
+                        <div className="sidebar-heading">
+                            Reports
+                        </div>
+                        <li className={window.location.pathname.includes('/infox/catalogue') ? "nav-item text-decoration-none active" : "nav-item text-decoration-none"}>
+                            <a className="nav-link collapsed" href="#menu" data-toggle="collapse" data-target="#collapseReports" aria-expanded="true" aria-controls="collapseUtilities">
+                                <i className="fas fa-fw fa-users"></i>
+                                <span>General</span>
+                            </a>
+                            <div id="collapseReports" className="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+                                <div className="bg-white py-2 collapse-inner rounded" style={{ zIndex: '9999 !important' }}>
+                                    <button data-toggle="collapse" data-target="#collapseReports" className="float-right btn btn-link text-decoration-none"><i className="fa fa-times"></i></button>
+                                    <NavLink onClick={this.closeSidebar} className="collapse-item" to="/report/attendance">Attendance</NavLink>
+                                    <NavLink onClick={this.closeSidebar} className="collapse-item" to="/report/activity_status">Activity Status</NavLink>
+                                </div>
+                            </div>
+                        </li>
                         <hr className="sidebar-divider d-none d-md-block" />
                         <div className="text-center d-none d-md-inline">
                             <button className="rounded-circle border-0" id="sidebarToggle"></button>
@@ -116,16 +136,19 @@ class InfoXApp extends React.Component {
                                     <Switch>
                                         <Route path="/dashboard">
                                             <DashboardAttendance />
-                                            
-                                                <EmployeeMap />
+
+                                            <EmployeeMap />
                                         </Route>
 
                                         <Route path="/setting" component={Setting} />
                                         <Route path="/catalogue" component={Catalogue} />
                                         <Route path="/quotation" component={Quotation} />
+                                        <Route path="/report/attendance" component={AttendanceReport} />
+                                        <Route path="/report/activity_status" component={ActivitystatusReport} />
                                         <Route exact path="/">
                                             <h5>Welcome, {this.context.profile.u_name}</h5>
                                             <AttendanceApp />
+                                            <StatusApp />
                                         </Route>
                                         <Route path="*">
                                             <div id="content">
@@ -149,7 +172,7 @@ class InfoXApp extends React.Component {
 
 
                         </div>
-                        <footer className="sticky-footer bg-white">
+                        <footer className="sticky-footer bg-white d-print-none">
                             <div className="container my-auto">
                                 <div className="copyright text-center my-auto">
                                     <span> &copy; Azba India </span>
@@ -158,7 +181,7 @@ class InfoXApp extends React.Component {
                         </footer>
                     </div>
                 </div>
-                <a className="scroll-to-top rounded" href="#page-top" title="scroll to top">
+                <a className="scroll-to-top rounded d-print-none" href="#page-top" title="scroll to top">
                     <i className="fas fa-angle-up"></i>
                 </a>
                 <div className="modal fade" id="logoutModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -240,7 +263,10 @@ class InfoXApp extends React.Component {
                                             <Route exact path="/">
                                                 <h5>Welcome, {this.context.profile.u_name}</h5>
                                                 <AttendanceApp />
+                                                <StatusApp />
+
                                             </Route>
+
                                             {
                                                 //<Route path="/quotation" component={Quotation} /> 
                                             }
@@ -266,7 +292,7 @@ class InfoXApp extends React.Component {
 
 
                             </div>
-                            <footer className="sticky-footer bg-white">
+                            <footer className="sticky-footer bg-white  d-print-none">
                                 <div className="container my-auto">
                                     <div className="copyright text-center my-auto">
                                         <span> &copy; Azba India </span>
@@ -275,7 +301,7 @@ class InfoXApp extends React.Component {
                             </footer>
                         </div>
                     </div>
-                    <a className="scroll-to-top rounded" href="#page-top" title="scroll to top">
+                    <a className="scroll-to-top rounded d-print-none" href="#page-top" title="scroll to top">
                         <i className="fas fa-angle-up"></i>
                     </a>
                     <div className="modal fade" id="logoutModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

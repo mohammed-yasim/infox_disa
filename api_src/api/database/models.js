@@ -20,6 +20,8 @@ class Visit extends infox_model { }
 //Messages & Notification
 class Message extends infox_model { }
 class Notification extends infox_model { }
+// Non Linked Data 
+class ActivityStatus extends infox_model { }
 
 //Connections
 User.init({
@@ -96,6 +98,9 @@ Notification.init({
     txt: { type: infox_datatype.STRING, allowNull: false },
 }, { sequelize: demo_db });
 
+ActivityStatus.init({
+    txt: { type: infox_datatype.STRING, allowNull: false },
+}, { sequelize: demo_db });
 
 //Relations
 User.belongsTo(Profile, { foreignKey: { name: 'profile_', allowNull: false }, as: 'profile' });
@@ -107,10 +112,12 @@ User.hasMany(Visit, { foreignKey: { name: 'u_id', allowNull: false }, as: 'visit
 User.hasMany(Message, { foreignKey: { name: 'sender', allowNull: false }, as: 'from_chats' });
 User.hasMany(Message, { foreignKey: { name: 'recipient', allowNull: false }, as: 'to_chats' });
 User.hasMany(Notification, { foreignKey: { name: 'recipient', allowNull: false }, as: 'notifications' });
+User.hasMany(ActivityStatus, { foreignKey: { name: 'u_id', allowNull: false }, as: 'status' });
 export {
     Configuration,
     User, Profile,
     Designation, Schedule, Location,
     Attendance, Visit,
-    Message, Notification
+    Message, Notification,
+    ActivityStatus
 }

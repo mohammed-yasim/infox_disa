@@ -147,7 +147,7 @@ class EmployeeMap extends React.Component {
                             <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                                 <h6 className="m-0 font-weight-bold text-primary">User By Location</h6>
                             </div>
-                            <div className="card-body" style={{ height: '53.5vh', width: '100%' }} >
+                            <div className="card-body" style={{ height: '53.5vh', width: '100%',overflow:'scroll' }} >
                                 <div className="table-responsive">
                                     <table className="table table-sm table-striped ">
                                         <thead>
@@ -177,7 +177,7 @@ class EmployeeMap extends React.Component {
                             <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                                 <h6 className="m-0 font-weight-bold text-primary">Attendace Summary</h6>
                             </div>
-                            <div className="card-body" style={{ height: '53.5vh', width: '100%' }} >
+                            <div className="card-body" style={{ height: '53.5vh', width: '100%',overflow:'scroll' }}>
                                 <div className="table-responsive">
                                     <table className="table table-sm table-striped ">
                                         <thead>
