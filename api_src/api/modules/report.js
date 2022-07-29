@@ -52,10 +52,12 @@ ReportAPI.post('/activity_status', adminMiddleware, (req, res) => {
             reject(err);
         })
     });
-    
+
     const activity_status = new Promise((resolve, reject) => {
         let PublishDate = new Date(req.body.from);
         let endDate = new Date(req.body.to);
+        endDate.setHours(23, 59, 0, 0);
+        PublishDate.setHours(0, 0, 0, 0)
         ActivityStatus.findAll({
             where: {
                 'updatedAt': { [infox_op.between]: [PublishDate, endDate] },

@@ -54,7 +54,7 @@ class ActivitystatusReport extends React.Component {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {this.state.data.activity_status.filter(user => user.clock_out_server !== null).map((data) => {
+                                            {this.state.data.activity_status.map((data) => {
                                                 let user = this.state.data.users.find((user) => { return user.u_id === data.u_id })
                                                 return (<tr>
                                                     <th>{user.profile.u_name}</th>

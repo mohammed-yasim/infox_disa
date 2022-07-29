@@ -72,6 +72,8 @@ ReportAPI.post('/activity_status', _middleware.adminMiddleware, (req, res) => {
   var activity_status = new Promise((resolve, reject) => {
     var PublishDate = new Date(req.body.from);
     var endDate = new Date(req.body.to);
+    endDate.setHours(23, 59, 0, 0);
+    PublishDate.setHours(0, 0, 0, 0);
 
     _models.ActivityStatus.findAll({
       where: {
