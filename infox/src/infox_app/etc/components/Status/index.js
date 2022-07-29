@@ -15,8 +15,11 @@ function Status() {
     useEffect(() => {
         const load_activity = () => {
             infoxAPI.get('/activity_status').then((response) => {
+                console.log(response.data)
                 if (response.data !== null) {
-                    setActivity(response.data.activity);
+                    if (response.data.activity !== null) {
+                        setActivity(response.data.activity);
+                    }
                 }
             })
         }
