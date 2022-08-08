@@ -11,7 +11,7 @@ QuotationRouter.get('/', Middleware, (req, res) => {
     }
     else {
         parameters.where['owner'] = req.user.u_id;
-        parameters.where['status'] = ['draft','ready','submitted','approved']
+        parameters.where['status'] = ['draft', 'ready', 'submitted', 'approved']
     }
     QuickQuotations.findAll(parameters)
         .then((quotations) => {
@@ -82,7 +82,7 @@ QuotationRouter.post('/quick/:id', Middleware, (req, res) => {
                 permission: 1
             }, {
                 where: {
-                    //owner: req.user.u_id,
+                    owner: req.user.u_id,
                     id: req.params.id
                 }
             }).then((quotation) => {
@@ -103,13 +103,13 @@ QuotationRouter.post('/status/:id/:status', Middleware, (req, res) => {
     if (req.user.u_type === 'admin' || req.user.u_type === 'root') {
         switch (status) {
             case 'apply':
-                data = { status: 'request',permission:1}
+                data = { status: 'request', permission: 1 }
                 break;
             case 'accept':
                 data = {
                     status: 'ready',
                     permission: 1,
-                    no:'0'
+                    no: req.body.argv
                 }
                 break;
             case 'reject':
@@ -118,12 +118,12 @@ QuotationRouter.post('/status/:id/:status', Middleware, (req, res) => {
                     permission: 0
                 }
                 break;
-                case 'submit':
-                    data = {
-                        status: 'submitted',
-                        permission: 1
-                    }
-                    break;                   
+            case 'submit':
+                data = {
+                    status: 'submitted',
+                    permission: 1
+                }
+                break;
             default:
                 res.status(406).send('No Actions').end();
         }
@@ -138,14 +138,14 @@ QuotationRouter.post('/status/:id/:status', Middleware, (req, res) => {
     } else {
         switch (status) {
             case 'apply':
-                data = { status: 'request',permission:1}
+                data = { status: 'request', permission: 1 }
                 break;
-                case 'submit':
-                    data = {
-                        status: 'submitted',
-                        permission: 1
-                    }
-                    break;
+            case 'submit':
+                data = {
+                    status: 'submitted',
+                    permission: 1
+                }
+                break;
             default:
                 res.status(406).send('No Actions').end();
         }

@@ -18,8 +18,12 @@ class QuickQuotationEditor extends React.Component {
                 party_phone: '',
                 file_name: '',
                 firm: '',
-                total: 0,
-                discount: 0
+                total: 0.00,
+                discount: 0.00,
+                discount_amount: 0.00,
+                shipping_charge: 0.00,
+                additional_information: '',
+                prepared_by: ''
             },
             editor: {
                 name: '',
@@ -33,8 +37,10 @@ class QuickQuotationEditor extends React.Component {
         }
     }
     componentDidMount() {
+        let quotation = this.state.quotation
+        quotation['prepared_by'] = this.context.profile;
         if (this.props.match.params.id === 'new') {
-            this.setState({ action: 'add' });
+            this.setState({ action: 'add', quotation: quotation });
         } else {
             this.loadData();
         }
@@ -91,6 +97,7 @@ class QuickQuotationEditor extends React.Component {
         new_items[index]['edit'] = false;
         quotation['items'] = new_items;
         quotation['total'] = (new_items.reduce((a, v) => { return a = a + (v.qty * v.rate) }, 0)).toFixed(2)
+        quotation['discount_amount'] = ((parseFloat(quotation.total) * (parseFloat(quotation.discount) / 100))).toFixed(2);
 
         this.setState({
             quotation: quotation, editor: {
@@ -122,7 +129,26 @@ class QuickQuotationEditor extends React.Component {
     }
     onChangeInput = (event) => {
         let quotation = this.state.quotation;
-        quotation[event.target.getAttribute('name')] = event.target.value;
+
+        if (event.target.getAttribute('name') === 'discount') {
+            if (event.target.value === '') {
+                quotation['discount'] = 0.00;
+                quotation['discount_amount'] = 0.00;
+            } else {
+                quotation['discount'] = event.target.value;
+                quotation['discount_amount'] = ((parseFloat(this.state.quotation.total) * (parseFloat(event.target.value) / 100))).toFixed(2);
+            }
+        }
+        if (event.target.getAttribute('name') === 'shipping_charge') {
+            if (event.target.value === '') {
+                quotation['shipping_charge'] = 0;
+            } else {
+                quotation['shipping_charge'] = parseInt(event.target.value)
+            }
+        }
+        else {
+            quotation[event.target.getAttribute('name')] = event.target.value;
+        }
         this.setState({ quotation: quotation });
 
     }
@@ -159,9 +185,9 @@ class QuickQuotationEditor extends React.Component {
                                 <div className="col-6"><select name="firm" value={this.state.quotation.firm} required onChange={this.onChangeInput} className="form-control">
                                     <option value="" disabled>choose</option>
                                     <option value="dream_india">Dream India School Aid</option>
-                                    <option value="dream_india">Dream India Trade Links</option>
-                                    <option value="dream_india">VNS School</option>
-                                    <option value="dream_india">VT School Land</option>
+                                    <option value="dream_india_tl">Dream India Trade Links</option>
+                                    <option value="dream_india_vns">VNS School</option>
+                                    <option value="dream_india_vt">VT School Land</option>
                                 </select>
                                 </div>
                             </div>
@@ -171,12 +197,12 @@ class QuickQuotationEditor extends React.Component {
                                     <div className="col-md-10">
                                         <h5>Bill To</h5>
                                         <div className="form-group">
-                                            <input type="text" required value={this.state.quotation.party_name} name="party_name" onChange={this.onChangeInput} className="form-control form-control-sm border-0 mb-1" id="formGroupExampleInput" placeholder="Name" />
+                                            <input type="text" required value={this.state.quotation.party_name} name="party_name" onChange={this.onChangeInput} className="form-control form-control-sm border-0 mb-1" placeholder="Name" />
                                             <textarea type="text" required value={this.state.quotation.party_address} name="party_address" onChange={this.onChangeInput}
-                                                onInput={this.adjustHeight} onLoad={this.adjustHeight} on className="form-control form-control-sm border-0 mb-1"
+                                                onInput={this.adjustHeight} onLoad={this.adjustHeight} className="form-control form-control-sm border-0 mb-1"
                                                 style={{ overflow: "hidden", }} rows="4"
-                                                id="formGroupExampleInput" placeholder="Address"></textarea>
-                                            <input type="text" value={this.state.quotation.party_phone} name="party_phone" onChange={this.onChangeInput} className="form-control form-control-sm border-0 mb-1" id="formGroupExampleInput" placeholder="Phone" />
+                                                placeholder="Address"></textarea>
+                                            <input type="text" value={this.state.quotation.party_phone} name="party_phone" onChange={this.onChangeInput} className="form-control form-control-sm border-0 mb-1" placeholder="Phone" />
                                         </div>
                                     </div>
                                 </div>
@@ -252,10 +278,28 @@ class QuickQuotationEditor extends React.Component {
                                         <th className="text-right" colSpan={4}> Sub Total : </th><th>&#8377; {this.state.quotation.total} / -</th>
                                     </tr>
                                     <tr>
-                                        <th className="text-right" colSpan={4}> Discount(%): </th><th><input type="number" onChange={this.onChangeInput} value={this.state.quotation.discount} name="discount" className="form-control form-control-sm" required /></th>
+                                        <th className="text-right" colSpan={4}> Discount(%): </th><th>
+                                            <input type="number" min={0} max={25} step={0.5} onChange={this.onChangeInput} value={this.state.quotation.discount} name="discount" className="form-control form-control-sm" size={3} required />
+                                        </th>
                                     </tr>
                                     <tr>
-                                        <th className="text-right" colSpan={4}> Grand Total : </th><th>&#8377; {parseInt(this.state.quotation.total) - ((parseInt(this.state.quotation.total) * (parseInt(this.state.quotation.discount) / 100)))} / -</th>
+                                        <th className="text-right" colSpan={4}> Discount: </th><th>{this.state.quotation.discount_amount}</th>
+                                    </tr>
+                                    <tr>
+                                        <th className="text-right" colSpan={4}> Freight charge : </th><th>
+                                            <input type="number" onChange={this.onChangeInput} value={this.state.quotation.shipping_charge} name="shipping_charge" className="form-control form-control-sm" required />
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th className="text-right" colSpan={4}> Grand Total : </th><th>&#8377; {(parseFloat(this.state.quotation.total) - parseFloat(this.state.quotation.discount_amount) + parseFloat(this.state.quotation.shipping_charge)).toFixed(2)} / -</th>
+                                    </tr>
+                                    <tr>
+                                        <th colSpan={6}>
+                                            <textarea type="text" value={this.state.quotation.additional_information} name="additional_information" onChange={this.onChangeInput}
+                                                onInput={this.adjustHeight} onLoad={this.adjustHeight} className="form-control form-control-sm border-0 mb-1"
+                                                style={{ overflow: "hidden", }} rows="4"
+                                                placeholder="Additional information"></textarea>
+                                        </th>
                                     </tr>
                                 </tfoot>
                             </table>

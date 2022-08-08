@@ -224,7 +224,7 @@ class InfoXApp extends React.Component {
                                     <span>Dashboard</span></span>
                             </NavLink>
                             <hr className="d-none sidebar-divider" />
-                            <NavLink replace={true} style={{ display: 'none' }} onClick={this.closeSidebar} className="nav-item text-decoration-none" to="/quotation">
+                            <NavLink replace={true} onClick={this.closeSidebar} className="nav-item text-decoration-none" to="/quotation">
                                 <span className="nav-link">
                                     <i className="fas fa-fw fa-quote-left"></i>
                                     <span>Quotation</span></span>
@@ -266,10 +266,7 @@ class InfoXApp extends React.Component {
                                                 <StatusApp />
 
                                             </Route>
-
-                                            {
-                                                //<Route path="/quotation" component={Quotation} /> 
-                                            }
+                                            <Route path="/quotation" component={Quotation} />
                                             <Route path="*">
                                                 <div id="content">
                                                     <div className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
@@ -277,7 +274,7 @@ class InfoXApp extends React.Component {
 
                                                             <div className="text-center">
                                                                 <div className="error mx-auto" data-text={404}>404</div>
-                                                                <p className="lead text-gray-800 mb-3">Not Found</p>
+                                                                <p className="lead text-gray-800 mb-3">No Permission/Not Found</p>
                                                                 <p className="text-gray-500 mb-0">It looks like you found a glitch in the infox...</p>
                                                                 <hr width="20%" />
                                                             </div>

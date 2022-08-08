@@ -1,7 +1,37 @@
-@media print{
-    #paper {
-      -webkit-box-shadow: none !important;
-      -moz-box-shadow:    none !important;
-      box-shadow:         none !important; 
-    }
+@media print {
+  #paper {
+    -webkit-box-shadow: none !important;
+    -moz-box-shadow: none !important;
+    box-shadow: none !important;
+  }
+
+  html,
+  body,
+  .container-fluid,
+  #wrapper #content-wrapper,
+  #content,
+  #root {
+    background-color: white;
+  }
+}
+
+.borderless td,
+.borderless th {
+  border: none;
+}
+
+.vns {
+  font-family: Helvetica, sans-serif !important;
+  letter-spacing: 0.6px;
+  color: black !important;
+}
+
+.ditl {
+  font-family: Arial, serif !important;
+  letter-spacing: 0.8px;
+  color: black !important;
+}
+
+hr.new2 {
+  border-top: 1px dashed green;
 }

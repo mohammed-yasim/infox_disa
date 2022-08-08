@@ -106,7 +106,10 @@ API_Router.get('/sync_user', _middleware.Middleware, (req, res) => {
     },
     include: {
       model: _models2.Profile,
-      as: 'profile'
+      as: 'profile',
+      attributes: {
+        exclude: ['createdAt', 'updatedAt', 'id']
+      }
     }
   }).then(user => {
     /*

@@ -3,6 +3,8 @@ import { Switch, Route, withRouter, useRouteMatch, NavLink } from "react-router-
 import { infoxAPI } from "../../etc/api";
 import QuickQuotationEditor from './quick_editor';
 import QuotationPreview from './preview';
+import { Modal } from 'antd-mobile';
+const prompt = Modal.prompt;
 class QuotationHome extends React.Component {
     constructor(props) {
         super(props);
@@ -147,7 +149,7 @@ class QuotationHome extends React.Component {
                         </div>
                     </div>
                     : null}
-                                {completed_count > 0 ?
+                {completed_count > 0 ?
                     <div className="col-xl-3 col-md-6 mb-4" key={'approved_count'}>
                         <div className="card border-left-success shadow h-100 py-2">
                             <div className="card-body">
@@ -177,7 +179,8 @@ class QuickQuotation extends React.Component {
         this.action = this.props.action;
         this.title = this.props.title;
         this.state = {
-            data: []
+            data: [],
+            quotation_no: null
         }
     }
     componentDidMount() {
@@ -192,8 +195,8 @@ class QuickQuotation extends React.Component {
     goBack = () => {
         this.props.history.goBack();
     }
-    actionStatus = (id, status) => {
-        infoxAPI.post(`/quotation/status/${id}/${status}`, {}).then(response => {
+    actionStatus = (id, status, argv = null) => {
+        infoxAPI.post(`/quotation/status/${id}/${status}`, { argv: argv }).then(response => {
             this.loadData();
         });
     }
@@ -205,58 +208,83 @@ class QuickQuotation extends React.Component {
                 </h4>
             </div>
             {this.state.data.length > 0 ?
-            <div className="table-responsive table-responsive-sm">
-                <table id="dataTable" className="table table-striped">
-                    <thead className="thead-dark">
-                        <tr>
-                        <th>File Name</th>
-                        <th>Firm</th>
-                        <th>Party</th>
-                        <th>Date</th>
-                        <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {this.state.data.map((quotation, i) => {
-                            return (<tr>
-                                <td>{quotation.name}<br />
-                                    {quotation.status === 'draft' && quotation.permission === 0 ? <span className="btn-danger btn-sm">Rejected</span> : null}
-                                </td>
-                                <td>{quotation.firm.toUpperCase()}</td>
-                                <td>{quotation.party}</td>
-                                <td>{new Date(quotation.date).toDateString()}</td>
-                                <td className="d-flex align-items-center justify-content-center">
-                                    <div className="btn-group btn-group-sm" role="group">
-                                        {quotation.status === 'draft' ? <NavLink className="btn btn-link" to={`/quotation/quick/edit/${quotation.id}`}><i className="fa fa-edit"></i></NavLink> : null}
-                                        {quotation.status === 'draft' ? <NavLink className="btn btn-link text-danger" to={`/quotation/quick/edit/${quotation.id}`}><i className="fa fa-trash"></i></NavLink> : null}
-                                        {quotation.status === 'request' ? <button onClick={() => { this.actionStatus(quotation.id, 'accept') }} className="btn btn-success" style={{ width: "60px" }}><i className="fa fa-check-circle"></i> Accept</button> : null}
-                                        {quotation.status === '!ready' ?
-                                            <>
-                                                <NavLink className="btn btn-warning btn-sm " to={`/quotation/quick/edit/${quotation.id}`}><i className="fa fa-print"></i></NavLink>
-                                            </>
-                                            : null
-                                        }
-                                        {quotation.status === 'request' || quotation.status === 'ready'||quotation.status === 'submitted' ?
-                                            <>
-                                                <NavLink className="btn btn-secondary btn-sm " to={`/quotation/quick/preview/${quotation.id}`}><i className="fa fa-eye"></i></NavLink>
-                                            </>
-                                            : null
-                                        }
-                                        {quotation.status === 'draft' && quotation.permission === 1 ? <button onClick={() => { this.actionStatus(quotation.id, 'apply') }} className="btn btn-primary" style={{ width: "60px" }}><i className="fa fa-check-circle"></i> Apply</button> : null}
-                                        {quotation.status === 'request' ? <button onClick={() => { this.actionStatus(quotation.id, 'reject') }} className="btn btn-danger" style={{ width: "60px" }}><i className="fa fa-times-circle"></i> Reject</button> : null}
-                                        {quotation.status === 'ready' && quotation.permission === 1 ? <button className="btn btn-success btn-sm " onClick={() => { this.actionStatus(quotation.id, 'submit') }} style={{ width: "60px" }}><i className="fa fa-check"></i> Submit</button> : null}
-                                        {quotation.status === '!submitted' ? <button className="btn btn-success btn-sm m-1"><i className="fa fa-check-circle"></i> Approved</button> : null}
-                                        {quotation.status === '!submitted' ? <button className="btn btn-danger btn-sm m-1"><i className="fa fa-times-circle"></i> Disposed</button> : null}
-                                    </div>
-                                </td>
-                            </tr>)
-                        })}
-                    </tbody>
-                </table>
-            </div>
-            :<>
-            No Data
-            </>}
+                <div className="table-responsive table-responsive-sm">
+                    <table id="dataTable" className="table table-striped">
+                        <thead className="thead-dark">
+                            <tr>
+                                <th>File Name</th>
+                                <th>Firm</th>
+                                <th>Party</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {this.state.data.map((quotation, i) => {
+                                return (<tr>
+                                    <td>{quotation.name}<br />
+                                        {quotation.status === 'draft' && quotation.permission === 0 ? <span className="btn-danger btn-sm">Rejected</span> : null}
+                                    </td>
+                                    <td>{quotation.firm.toUpperCase()}</td>
+                                    <td>{quotation.party}</td>
+                                    <td>{new Date(quotation.date).toDateString()}</td>
+                                    <td className="d-flex align-items-center justify-content-center">
+                                        <div className="btn-group btn-group-sm" role="group">
+                                            {quotation.status === 'draft' ? <NavLink className="btn btn-link" to={`/quotation/quick/edit/${quotation.id}`}><i className="fa fa-edit"></i></NavLink> : null}
+                                            {quotation.status === 'draft' ? <NavLink className="btn btn-link text-danger" to={`/quotation/quick/edit/${quotation.id}`}><i className="fa fa-trash"></i></NavLink> : null}
+                                            {quotation.status === 'request' ? <button onClick={() => {
+
+                                                //this.actionStatus(quotation.id, 'accept',) ;
+                                                prompt('Quotation No', 'please enter quotation no',
+                                                    [
+                                                        {
+                                                            text: 'Close',
+                                                            onPress: value => new Promise((resolve) => {
+                                                                resolve();
+                                                            }),
+                                                        },
+                                                        {
+                                                            text: 'Accept',
+                                                            onPress: value => new Promise((resolve, reject) => {
+                                                                if (value.length > 3 && value !== null) {
+                                                                    this.actionStatus(quotation.id, 'accept', value);
+                                                                    resolve();
+                                                                } else {
+                                                                    reject();
+                                                                }
+                                                            }),
+                                                        },
+                                                    ], 'default', null, ['Quotation No'])
+
+
+                                            }} className="btn btn-success" style={{ width: "60px" }}><i className="fa fa-check-circle"></i> Accept</button> : null}
+                                            {quotation.status === '!ready' ?
+                                                <>
+                                                    <NavLink className="btn btn-warning btn-sm " to={`/quotation/quick/edit/${quotation.id}`}><i className="fa fa-print"></i></NavLink>
+                                                </>
+                                                : null
+                                            }
+                                            {quotation.status === 'request' || quotation.status === 'ready' || quotation.status === 'submitted' ?
+                                                <>
+                                                    <NavLink className="btn btn-secondary btn-sm " to={`/quotation/quick/preview/${quotation.id}`}><i className="fa fa-eye"></i></NavLink>
+                                                </>
+                                                : null
+                                            }
+                                            {quotation.status === 'draft' && quotation.permission === 1 ? <button onClick={() => { this.actionStatus(quotation.id, 'apply') }} className="btn btn-primary" style={{ width: "60px" }}><i className="fa fa-check-circle"></i> Apply</button> : null}
+                                            {quotation.status === 'request' ? <button onClick={() => { this.actionStatus(quotation.id, 'reject') }} className="btn btn-danger" style={{ width: "60px" }}><i className="fa fa-times-circle"></i> Reject</button> : null}
+                                            {quotation.status === 'ready' && quotation.permission === 1 ? <button className="btn btn-success btn-sm " onClick={() => { this.actionStatus(quotation.id, 'submit') }} style={{ width: "60px" }}><i className="fa fa-check"></i> Submit</button> : null}
+                                            {quotation.status === '!submitted' ? <button className="btn btn-success btn-sm m-1"><i className="fa fa-check-circle"></i> Approved</button> : null}
+                                            {quotation.status === '!submitted' ? <button className="btn btn-danger btn-sm m-1"><i className="fa fa-times-circle"></i> Disposed</button> : null}
+                                        </div>
+                                    </td>
+                                </tr>)
+                            })}
+                        </tbody>
+                    </table>
+                </div>
+                : <>
+                    No Data
+                </>}
         </>)
     }
 }

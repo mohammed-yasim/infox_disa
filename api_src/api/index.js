@@ -85,7 +85,7 @@ API_Router.get('/sync_user', Middleware, (req, res) => {
     User.findOne({
         attributes: ['u_id', 'u_type'],
         where: { u_id: req.user.u_id },
-        include: { model: Profile, as: 'profile' }
+        include: { model: Profile, as: 'profile',attributes:{exclude:['createdAt','updatedAt','id']} }
     }).then(
         (user) => {
             /*

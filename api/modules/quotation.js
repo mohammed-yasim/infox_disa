@@ -107,7 +107,7 @@ QuotationRouter.post('/quick/:id', _middleware.Middleware, (req, res) => {
         permission: 1
       }, {
         where: {
-          //owner: req.user.u_id,
+          owner: req.user.u_id,
           id: req.params.id
         }
       }).then(quotation => {
@@ -140,7 +140,7 @@ QuotationRouter.post('/status/:id/:status', _middleware.Middleware, (req, res) =
         data = {
           status: 'ready',
           permission: 1,
-          no: '0'
+          no: req.body.argv
         };
         break;
 
