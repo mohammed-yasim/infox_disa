@@ -5,13 +5,15 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _express = _interopRequireDefault(require("express"));
+var _express = _interopRequireWildcard(require("express"));
 
 var _models = require("../models");
 
 var _middleware = require("../middleware");
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 var QuotationRouter = _express.default.Router();
 
@@ -65,11 +67,19 @@ QuotationRouter.get('/list/:type', _middleware.Middleware, (req, res) => {
   });
 });
 QuotationRouter.get('/quick/:id', _middleware.Middleware, (req, res) => {
-  _models.QuickQuotations.findOne({
-    where: {
-      //owner: req.user.u_id,
+  var where = {
+    owner: req.user.u_id,
+    id: req.params.id
+  };
+
+  if (req.user.u_type === 'admin' || req.user.u_type === 'root') {
+    where = {
       id: req.params.id
-    }
+    };
+  }
+
+  _models.QuickQuotations.findOne({
+    where: where
   }).then(quotations => {
     res.status(200).json(quotations);
   }).catch(err => {
@@ -98,6 +108,17 @@ QuotationRouter.post('/quick/:id', _middleware.Middleware, (req, res) => {
       break;
 
     case 'edit':
+      var where = {
+        owner: req.user.u_id,
+        id: req.params.id
+      };
+
+      if (req.user.u_type === 'admin' || req.user.u_type === 'root') {
+        where = {
+          id: req.params.id
+        };
+      }
+
       _models.QuickQuotations.update({
         blob: JSON.stringify(req.body),
         date: new Date(req.body.date),
@@ -106,10 +127,7 @@ QuotationRouter.post('/quick/:id', _middleware.Middleware, (req, res) => {
         party: "".concat(req.body.party_name, " - ").concat(req.body.party_address),
         permission: 1
       }, {
-        where: {
-          owner: req.user.u_id,
-          id: req.params.id
-        }
+        where: where
       }).then(quotation => {
         res.status(200).json(quotation);
       }).catch(err => {
@@ -210,6 +228,17 @@ QuotationRouter.get('/preview/:id', _middleware.Middleware, (req, res) => {
     }
   }).then(quotations => {
     res.status(200).json(quotations);
+  }).catch(err => {
+    res.status(403).send("".concat(err));
+  });
+});
+QuotationRouter.get('/pcode/:id', _middleware.Middleware, (req, res) => {
+  _models.Products.findOne({
+    where: {
+      p_code: req.params.id
+    }
+  }).then(product => {
+    res.status(200).json(product);
   }).catch(err => {
     res.status(403).send("".concat(err));
   });

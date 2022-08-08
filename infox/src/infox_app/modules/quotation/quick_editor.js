@@ -26,6 +26,7 @@ class QuickQuotationEditor extends React.Component {
                 prepared_by: ''
             },
             editor: {
+                code: '',
                 name: '',
                 rate: 0,
                 qty: 1,
@@ -33,7 +34,6 @@ class QuickQuotationEditor extends React.Component {
                 amount: 0
             },
             edit: false,
-
         }
     }
     componentDidMount() {
@@ -53,16 +53,22 @@ class QuickQuotationEditor extends React.Component {
     }
     saveForm = (event) => {
         event.preventDefault();
-        if (this.state.quotation.total > 0) {
-            let data = this.state.quotation;
-            infoxAPI.post(`/quotation/quick/${this.props.match.params.id}?action=${this.state.action}`, data).then(
-                (response) => {
-                    Toast.success('Saved');
-                    this.props.history.replace('/quotation/draft');
-                }
-            )
+        if (this.state.edit === false) {
+            if (this.state.quotation.total > 0) {
+                let data = this.state.quotation;
+                infoxAPI.post(`/quotation/quick/${this.props.match.params.id}?action=${this.state.action}`, data).then(
+                    (response) => {
+                        Toast.success('Saved');
+                        this.props.history.replace('/quotation/draft');
+                    }
+                ).catch((err) => {
+                    Toast.fail();
+                })
+            } else {
+                Toast.fail('Add data First');
+            }
         } else {
-            Toast.fail('Add data First');
+            Toast.fail('First Save the Row ');
         }
     }
     goBack = () => {
@@ -75,7 +81,9 @@ class QuickQuotationEditor extends React.Component {
         if (items.length > 0) {
             new_items = items.map((item) => { item.edit = false; return item; })
         }
-        let data = { name: '', rate: 0, qty: 1, edit: true, amount: 0 }
+        let data = {
+            code: '', name: '', rate: 0, qty: 1, edit: true, amount: 0
+        }
         new_items.push(data)
         quotation['items'] = new_items;
         this.setState({ quotation: quotation, edit: true });
@@ -101,6 +109,7 @@ class QuickQuotationEditor extends React.Component {
 
         this.setState({
             quotation: quotation, editor: {
+                code: '',
                 name: '',
                 rate: 0,
                 qty: 1,
@@ -115,6 +124,7 @@ class QuickQuotationEditor extends React.Component {
         items.splice(index, 1);
         this.setState({
             quotation: quotation, editor: {
+                code: '',
                 name: '',
                 rate: 0,
                 qty: 1,
@@ -163,6 +173,20 @@ class QuickQuotationEditor extends React.Component {
     adjustHeight = (e) => {
         e.target.style.height = 'inherit';
         e.target.style.height = `${e.target.scrollHeight}px`;
+    }
+    fetch_product = (p_code) => {
+        infoxAPI.get(`/quotation/pcode/${p_code}`).then((response) => {
+            let editor = {
+                code: response.data.p_code,
+                name: `${response.data.p_reference} ${response.data.p_description}`,
+                rate: response.data.p_price,
+                qty: 1,
+                edit: true
+            }
+            this.setState({ editor: editor })
+        }).catch(err => {
+            Toast.fail()
+        });
     }
     render() {
         return (
@@ -226,28 +250,35 @@ class QuickQuotationEditor extends React.Component {
                             <table className="table table-sm table-bordered text-center table-responsive-sm ">
                                 <thead>
                                     <tr>
-                                        <th>SI No.</th>
+                                        {this.state.edit === true ? <td className="col-md-1">PCODE</td> : null}
+                                        <th className="col-md-1">SI No.</th>
                                         <th scope="col">Description</th>
-                                        <th>Rate</th>
-                                        <th>Quantity</th>
-                                        <th>Amount</th>
-                                        {this.state.edit === true ? <th></th> : null}
+                                        <th className="col-md-1">Rate</th>
+                                        <th className="col-md-1">Quantity</th>
+                                        <th className="col-md-2">Amount</th>
+                                        {this.state.edit === true ? <th className="col-md-1"></th> : null}
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {this.state.quotation.items.map((item, i) => {
                                         if (item.edit === true) {
-
                                             let amount = ((this.state.editor.qty) * (this.state.editor.rate)).toFixed(2)
                                             return (
                                                 <tr key={i}>
+                                                    {this.state.edit === true ?
+                                                        <td><input className="form-control" autoComplete="false" type="text" onChange={this.onRowInput} onKeyPress={(event) => {
+                                                            if (event.key === "Enter") {
+                                                                event.preventDefault();
+                                                                this.fetch_product(this.state.editor.code);
+                                                            }
+                                                        }} name="code" value={this.state.editor.code} /></td> : null}
                                                     <th scope="col">
                                                         <button onClick={() => { this.delRow(i) }} className="btn btn-link ml-2"><i className="fa fa-trash"></i></button>
                                                     </th>
-                                                    <td><input className="form-control" autoComplete="false" type="text" onChange={this.onRowInput} name="name" value={this.state.editor.name} autoFocus /></td>
-                                                    <td className="col-md-1"><input className="form-control " type="number" onChange={this.onRowInput} name="rate" value={this.state.editor.rate} /></td>
-                                                    <td className="col-md-1"><input maxLength={3} className="form-control " type="number" onChange={this.onRowInput} name="qty" value={this.state.editor.qty} /></td>
-                                                    <td  >&#8377; {amount}</td>
+                                                    <td><textarea className="form-control" autoComplete="false" type="text" onChange={this.onRowInput} name="name" value={this.state.editor.name} autoFocus /></td>
+                                                    <td><input className="form-control " type="number" onChange={this.onRowInput} name="rate" value={this.state.editor.rate} /></td>
+                                                    <td><input maxLength={3} className="form-control " type="number" onChange={this.onRowInput} name="qty" value={this.state.editor.qty} /></td>
+                                                    <td>&#8377; {amount}</td>
                                                     <td>
                                                         <button onClick={() => { this.saveRow(i) }} className="btn btn-success btn-circle btn-sm mr-1"><i className="fa fa-save"></i></button>
                                                     </td>
@@ -256,42 +287,43 @@ class QuickQuotationEditor extends React.Component {
                                         }
                                         else {
                                             return (<tr key={i} onClick={() => { this.editRow(i) }} >
+                                                {this.state.edit === true ? <td>{item.code}</td> : null}
                                                 <th scope="col">{i + 1}</th>
                                                 <td>{item.name}</td>
                                                 <td>&#8377; {parseFloat(item.rate).toFixed(2)}</td>
                                                 <td>{item.qty}</td>
                                                 <td>&#8377; {item.amount}</td>
+                                                {this.state.edit === true ? <th className="col-md-2"></th> : null}
                                             </tr>)
                                         }
                                     })}
                                 </tbody>
                                 <tfoot>
                                     {this.state.edit === false ?
-                                        <tr><td colSpan={6}>
-
+                                        <tr><td colSpan={this.state.edit === true ? 7 : 5}>
                                             <button onClick={this.addRow} className="btn btn-primary btn-circle btn-sm"><i className="fa fa-plus"></i></button>
                                         </td>
                                         </tr>
                                         : null}
 
                                     <tr>
-                                        <th className="text-right" colSpan={4}> Sub Total : </th><th>&#8377; {this.state.quotation.total} / -</th>
+                                        <th className="text-right" colSpan={this.state.edit === true ? 6 : 4}> Sub Total : </th><th>&#8377; {this.state.quotation.total} / -</th>
                                     </tr>
                                     <tr>
-                                        <th className="text-right" colSpan={4}> Discount(%): </th><th>
+                                        <th className="text-right" colSpan={this.state.edit === true ? 6 : 4}> Discount(%): </th><th>
                                             <input type="number" min={0} max={25} step={0.5} onChange={this.onChangeInput} value={this.state.quotation.discount} name="discount" className="form-control form-control-sm" size={3} required />
                                         </th>
                                     </tr>
                                     <tr>
-                                        <th className="text-right" colSpan={4}> Discount: </th><th>{this.state.quotation.discount_amount}</th>
+                                        <th className="text-right" colSpan={this.state.edit === true ? 6 : 4}> Discount: </th><th>{this.state.quotation.discount_amount}</th>
                                     </tr>
                                     <tr>
-                                        <th className="text-right" colSpan={4}> Freight charge : </th><th>
+                                        <th className="text-right" colSpan={this.state.edit === true ? 6 : 4}> Freight charge : </th><th>
                                             <input type="number" onChange={this.onChangeInput} value={this.state.quotation.shipping_charge} name="shipping_charge" className="form-control form-control-sm" required />
                                         </th>
                                     </tr>
                                     <tr>
-                                        <th className="text-right" colSpan={4}> Grand Total : </th><th>&#8377; {(parseFloat(this.state.quotation.total) - parseFloat(this.state.quotation.discount_amount) + parseFloat(this.state.quotation.shipping_charge)).toFixed(2)} / -</th>
+                                        <th className="text-right" colSpan={this.state.edit === true ? 6 : 4}> Grand Total : </th><th>&#8377; {(parseFloat(this.state.quotation.total) - parseFloat(this.state.quotation.discount_amount) + parseFloat(this.state.quotation.shipping_charge)).toFixed(2)} / -</th>
                                     </tr>
                                     <tr>
                                         <th colSpan={6}>

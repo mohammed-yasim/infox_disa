@@ -1,5 +1,5 @@
-import express from 'express';
-import { QuickQuotations } from '../models';
+import express, { request } from 'express';
+import { Products, QuickQuotations } from '../models';
 import { Middleware } from '../middleware';
 const QuotationRouter = express.Router();
 
@@ -41,11 +41,15 @@ QuotationRouter.get('/list/:type', Middleware, (req, res) => {
     })
 });
 QuotationRouter.get('/quick/:id', Middleware, (req, res) => {
+    let where = {
+        owner: req.user.u_id,
+        id: req.params.id
+    }
+    if (req.user.u_type === 'admin' || req.user.u_type === 'root') {
+        where = { id: req.params.id }
+    }
     QuickQuotations.findOne({
-        where: {
-            //owner: req.user.u_id,
-            id: req.params.id
-        },
+        where: where
     }).then((quotations) => {
         res.status(200).json(quotations);
     })
@@ -73,6 +77,13 @@ QuotationRouter.post('/quick/:id', Middleware, (req, res) => {
                 });
             break;
         case 'edit':
+            let where = {
+                owner: req.user.u_id,
+                id: req.params.id
+            }
+            if (req.user.u_type === 'admin' || req.user.u_type === 'root') {
+                where = { id: req.params.id }
+            }
             QuickQuotations.update({
                 blob: JSON.stringify(req.body),
                 date: new Date(req.body.date),
@@ -81,10 +92,7 @@ QuotationRouter.post('/quick/:id', Middleware, (req, res) => {
                 party: `${req.body.party_name} - ${req.body.party_address}`,
                 permission: 1
             }, {
-                where: {
-                    owner: req.user.u_id,
-                    id: req.params.id
-                }
+                where: where
             }).then((quotation) => {
                 res.status(200).json(quotation);
             })
@@ -166,6 +174,19 @@ QuotationRouter.get('/preview/:id', Middleware, (req, res) => {
         },
     }).then((quotations) => {
         res.status(200).json(quotations);
+    })
+        .catch(err => {
+            res.status(403).send(`${err}`)
+        })
+});
+
+QuotationRouter.get('/pcode/:id', Middleware, (req, res) => {
+    Products.findOne({
+        where: {
+            p_code: req.params.id
+        },
+    }).then((product) => {
+        res.status(200).json(product);
     })
         .catch(err => {
             res.status(403).send(`${err}`)
