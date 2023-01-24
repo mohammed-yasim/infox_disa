@@ -55,7 +55,8 @@ var demo_db = new _sequelize.Sequelize('u947217984_infox', 'u947217984_infox', '
 });
 exports.demo_db = demo_db;
 var infox_db = new _sequelize.Sequelize('u947217984_infox', 'u947217984_infox', '5g&9Zq9auxKsGrwn', {
-  host: '173.249.36.84',
+  // host: '173.249.36.84',
+  host: '161.97.134.182',
   dialect: 'mariadb',
   pool: {
     max: 150,

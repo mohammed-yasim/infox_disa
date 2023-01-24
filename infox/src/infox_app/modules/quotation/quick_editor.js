@@ -29,7 +29,7 @@ class QuickQuotationEditor extends React.Component {
                 code: '',
                 name: '',
                 rate: 0,
-                qty: 1,
+                qty: 0,
                 edit: true,
                 amount: 0
             },
@@ -49,7 +49,11 @@ class QuickQuotationEditor extends React.Component {
         infoxAPI.get(`/quotation/quick/${this.props.match.params.id}`).then(
             (response) => {
                 this.setState({ quotation: JSON.parse(response.data.blob) });
-            });
+            }).catch(err => {
+                let quotation = this.state.quotation
+                quotation['prepared_by'] = this.context.profile;
+                this.setState({ action: 'add', quotation: quotation });
+            })
     }
     saveForm = (event) => {
         event.preventDefault();
@@ -82,7 +86,7 @@ class QuickQuotationEditor extends React.Component {
             new_items = items.map((item) => { item.edit = false; return item; })
         }
         let data = {
-            code: '', name: '', rate: 0, qty: 1, edit: true, amount: 0
+            code: '', name: '', rate: 0, qty: 0, edit: true, amount: 0
         }
         new_items.push(data)
         quotation['items'] = new_items;
@@ -112,7 +116,7 @@ class QuickQuotationEditor extends React.Component {
                 code: '',
                 name: '',
                 rate: 0,
-                qty: 1,
+                qty: 0,
                 edit: true
             },
             edit: false
@@ -127,7 +131,7 @@ class QuickQuotationEditor extends React.Component {
                 code: '',
                 name: '',
                 rate: 0,
-                qty: 1,
+                qty: 0,
                 edit: true
             }, edit: false
         })
@@ -276,8 +280,8 @@ class QuickQuotationEditor extends React.Component {
                                                         <button onClick={() => { this.delRow(i) }} className="btn btn-link ml-2"><i className="fa fa-trash"></i></button>
                                                     </th>
                                                     <td><textarea className="form-control" autoComplete="false" type="text" onChange={this.onRowInput} name="name" value={this.state.editor.name} autoFocus /></td>
-                                                    <td><input className="form-control " type="number" onChange={this.onRowInput} name="rate" value={this.state.editor.rate} /></td>
-                                                    <td><input maxLength={3} className="form-control " type="number" onChange={this.onRowInput} name="qty" value={this.state.editor.qty} /></td>
+                                                    <td><input className="form-control " type="number" onKeyDown={(e) => { if (e.which === 13) { e.preventDefault(); document.getElementById('qtyformfiled').focus(); } }} onChange={this.onRowInput} name="rate" value={this.state.editor.rate} /></td>
+                                                    <td><input maxLength={3} className="form-control " id='qtyformfiled' onKeyDown={(e) => { if (e.which === 13) { e.preventDefault(); this.saveRow(i) } }} type="number" onChange={this.onRowInput} name="qty" value={this.state.editor.qty} /></td>
                                                     <td>&#8377; {amount}</td>
                                                     <td>
                                                         <button onClick={() => { this.saveRow(i) }} className="btn btn-success btn-circle btn-sm mr-1"><i className="fa fa-save"></i></button>
@@ -326,7 +330,7 @@ class QuickQuotationEditor extends React.Component {
                                         <th className="text-right" colSpan={this.state.edit === true ? 6 : 4}> Grand Total : </th><th>&#8377; {(parseFloat(this.state.quotation.total) - parseFloat(this.state.quotation.discount_amount) + parseFloat(this.state.quotation.shipping_charge)).toFixed(2)} / -</th>
                                     </tr>
                                     <tr>
-                                        <th colSpan={6}>
+                                        <th colSpan={this.state.edit === true ? 7 : 5}>
                                             <textarea type="text" value={this.state.quotation.additional_information} name="additional_information" onChange={this.onChangeInput}
                                                 onInput={this.adjustHeight} onLoad={this.adjustHeight} className="form-control form-control-sm border-0 mb-1"
                                                 style={{ overflow: "hidden", }} rows="4"

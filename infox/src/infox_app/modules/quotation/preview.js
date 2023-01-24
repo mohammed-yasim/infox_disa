@@ -377,19 +377,21 @@ class QuotationPreview extends React.Component {
                             : quotation !== null && this.state.data.firm === 'dream_india_vt' ?
                                 <div id="print-area" className="text-dark bg-white p-5">
                                     <div className="vns">
-                                        <div style={{ minHeight: '30px' }}>
-                                            <span className="float-left p font-italic">GSTIN: 32BHHPA4275Q1Z4</span>
+                                        <div className="row">
+                                            <div className="col-6 font-italic">GSTIN: 32BHHPA4275Q1Z4</div>
 
-                                            <span className="float-right p font-italic"> Phone: 04828-205354 <br />
-                                                Mob: 09747177280</span>
+                                            <div className="col-6 text-right font-italic"> Phone: 04828-205354 <br />
+                                                Mob: 09747177280</div>
                                         </div>
                                         <div className="text-center">
-                                            <h1 className="h1 text-success">V.T. SCHOOL LAND &amp; PUBLISHERS</h1>
-                                            Near Post Office Anakkallu, ANAKKALLU P.O -686508,Kottayam Dist Kerala<br />
-                                            E-MAIL:vtskerala@gmail.com
+                                            <h1 className="text-success">V.T. SCHOOL LAND &amp; PUBLISHERS</h1>
+                                            <p>
+                                                Near Post Office Anakkallu, ANAKKALLU P.O -686508,Kottayam Dist Kerala<br />
+                                                E-MAIL:vtskerala@gmail.com
+                                            </p>
                                             <hr className="new2" />
                                         </div>
-                                        <table className="table  table-bordered table-sm">
+                                        <table className="table  table-bordered table-sm text-gray-900 ">
                                             <tbody>
                                                 <tr>
                                                     <td colSpan={6} className="p-3">
@@ -402,14 +404,14 @@ class QuotationPreview extends React.Component {
                                             </tbody>
                                             <tfoot>
                                                 <tr>
-                                                    <th>QT. NO :-</th><td> {this.state.data.no}</td>
-                                                    <th>DATE :-</th><td>{quotation.date}</td>
-                                                    <th>VALID UNTIL :-</th><td> {quotation.validity}</td>
+                                                    <th className="col-2 text-right">QT. NO :</th><td> {this.state.data.no}</td>
+                                                    <th className="col-2 text-right">DATE :</th><td>{quotation.date}</td>
+                                                    <th className="col-2 text-right">VALID UNTIL :</th><td> {quotation.validity}</td>
                                                 </tr>
                                             </tfoot>
                                         </table>
-                                        <div className="text-center"> <h3 className="text-uppercase"><u><b>Quotation</b></u></h3></div>
-                                        <table className="table table-bordered mt-3 table-md" >
+                                        <div className="text-center"> <h3 className="text-uppercase"><b>Quotation</b></h3></div>
+                                        <table className="table table-bordered mt-3 table-md text-gray-900 " >
                                             <thead className="thead-light text-center text-uppercase">
                                                 <tr>
                                                     <th>SINo</th>
@@ -475,4 +477,4 @@ class QuotationPreview extends React.Component {
         </>)
     }
 }
-export default withRouter(QuotationPreview);
+export default withRouter(QuotationPreview)

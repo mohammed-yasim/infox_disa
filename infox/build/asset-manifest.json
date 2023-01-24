@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/infox/static/css/main.ccc7b601.chunk.css",
-    "main.js": "/infox/static/js/main.ef062ab9.chunk.js",
-    "runtime-main.js": "/infox/static/js/runtime-main.80de45fc.js",
+    "main.js": "/infox/static/js/main.811975c3.chunk.js",
+    "runtime-main.js": "/infox/static/js/runtime-main.065aad65.js",
     "static/css/2.7952ae80.chunk.css": "/infox/static/css/2.7952ae80.chunk.css",
     "static/js/2.1cd76176.chunk.js": "/infox/static/js/2.1cd76176.chunk.js",
     "static/js/3.87b98cd5.chunk.js": "/infox/static/js/3.87b98cd5.chunk.js",
@@ -10,7 +10,7 @@
     "static/css/5.69bf759b.chunk.css": "/infox/static/css/5.69bf759b.chunk.css",
     "static/js/5.f0d35bac.chunk.js": "/infox/static/js/5.f0d35bac.chunk.js",
     "static/css/6.45ad0b6d.chunk.css": "/infox/static/css/6.45ad0b6d.chunk.css",
-    "static/js/6.b6b741a0.chunk.js": "/infox/static/js/6.b6b741a0.chunk.js",
+    "static/js/6.89b3e64e.chunk.js": "/infox/static/js/6.89b3e64e.chunk.js",
     "static/js/7.b5de0906.chunk.js": "/infox/static/js/7.b5de0906.chunk.js",
     "static/js/8.132d3e10.chunk.js": "/infox/static/js/8.132d3e10.chunk.js",
     "index.html": "/infox/index.html",
@@ -23,10 +23,10 @@
     "static/media/logo.2d91a656.png": "/infox/static/media/logo.2d91a656.png"
   },
   "entrypoints": [
-    "static/js/runtime-main.80de45fc.js",
+    "static/js/runtime-main.065aad65.js",
     "static/css/2.7952ae80.chunk.css",
     "static/js/2.1cd76176.chunk.js",
     "static/css/main.ccc7b601.chunk.css",
-    "static/js/main.ef062ab9.chunk.js"
+    "static/js/main.811975c3.chunk.js"
   ]
 }
