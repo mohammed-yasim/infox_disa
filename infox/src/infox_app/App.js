@@ -230,6 +230,23 @@ class InfoXApp extends React.Component {
                                     <span>Quotation</span></span>
                             </NavLink>
                             <hr className="sidebar-divider d-none d-md-block" />
+                            <div className="sidebar-heading">
+                                Assets
+                            </div>
+                            <li className={window.location.pathname.includes('/infox/catalogue') ? "nav-item text-decoration-none active" : "nav-item text-decoration-none"}>
+                                <a className="nav-link collapsed" href="#menu" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
+                                    <i className="fas fa-fw fa-users"></i>
+                                    <span>Catalogue</span>
+                                </a>
+                                <div id="collapseUtilities" className="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+                                    <div className="bg-white py-2 collapse-inner rounded" style={{ zIndex: '9999 !important' }}>
+                                        <button data-toggle="collapse" data-target="#collapseUtilities" className="float-right btn btn-link text-decoration-none"><i className="fa fa-times"></i></button>
+                                        <NavLink replace={true} onClick={this.closeSidebar} className="collapse-item" to="/catalogue/all">All Products</NavLink>
+                                        <NavLink replace={true} onClick={this.closeSidebar} className="collapse-item" to="/catalogue/advanced">Advanced</NavLink>
+                                    </div>
+                                </div>
+                            </li>
+                            <hr className="sidebar-divider" />
                             <div className="text-center d-none d-md-inline">
                                 <button className="rounded-circle border-0" id="sidebarToggle"></button>
                             </div>
@@ -267,6 +284,8 @@ class InfoXApp extends React.Component {
 
                                             </Route>
                                             <Route path="/quotation" component={Quotation} />
+                                            <Route path="/catalogue" component={Catalogue} />
+
                                             <Route path="*">
                                                 <div id="content">
                                                     <div className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
